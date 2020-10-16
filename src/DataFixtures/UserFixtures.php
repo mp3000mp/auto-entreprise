@@ -34,7 +34,7 @@ class UserFixtures extends Fixture
         $encodedPassword = $this->encoder->encodePassword($user, $password);
 		$user->setIsActive(true);
 		$user->setNbFailedConnexion(0);
-		$user->setEmail('ma_perret@hotmail.fr');
+		$user->setEmail('mperret@mp3000mp.fr');
 		$user->setFirstName('Matthias');
 		$user->setLastName('Perret');
 		$user->setPassword($encodedPassword);
