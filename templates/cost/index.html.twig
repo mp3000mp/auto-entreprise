@@ -1,0 +1,32 @@
+{% extends 'layout/logged.html.twig' %}
+
+{% block body %}
+
+    <div id="vjs-cost-show"
+         data-vjs='{{ vjsData|json_encode|e('html_attr') }}'
+    >
+
+        <h1>{{ 'entity.Cost.label'|trans({'%count%': 2}) }}</h1>
+
+        <a @click.prevent="showPopupAddCost" class="btn btn-primary" href="{{ path('cost.new') }}">{{ 'entity.Cost.action.new'|trans }}</a>
+
+        <table class="table table-striped">
+            <tr>
+                <th> {{ 'field.type'|trans }}</th>
+                <th>{{ 'field.date'|trans }}</th>
+                <th>{{ 'entity.Cost.field.amount'|trans }}</th>
+                <th>{{ 'field.description'|trans }}</th>
+            </tr>
+            <tr v-for="(cost, index) in costs">
+                <td><a @click.prevent="showPopupEditCost($event, index)" :href="'/cost/' + cost.id + '/edit'" title="{{ 'entity.Cost.action.edit'|trans }}"><i class="fas fa-edit"></i></a> ${ cost.type.trad[locale] }</td>
+                <td>${ cost.date }</td>
+                <td>${ cost.amount }</td>
+                <td>${ cost.description }</td>
+            </tr>
+        </table>
+
+        <h2>Prochaine taxe sur CA : ${ taxe }</h2>
+
+    </div>
+
+{% endblock %}

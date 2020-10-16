@@ -1,0 +1,5 @@
+{% extends 'base.html.twig' %}
+
+{% block menu %}
+    {{ gen_menu(app.request.server.get('REQUEST_URI'))|raw }}
+{% endblock %}

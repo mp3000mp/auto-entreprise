@@ -1,0 +1,25 @@
+
+.form-group {
+  
+  
+  .required:after {
+	content: "*";
+  }
+  
+  select{
+	cursor: pointer;
+  }
+  
+}
+
+.custom-file-label{
+  i.far{
+	font-size: 150%;
+	&.fa-file-pdf{
+	  color: $c-red;
+	}
+	&.fa-file-word{
+	  color: $c-blue;
+	}
+  }
+}

@@ -1,0 +1,155 @@
+app:
+    error:
+        401: Forbidden
+        404: Page not found
+        500: Unexpected error
+    home: Accueil
+
+entity:
+    Company:
+        action:
+            new: Nouvelle companie
+            edit: Editerer companie
+        field:
+            street1: Rue
+            street2: Rue2
+            city: Ville
+            postcode: Code postal
+        label: Companie|Companies
+
+    Contact:
+        action:
+            new: Nouveau contact
+            edit: Editer contact
+        field:
+            last_name: Last name
+            first_name: First name
+            email: Email
+            phone: Phone
+        label: Contact|Contacts
+
+    Cost:
+        action:
+            new: Nouveau coût
+            edit: Editer coût
+        field:
+            amount: Montant
+        label: Coût|Coûts
+
+    Opportunity:
+        action:
+            new: Nouveau opportunité
+            edit: Editer opportunité
+        field:
+            bill: Facture
+            billed_at: Facturé le
+            canceled_at: Annulé le
+            customer_ref1: Ref client
+            customer_ref2: Ref client 2
+            forecasted_delivery: Deadline
+            mean_of_payment: Moyen de payement
+            payed_at: Payé le
+            payment_ref: Ref payement
+            purchased_at: Commandé le
+            ref: Référence
+            tracked_at: Pisté le
+        label: Opportunité|Opportunités
+
+    Tender:
+        action:
+            new: Nouveau devis
+            edit: Editer devis
+        field:
+            amount: Montant
+            average_daily_rate: TJM
+            accepted_at: Accepter le
+            canceled_at: Annuler le
+            refused_at: Refusé le
+            sent_at: Envoyé le
+            sold_days: Jours vendus
+            version: Version
+        label: Devis|Devis
+
+    TenderRow:
+        action:
+            new: Nouvelle ligne
+            edit: Editer ligne
+        field:
+            title: Titre
+            sold_days: Jours vendus
+        label: Ligne|Lignes
+
+    User:
+        action:
+            edit: Editer utilisateur
+            new: Nouvel utilisateur
+            show: Voir utilisateur
+        field:
+            email: Email
+            password: Mot de passe
+            is_active: Actif
+            last_name: Nom
+            first_name: Prénom
+        label: Utilisateur|Utilisateurs
+
+field:
+    comments: Commentaires
+    created_at: Créé le
+    created_by: Créé par
+    date: Date
+    deleted_at: Supprimé le
+    deleted_by: Supprimé par
+    description: Description
+    file: Fichier|Fichiers
+    name: Nom
+    position: Position
+    status: Statut
+    time: Temps
+    type: Type
+    updated_at: Modifié le
+    updated_by: Modifié par
+    version: Version
+
+form:
+    add: Ajouter
+    archive: Archiver
+    cancel: Annuler
+    create: Créer
+    delete: Supprimer
+    new: Nouveau
+    remove: Supprimer
+    restore: Restaurer
+    send: Envoyer
+    submit: Soumettre
+    update: Modifier
+
+menu:
+    home: Accueil
+    language:
+        code:
+            en: English
+            fr: Français
+        label: Langue|Langues
+    reporting: Rapports
+
+security:
+    forgotten_password: Mot de passe oublié
+    login: Connection
+    logout: Déconnection
+    missing_email: Email manquant
+    remember_me: Se souvenir
+    reset_password: Réinitialiser mot de passe
+
+title:
+    last_opportunities: Dernières opportunités
+    utils: Utiles
+
+word:
+    and: et
+    at: le
+    by: par
+    day: jour|jours
+    declaration_ca: Déclaration CA
+    or: ou
+    timeline: Chronologie
+    welcome: Bienvenue

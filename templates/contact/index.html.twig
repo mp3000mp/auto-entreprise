@@ -1,0 +1,25 @@
+{% extends 'layout/logged.html.twig' %}
+
+{% block body %}
+    <h1>{{ 'entity.Contact.label'|trans({'%count%': 2}) }}</h1>
+
+    <a class="btn btn-primary" href="{{ path('contact.new') }}">{{ 'entity.Contact.action.new'|trans }}</a>
+
+    <table class="table table-striped">
+        <tr>
+            <th>{{ 'entity.Company.label'|trans({'%count%':1}) }}</th>
+            <th>{{ 'field.name'|trans }}</th>
+            <th>{{ 'entity.Contact.field.email'|trans }}</th>
+            <th>{{ 'entity.Contact.field.phone'|trans }}</th>
+        </tr>
+        {% for contact in list %}
+        <tr>
+            <td><a href="{{ path('company.show', {'id': contact.company.id}) }}">{{ contact.company.name }}</a></td>
+            <td><a href="{{ path('contact.show', {'id': contact.id}) }}">{{ contact.firstName }} {{ contact.lastName }}</a></td>
+            <td>{{ contact.email }}</td>
+            <td>{{ contact.phone }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

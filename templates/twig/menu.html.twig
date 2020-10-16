@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        {% if menu.brand is not null %}
+            <a class="navbar-brand" href="#">{{ menu.brand }}</a>
+        {% endif %}
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navCollapse" aria-controls="navCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navCollapse">
+            <div class="navbar-nav mr-auto flex-column">
+
+                <ul class="navbar-nav" id="nav1">
+                    {% for item in menu.items %}
+                        {% if item.role is null or is_granted(item.role) %}
+                            <li class="nav-item">
+                                <a class="nav-link{{ (item.active) ? ' active' }}" href="{{ path(item.route, item.routeArgs) }}">
+                                    {% if item.icon is not null %}
+                                        <i title="{{ item.html|trans(item.translationArgs, item.translationDomain) }}" class="fa fa-{{ item.icon }}"></i>
+                                    {% else %}
+                                        {{ item.html|trans(item.translationArgs, item.translationDomain) }}
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+                <ul class="navbar-nav flex-lg-row" id="nav2">
+                    {% for item in menu.subItems %}
+                        {% if item.role is null or is_granted(item.role) %}
+                            <li class="nav-item">
+                                <a class="nav-link{{ (item.active) ? ' active' }}" href="{{ path(item.route, item.routeArgs) }}">
+                                    {% if item.icon is not null %}
+                                        <i title="{{ item.html|trans(item.translationArgs, item.translationDomain) }}" class="fa fa-{{ item.icon }}"></i>
+                                    {% else %}
+                                        {{ item.html|trans(item.translationArgs, item.translationDomain) }}
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <ul class="navbar-nav navbar-right" id="nav3">
+                <li class="nav-item dropdown pr-4">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ 'menu.language.label'|trans({'%count%':2}) }}</a>
+                    <ul id="flags" class="dropdown-menu">
+                        {% for lang in menu.langs %}
+                            <li class="mx-3 mx-lg-1"><a href="{{ path('app.language', {'code': lang}) }}" title="{{ ('menu.language.code.'~lang)|trans }}"><img src="/img/app/flags/{{ lang }}.png" alt="{{ lang }}" /></a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" title="{{ 'security.my_account'|trans }}" href="{{ path('security.my_account') }}">{{ 'security.my_account'|trans }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" title="{{ 'security.logout'|trans }}" href="{{ path('logout') }}"><i class="fa fa-sign-out-alt"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+

@@ -1,0 +1,19 @@
+{% extends 'layout/logged.html.twig' %}
+
+{% block body %}
+    <h1>{{ 'entity.Company.label'|trans({'%count%': 2}) }}</h1>
+
+    <a class="btn btn-primary" href="{{ path('company.new') }}">{{ 'entity.Company.action.new'|trans }}</a>
+
+    <table class="table table-striped">
+        <tr>
+            <th>{{ 'field.name'|trans }}</th>
+        </tr>
+        {% for company in list %}
+            <tr>
+                <td><a href="{{ path('company.show', {'id': company.id}) }}">{{ company.name }}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

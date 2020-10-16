@@ -1,0 +1,9 @@
+
+table{
+  border-left: 1px solid $c-blue;
+  margin-top: 10px;
+}
+
+table tr:hover{
+  background-color: $c-grey-light;
+}

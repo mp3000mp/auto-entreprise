@@ -1,0 +1,48 @@
+{% extends 'layout/logged.html.twig' %}
+
+{% block body %}
+    <h1>{{ 'entity.Company.label'|trans({'%count%': 1}) }}</h1>
+
+    <a class="btn btn-primary" href="{{ path('company.edit', {'id': company.id}) }}">{{ 'entity.Company.action.edit'|trans }}</a>
+
+    <h2>{{ company.name }}</h2>
+    <p>
+        {{ company.street1 }}<br />
+        {{ company.street2 }}<br />
+        {{ company.city }}<br />
+        {{ company.postcode }}<br />
+    </p>
+
+    <h2>{{ 'entity.Opportunity.label'|trans({'%count%': 2}) }}</h2>
+    <a class="btn btn-primary" href="{{ path('opportunity.new', {'company_id': company.id}) }}">{{ 'entity.Opportunity.action.new'|trans }}</a>
+    <table class="table table-striped">
+        <tr>
+            <th>{{ 'entity.Opportunity.label'|trans({'%count%': 1}) }}</th>
+            <th>{{ 'field.status'|trans }}</th>
+        </tr>
+        {% for opportunity in company.opportunities %}
+            <tr>
+                <td><a href="{{ path('opportunity.show', {'id': opportunity.id}) }}">{{ opportunity.ref }}</a></td>
+                <td>{{ opportunity.status.label }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>{{ 'entity.Contact.label'|trans({'%count%': 2}) }}</h2>
+    <a class="btn btn-primary" href="{{ path('contact.new', {'company_id': company.id}) }}">{{ 'entity.Contact.action.new'|trans }}</a>
+    <table class="table table-striped">
+        <tr>
+            <th>{{ 'field.name'|trans }}</th>
+            <th>{{ 'entity.Contact.field.email'|trans }}</th>
+            <th>{{ 'entity.Contact.field.phone'|trans }}</th>
+        </tr>
+        {% for contact in company.contacts %}
+            <tr>
+                <td><a href="{{ path('contact.show', {'id': contact.id}) }}">{{ contact.firstName }} {{ contact.lastName }}</a></td>
+                <td>{{ contact.email }}</td>
+                <td>{{ contact.phone }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

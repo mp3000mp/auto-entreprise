@@ -1,0 +1,59 @@
+{%- block date_widget -%}
+    <div class="form-group">
+        <div class="d-none">
+            <input type="text" id="{{ id }}_day" name="{{ full_name }}[day]" value="{{ data is null ? '' : data|date('j') }}" />
+            <input type="text" id="{{ id }}_month" name="{{ full_name }}[month]" value="{{ data is null ? '' : data|date('n') }}" />
+            <input type="text" id="{{ id }}_year" name="{{ full_name }}[year]" value="{{ data is null ? '' : data|date('Y') }}" />
+        </div>
+        <input value="{{ data is null ? '' : (data|date('Y')~'-'~data|date('n')~'-'~data|date('j')) }}" name="{{ id }}" class="flatpickrDate form-control" type="text" placeholder="yyyy-mm-dd" {{ required ? 'required="required"' : '' }} data-input />
+    </div>
+{%- endblock -%}
+
+{%- block time_widget -%}
+    <div class="form-group">
+        <div class="d-none">
+            <input type="text" id="{{ id }}_time_hour" name="{{ full_name }}[hour]" value="{{ data|date('H') }}" />
+            <input type="text" id="{{ id }}_time_minute" name="{{ full_name }}[minute]" value="{{ data|date('i') }}" />
+        </div>
+        <input value="00:00" name="{{ id }}" class="flatpickrTime form-control" type="text" placeholder="hh:ii" {{ required ? 'required="required"' : '' }} data-input />
+    </div>
+{%- endblock -%}
+
+{%- block form_row -%}
+    <div class="form-group {{ (attr.wrap_class is defined) ? attr.wrap_class : 'col-12' }}">
+        {{ form_label(form) }}
+        {#{{ form_errors(form) }}#}
+        {{ form_widget(form) }}
+    </div>
+{%- endblock -%}
+
+{%- block form_rows -%}
+    <div class="row">
+        {% for child in form %}
+            {% if not child.rendered %}
+                {{- form_row(child) -}}
+            {% endif %}
+        {% endfor %}
+    </div>
+{%- endblock -%}
+
+{%- block button_row -%}
+    <div class="form-group {{ (attr.wrap_class is defined) ? attr.wrap_class : 'col-12' }}">
+        {{- form_widget(form) -}}
+    </div>
+{%- endblock button_row -%}
+
+{% block file_widget -%}
+    <{{ element|default('div') }} class="custom-file">
+    {%- set type = type|default('file') -%}
+    {{- block('form_widget_simple') -}}
+    <label for="{{ form.vars.id }}" class="custom-file-label">
+        {%- if attr.placeholder is defined -%}
+            {{- translation_domain is same as(false) ? attr.placeholder : attr.placeholder|trans({}, translation_domain) -}}
+        {%- endif -%}
+        {%- if attr.fileType is defined -%}
+            <i class="far fa-file-{{ attr.fileType }}"></i>
+        {%- endif -%}
+    </label>
+    </{{ element|default('div') }}>
+{% endblock %}

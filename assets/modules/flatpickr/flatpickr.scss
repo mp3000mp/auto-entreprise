@@ -1,0 +1,26 @@
+
+@import "../../css/vars";
+//@import "~flatpickr/dist/flatpickr.min.css";
+@import "~flatpickr/dist/themes/dark.css";
+
+
+.form-group{
+
+
+
+  /* =========================================================================================== */
+  /*                                            input date                                      */
+  /* =========================================================================================== */
+
+
+  input.flatpickr[readonly]{
+    background-color: white!important;
+  }
+  
+  .flatpickrDate{
+    cursor: pointer;
+  }
+  
+  
+} //fin form group
+

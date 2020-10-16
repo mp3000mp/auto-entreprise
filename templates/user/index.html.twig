@@ -1,0 +1,18 @@
+{% extends 'layout/logged.html.twig' %}
+
+{% block body %}
+    <h1>{{ 'entity.User.label'|trans({'%count%': 2}) }}</h1>
+
+    <table class="table table-striped">
+        <tr>
+            <th>{{ 'entity.User.label'|trans({'%count%':1}) }}</th>
+        </tr>
+        {% for user in list %}
+            <tr>
+                <td><a href="{{ path('user.show', {'id':user.id}) }}">{{ user.firstName }} {{ user.lastName }}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <a class="btn btn-primary" href="{{ path('user.new') }}">{{ 'entity.User.action.new'|trans }}</a>
+{% endblock %}

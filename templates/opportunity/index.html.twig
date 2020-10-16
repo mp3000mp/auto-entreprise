@@ -1,0 +1,23 @@
+{% extends 'layout/logged.html.twig' %}
+
+{% block body %}
+    <h1>{{ 'entity.Opportunity.label'|trans({'%count%': 2}) }}</h1>
+
+    <a class="btn btn-primary" href="{{ path('opportunity.new') }}">{{ 'entity.Opportunity.action.new'|trans }}</a>
+
+    <table class="table table-striped">
+        <tr>
+            <th>{{ 'entity.Company.label'|trans({'%count%': 1}) }}</th>
+            <th>{{ 'entity.Opportunity.label'|trans({'%count%': 1}) }}</th>
+            <th>{{ 'field.status'|trans }}</th>
+        </tr>
+        {% for opportunity in list %}
+            <tr>
+                <td><a href="{{ path('company.show', {'id': opportunity.company.id}) }}">{{ opportunity.company.name }}</a></td>
+                <td><a href="{{ path('opportunity.show', {'id': opportunity.id}) }}">{{ opportunity.ref }}</a></td>
+                <td>{{ opportunity.status.trad|jsonTrans }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

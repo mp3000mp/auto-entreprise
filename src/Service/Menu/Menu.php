@@ -1,0 +1,140 @@
+<?php
+
+namespace App\Service\Menu;
+
+
+/**
+ *
+ * Class Menu
+ * @package App\Service\Menu
+ */
+class Menu
+{
+
+    /**
+     * @var MenuItem[]
+     */
+    private $items = [];
+    
+	/**
+	 * @var array
+	 */
+    private $langs;
+    
+	/**
+	 * @var string
+	 */
+    private $currentUrl;
+	
+	/**
+	 * @var string|null
+	 */
+    private $brand;
+	
+	/**
+	 * @var int
+	 */
+    private $iActiveItem = -1;
+
+
+	/**
+	 * Menu constructor.
+	 */
+    public function __construct($currentUrl)
+    {
+		$this->currentUrl = $currentUrl;
+    }
+	
+	/**
+	 * @return MenuItem[]
+	 */
+    public function getSubItems():array
+    {
+    	if($this->iActiveItem > -1){
+    		return $this->items[$this->iActiveItem]->getSubItems();
+	    }
+    	return [];
+    }
+    
+    
+	/**
+	 * @param string $brand
+	 *
+	 * @return $this
+	 */
+    public function setBrand(string $brand)
+    {
+    	$this->brand = $brand;
+	    return $this;
+    }
+	
+	/**
+	 * @return string|null
+	 */
+    public function getBrand(): ?string
+    {
+    	return $this->brand;
+    }
+    
+	/**
+	 * @return array
+	 */
+    public function getLangs(): array
+    {
+    	return $this->langs;
+    }
+	
+
+	/**
+	 * @param array $langs
+	 *
+	 * @return $this
+	 */
+    public function setLangs(array $langs)
+    {
+	    $this->langs = $langs;
+	    return $this;
+    }
+
+    
+    /**
+     * ajoute un route
+     * @param array $options
+     * @return $this
+     */
+    public function addItem(array $options):self
+    {
+    	$item = new MenuItem($options);
+    	if($item->checkActive($this->currentUrl)){
+    		$this->iActiveItem = count($this->items);
+	    }
+        $this->items[] = $item;
+        return $this;
+    }
+	
+    
+	/**
+	 * ajoute une sous route
+	 * @param array $options
+	 *
+	 * @return Menu
+	 */
+    public function addSubItem(array $options):self
+    {
+	    $item = new MenuItem($options);
+	    $item->checkActive($this->currentUrl);
+	    $this->items[count($this->items)-1]->addSubItem($item);
+	    return $this;
+    }
+
+
+    /**
+     * get all routes
+     * @return MenuItem[]
+     */
+    public function getItems(): array
+    {
+        return $this->items;
+    }
+
+}

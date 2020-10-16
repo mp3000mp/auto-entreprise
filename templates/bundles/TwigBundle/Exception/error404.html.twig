@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row" style="margin-top: 20%;">
+        <div class="col-12 text-center" >
+            <h1>{{ 'app.error.404'|trans }}</h1>
+            <a href="{{ path('app.home') }}" class="btn btn-primary" style="color: white;">{{ 'app.home'|trans }}</a>
+        </div>
+    </div>
+{% endblock %}

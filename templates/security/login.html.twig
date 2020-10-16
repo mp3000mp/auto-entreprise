@@ -1,0 +1,51 @@
+{% extends 'layout/nologged.html.twig' %}
+
+{% block body %}
+    {{ parent() }}
+    <div class="row">
+
+        <div id="mptest"></div>
+
+        <div class="col-lg-4 col-md-3 col-sm-2"></div>
+        <div class="col-lg-4 col-md-6 col-sm-8">
+            <h2 class="my-5">{{ 'security.login'|trans }}</h2>
+
+            <form action="{{ path("login_check", {}) }}" method="POST" id="loginForm">
+                {% if error %}
+                    {# mp: pas beau, trouver comment overrider BadCredentialsException #}
+                    {% if error.messageKey == 'Invalid credentials.' %}
+                        <div class="alert-danger">{{ 'security.connexion.err.bad_credentials'|trans }}</div>
+                    {% else %}
+                        <div class="alert-danger">{{ error.messageKey|trans }}</div>
+                    {% endif %}
+                {% endif %}
+
+                <div class="form-group">
+                    <input data-value="{{ last_username }}" v-model.dv="email" type="text" required="required" class="form-control" name="_username" id="username" placeholder="example@domain.com" />
+                    <i class="px-2 b-rad alert-danger" :class="{ visible: emailNeeded, invisible: !emailNeeded }">{{ 'security.missing_email'|trans }}</i>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" class="form-control" name="_password" required="required" id="password" placeholder="{{ 'entity.User.field.password'|trans }}" />
+                </div>
+
+                <div class="form-group">
+                    <input type="otp" class="form-control" name="otp" required="required" id="otp" placeholder="{{ 'security.otp.code'|trans }}" />
+                </div>
+
+                {# mp: remember me => on n'en veut pas #}
+                {#<div class="form-group">
+                    <input type="checkbox" id="remember_me" name="_remember_me" />
+                    <label for="remember_me">{{ 'security.remember_me'|trans }}</label><br />
+                </div>#}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+
+                <a @click="test" href="{{ path('security.forgottenpass', {'email':''}) }}" title="{{ 'security.forgotten_password'|trans }}">{{ 'security.forgotten_password'|trans }}</a>
+
+                <button type="submit" class="float-right btn btn-primary">
+                    {{ 'security.login'|trans }} <i class="fa fa-sign-in-alt"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

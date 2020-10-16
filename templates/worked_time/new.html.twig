@@ -1,0 +1,12 @@
+{#{% extends 'layout/logged.html.twig' %}
+
+{% block body %}#}
+    <h1>{{ 'entity.WorkedTime.action.new'|trans }}</h1>
+
+    {{ form_start(form, {'action' : path('tender.worked_time.new', {'id': tender.id})}) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="btn btn-primary" type="submit">{{ 'form.create'|trans }}</button>
+    {{ form_end(form) }}
+{#
+{% endblock %}
+#}

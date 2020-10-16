@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png" href="img/app/favicon.png">
+        <title>{% block title %}MP3000{% endblock %}</title>
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+        {% endblock %}
+    </head>
+    <body>
+
+    {% block tradjs %}{% endblock %}
+
+    <header>
+        {% block menu %}{% endblock %}
+    </header>
+
+    <main role="main">
+        <div id="main-fluid-pre" class="container-fluid">
+            {% block prebody %}{% endblock %}
+        </div>
+        <div id="main" class="container">
+            {% block body %}{% endblock %}
+        </div>
+        <div id="main-fluid-post" class="container-fluid">
+            {% block postbody %}{% endblock %}
+        </div>
+    </main>
+
+        {% block javascripts %}
+            <script src="{{ asset('build/runtime.js') }}"></script>
+            <script src="{{ asset('build/app.js') }}"></script>
+        {% endblock %}
+    </body>
+</html>

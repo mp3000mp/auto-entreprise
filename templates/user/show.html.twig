@@ -1,0 +1,13 @@
+{% extends 'layout/logged.html.twig' %}
+
+{% block body %}
+    <h1>{{ 'entity.User.label'|trans({'%count%': 1}) }}</h1>
+
+    <a class="btn btn-primary" href="{{ path('user.edit', {'id': user.id}) }}">{{ 'entity.User.action.edit'|trans }}</a>
+
+    <h2>{{ user.fullName }}</h2>
+    <p>
+        {{ user.email }}<br />
+    </p>
+
+{% endblock %}

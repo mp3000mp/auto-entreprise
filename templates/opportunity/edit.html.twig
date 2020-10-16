@@ -1,0 +1,11 @@
+{% extends 'layout/logged.html.twig' %}
+
+{% block body %}
+    <h1>{{ 'entity.Opportunity.action.edit'|trans }}</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="btn btn-primary" type="submit">{{ 'form.edit'|trans }}</button>
+    {{ form_end(form) }}
+
+{% endblock %}
