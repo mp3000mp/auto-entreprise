@@ -8,6 +8,7 @@
         "ext-json": "*",
         "endroid/qr-code-bundle": "^3.3",
         "friendsofphp/php-cs-fixer": "^2.16",
+        "mp3000mp/redis-client": "^0.1.0",
         "phpmetrics/phpmetrics": "^2.7",
         "phpstan/phpstan": "^0.12.50",
         "phpunit/phpunit": "^9.4",

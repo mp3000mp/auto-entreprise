@@ -159,6 +159,12 @@
     "monolog/monolog": {
         "version": "1.24.0"
     },
+    "mp3000mp/redis-client": {
+        "version": "0.1"
+    },
+    "mp3000mp/tos-bundle": {
+        "version": "0.1"
+    },
     "myclabs/php-enum": {
         "version": "1.7.1"
     },

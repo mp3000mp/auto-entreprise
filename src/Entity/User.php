@@ -14,7 +14,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class User implements UserInterface, \Serializable
 {
-	
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -76,7 +76,7 @@ class User implements UserInterface, \Serializable
      * @ORM\OneToMany(targetEntity="App\Entity\WorkedTime", mappedBy="user")
      */
     private $workedTimes;
-    
+
 
 
     /**
@@ -146,7 +146,7 @@ class User implements UserInterface, \Serializable
 	    }
 	    return $roles;
     }
-	
+
 	/**
 	 * @param array $roles
 	 *
@@ -161,7 +161,7 @@ class User implements UserInterface, \Serializable
 
         return $this;
     }
-    
+
     /**
      * @return int|null
      */
@@ -303,6 +303,7 @@ class User implements UserInterface, \Serializable
             $this->email,
             $this->password,
             $this->is_active,
+            $this->roles,
             // see section on salt below
             // $this->salt,
         ));
@@ -316,6 +317,7 @@ class User implements UserInterface, \Serializable
             $this->email,
             $this->password,
             $this->is_active,
+            $this->roles,
             // see section on salt below
             // $this->salt
             ) = unserialize($serialized, ['allowed_classes' => false]);
@@ -410,5 +412,5 @@ class User implements UserInterface, \Serializable
 
         return $this;
     }
-    
+
 }
