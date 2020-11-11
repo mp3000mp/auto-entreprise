@@ -11,21 +11,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CostType
 {
-	
-	const TYPE_TAXES = 1;
-	
-	
+    const TYPE_TAXES = 1;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
-	
-	/**
-	 * @ORM\Column(type="smallint")
-	 */
-	private $position;
+
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $position;
 
     /**
      * @ORM\Column(type="json_array")
@@ -89,27 +87,23 @@ class CostType
 
         return $this;
     }
-	
-	/**
-	 * @return array
-	 */
-    public function jsonize():array
+
+    public function jsonize(): array
     {
-    	return [
-    		'trad' => $this->trad,
-	    ];
+        return [
+            'trad' => $this->trad,
+        ];
     }
-	
-	public function getPosition(): ?int
-	{
-		return $this->position;
-	}
-	
-	public function setPosition(int $position): self
-	{
-		$this->position = $position;
-		
-		return $this;
-	}
- 
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
+    }
 }

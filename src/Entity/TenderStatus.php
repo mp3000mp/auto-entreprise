@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TenderStatus
 {
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -55,5 +54,4 @@ class TenderStatus
 
         return $this;
     }
-
 }

@@ -18,5 +18,4 @@ class WorkedTimeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, WorkedTime::class);
     }
-
 }

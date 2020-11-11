@@ -6,20 +6,15 @@ use App\Entity\TenderStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-
 class TenderStatusFixtures extends Fixture
 {
-
-
-	public function __construct()
-	{
-
-	}
+    public function __construct()
+    {
+    }
 
     public function load(ObjectManager $manager)
     {
-
-    	$arrStatusLabel = [
+        $arrStatusLabel = [
             [
                 'en' => 'Ongoing',
                 'fr' => 'En cours',
@@ -40,9 +35,9 @@ class TenderStatusFixtures extends Fixture
                 'en' => 'Canceled',
                 'fr' => 'Annulé',
             ],
-	    ];
+        ];
 
-    	$position = 10;
+        $position = 10;
         foreach ($arrStatusLabel as $label) {
             $status = new TenderStatus();
             $status->setPosition($position);
@@ -52,6 +47,5 @@ class TenderStatusFixtures extends Fixture
         }
 
         $manager->flush();
-
     }
 }

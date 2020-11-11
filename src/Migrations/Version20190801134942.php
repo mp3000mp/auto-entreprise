@@ -12,15 +12,15 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20190801134942 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE opportunity_status_log DROP FOREIGN KEY FK_90B5B4A8A76ED395');
         $this->addSql('DROP INDEX IDX_90B5B4A8A76ED395 ON opportunity_status_log');
@@ -29,10 +29,10 @@ final class Version20190801134942 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_90B5B4A8B03A8386 ON opportunity_status_log (created_by_id)');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE opportunity_status_log DROP FOREIGN KEY FK_90B5B4A8B03A8386');
         $this->addSql('DROP INDEX IDX_90B5B4A8B03A8386 ON opportunity_status_log');

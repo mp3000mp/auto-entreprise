@@ -5,8 +5,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -14,7 +14,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class User implements UserInterface, \Serializable
 {
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -77,36 +76,25 @@ class User implements UserInterface, \Serializable
      */
     private $workedTimes;
 
-
-
     /**
      * User constructor.
-     *
      */
     public function __construct()
     {
         $this->workedTimes = new ArrayCollection();
     }
 
-    /**
-     * @return int|null
-     *
-     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return null|string
-     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
     /**
-     * @param string $email
      * @return User
      */
     public function setEmail(string $email): self
@@ -116,16 +104,12 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
     /**
-     * @param string $password
      * @return User
      */
     public function setPassword(string $password): self
@@ -141,37 +125,32 @@ class User implements UserInterface, \Serializable
     public function getRoles(): array
     {
         $roles = $this->roles;
-	    if(!in_array('ROLE_USER',$roles)){
-		    $roles[] = 'ROLE_USER';
-	    }
-	    return $roles;
+        if (!in_array('ROLE_USER', $roles)) {
+            $roles[] = 'ROLE_USER';
+        }
+
+        return $roles;
     }
 
-	/**
-	 * @param array $roles
-	 *
-	 * @return User
-	 */
+    /**
+     * @return User
+     */
     public function setRoles(array $roles): self
     {
-    	if(!in_array('ROLE_USER',$roles)){
-    	    $roles[] = 'ROLE_USER';
+        if (!in_array('ROLE_USER', $roles)) {
+            $roles[] = 'ROLE_USER';
         }
-    	$this->roles = $roles;
+        $this->roles = $roles;
 
         return $this;
     }
 
-    /**
-     * @return int|null
-     */
     public function getNbFailedConnexion(): ?int
     {
         return $this->nb_failed_connexion;
     }
 
     /**
-     * @param int $nb_failed_connexion
      * @return User
      */
     public function setNbFailedConnexion(int $nb_failed_connexion): self
@@ -186,7 +165,7 @@ class User implements UserInterface, \Serializable
      */
     public function addNbFailedConnexion(): self
     {
-        $this->nb_failed_connexion++;
+        ++$this->nb_failed_connexion;
 
         return $this;
     }
@@ -202,7 +181,6 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * @param bool $is_active
      * @return User
      */
     public function setIsActive(bool $is_active): self
@@ -220,16 +198,12 @@ class User implements UserInterface, \Serializable
         return $this->is_active;
     }
 
-    /**
-     * @return null|string
-     */
     public function getFirstName(): ?string
     {
         return $this->first_name;
     }
 
     /**
-     * @param string $first_name
      * @return User
      */
     public function setFirstName(string $first_name): self
@@ -239,16 +213,12 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * @return null|string
-     */
     public function getLastName(): ?string
     {
         return $this->last_name;
     }
 
     /**
-     * @param string $last_name
      * @return User
      */
     public function setLastName(string $last_name): self
@@ -258,16 +228,12 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getPasswordUpdatedAt(): ?\DateTimeInterface
     {
         return $this->password_updated_at;
     }
 
     /**
-     * @param \DateTimeInterface $password_updated_at
      * @return User
      */
     public function setPasswordUpdatedAt(\DateTimeInterface $password_updated_at): self
@@ -278,7 +244,7 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getSalt()
     {
@@ -287,18 +253,14 @@ class User implements UserInterface, \Serializable
         return null;
     }
 
-    /**
-     *
-     */
     public function eraseCredentials()
     {
-
     }
 
     /** @see \Serializable::serialize() */
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->id,
             $this->email,
             $this->password,
@@ -306,13 +268,13 @@ class User implements UserInterface, \Serializable
             $this->roles,
             // see section on salt below
             // $this->salt,
-        ));
+        ]);
     }
 
     /** @see \Serializable::unserialize() */
     public function unserialize($serialized)
     {
-        list (
+        list(
             $this->id,
             $this->email,
             $this->password,
@@ -328,7 +290,7 @@ class User implements UserInterface, \Serializable
      */
     public function isAccountNonLocked()
     {
-        return ($this->nb_failed_connexion <= 3);
+        return $this->nb_failed_connexion <= 3;
     }
 
     /**
@@ -339,16 +301,12 @@ class User implements UserInterface, \Serializable
         return $this->email;
     }
 
-    /**
-     * @return null|string
-     */
     public function getResetPasswordToken(): ?string
     {
         return $this->reset_password_token;
     }
 
     /**
-     * @param null|string $reset_password_token
      * @return User
      */
     public function setResetPasswordToken(?string $reset_password_token): self
@@ -358,16 +316,12 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface|null
-     */
     public function getResetPasswordDate(): ?\DateTimeInterface
     {
         return $this->reset_password_date;
     }
 
     /**
-     * @param \DateTimeInterface|null $reset_password_date
      * @return User
      */
     public function setResetPasswordDate(?\DateTimeInterface $reset_password_date): self
@@ -379,7 +333,7 @@ class User implements UserInterface, \Serializable
 
     public function getFullName()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name.' '.$this->last_name;
     }
 
     /**
@@ -394,7 +348,7 @@ class User implements UserInterface, \Serializable
     {
         if (!$this->workedTimes->contains($workedTime)) {
             $this->workedTimes[] = $workedTime;
-	        $workedTime->setUser($this);
+            $workedTime->setUser($this);
         }
 
         return $this;
@@ -406,11 +360,10 @@ class User implements UserInterface, \Serializable
             $this->workedTimes->removeElement($workedTime);
             // set the owning side to null (unless already changed)
             if ($workedTime->getUser() === $this) {
-	            $workedTime->setUser(null);
+                $workedTime->setUser(null);
             }
         }
 
         return $this;
     }
-
 }

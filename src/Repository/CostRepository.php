@@ -18,11 +18,11 @@ class CostRepository extends ServiceEntityRepository
         parent::__construct($registry, Cost::class);
     }
 
-	/**
-	 * @return Cost[]|array
-	 */
+    /**
+     * @return Cost[]|array
+     */
     public function findAll()
     {
-	    return $this->findBy([], ['date' => 'DESC']);
+        return $this->findBy([], ['date' => 'DESC']);
     }
 }

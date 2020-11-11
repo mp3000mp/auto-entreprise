@@ -20,21 +20,23 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
         parent::__construct($registry, User::class);
     }
 
-	/**
-	 * utiliser par system d'auth
-	 * @param string $username
-	 *
-	 * @return mixed|null|\Symfony\Component\Security\Core\User\UserInterface
-	 * @throws \Doctrine\ORM\NonUniqueResultException
-	 */
-	public function loadUserByUsername($username)
-	{
-		return $this->createQueryBuilder('u')
-		            ->where('u.email = :email')
-		            ->setParameter('email', $username)
-		            ->getQuery()
-		            ->getOneOrNullResult();
-	}
+    /**
+     * utiliser par system d'auth.
+     *
+     * @param string $username
+     *
+     * @return mixed|\Symfony\Component\Security\Core\User\UserInterface|null
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function loadUserByUsername($username)
+    {
+        return $this->createQueryBuilder('u')
+                    ->where('u.email = :email')
+                    ->setParameter('email', $username)
+                    ->getQuery()
+                    ->getOneOrNullResult();
+    }
 
     // /**
     //  * @return Contact[] Returns an array of Contact objects

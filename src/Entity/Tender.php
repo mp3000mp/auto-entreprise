@@ -5,20 +5,17 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TenderRepository")
  */
 class Tender
 {
-	
-	const STATUS_SENT = 2;
-	const STATUS_ACCEPTED = 3;
-	const STATUS_REFUSED = 4;
-	const STATUS_CANCELED = 5;
-	
-	
+    const STATUS_SENT = 2;
+    const STATUS_ACCEPTED = 3;
+    const STATUS_REFUSED = 4;
+    const STATUS_CANCELED = 5;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -67,10 +64,10 @@ class Tender
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $refusedAt;
-	
-	/**
-	 * @ORM\Column(type="datetime", nullable=true)
-	 */
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
     private $sentAt;
 
     /**
@@ -254,25 +251,30 @@ class Tender
 
         return $this;
     }
-    
-    public function getSoldDays(){
-	    $soldDays = 0;
-	    foreach($this->tenderRows as $tenderRow){
-		    $soldDays += $tenderRow->getSoldDays();
-	    }
-	    return $soldDays;
+
+    public function getSoldDays()
+    {
+        $soldDays = 0;
+        foreach ($this->tenderRows as $tenderRow) {
+            $soldDays += $tenderRow->getSoldDays();
+        }
+
+        return $soldDays;
     }
-    
-    public function getAmount(){
-    	$amount = 0;
-    	foreach($this->tenderRows as $tenderRow){
-    		$amount += ($tenderRow->getSoldDays()*$this->averageDailyRate);
-	    }
-    	return $amount;
+
+    public function getAmount()
+    {
+        $amount = 0;
+        foreach ($this->tenderRows as $tenderRow) {
+            $amount += ($tenderRow->getSoldDays() * $this->averageDailyRate);
+        }
+
+        return $amount;
     }
-    
-    public function getNextPosition(){
-	    return count($this->getTenderRows())+1;
+
+    public function getNextPosition()
+    {
+        return count($this->getTenderRows()) + 1;
     }
 
     public function getComments(): ?string
@@ -286,26 +288,26 @@ class Tender
 
         return $this;
     }
-	
-	/**
-	 * @return Collection|WorkedTime[]
-	 */
-	public function getWorkedTimes(): Collection
+
+    /**
+     * @return Collection|WorkedTime[]
+     */
+    public function getWorkedTimes(): Collection
     {
         return $this->workedTimes;
     }
-	
-	public function addWorkedTime(WorkedTime $workedTime): self
+
+    public function addWorkedTime(WorkedTime $workedTime): self
     {
         if (!$this->workedTimes->contains($workedTime)) {
             $this->workedTimes[] = $workedTime;
             $workedTime->setTender($this);
         }
-        
+
         return $this;
     }
-	
-	public function removeWorkedTime(WorkedTime $workedTime): self
+
+    public function removeWorkedTime(WorkedTime $workedTime): self
     {
         if ($this->workedTimes->contains($workedTime)) {
             $this->workedTimes->removeElement($workedTime);
@@ -314,17 +316,18 @@ class Tender
                 $workedTime->setUser(null);
             }
         }
-        
+
         return $this;
     }
-    
+
     public function getTotalWorkedDays()
     {
-    	$n = 0;
-    	foreach ($this->workedTimes as $worked_time){
-    		$n += $worked_time->getWorkedDays();
-	    }
-    	return $n;
+        $n = 0;
+        foreach ($this->workedTimes as $worked_time) {
+            $n += $worked_time->getWorkedDays();
+        }
+
+        return $n;
     }
 
     /**
@@ -381,16 +384,15 @@ class Tender
 
         return $this;
     }
-    
+
     public function jsonize()
     {
-    	return [
-    		'id' => $this->id,
-		    'version' => $this->version,
-		    'averageDailyRate' => $this->averageDailyRate,
-		    'status' => $this->status->getTrad(),
-		    'totalWorkedDays' => $this->getTotalWorkedDays(),
-	    ];
+        return [
+            'id' => $this->id,
+            'version' => $this->version,
+            'averageDailyRate' => $this->averageDailyRate,
+            'status' => $this->status->getTrad(),
+            'totalWorkedDays' => $this->getTotalWorkedDays(),
+        ];
     }
-	
 }

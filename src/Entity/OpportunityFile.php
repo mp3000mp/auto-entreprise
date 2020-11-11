@@ -124,18 +124,17 @@ class OpportunityFile
 
         return $this;
     }
-	
-	/**
-	 * @return array
-	 */
+
+    /**
+     * @return array
+     */
     public function jsonize()
     {
-    	return [
-    		'title' => $this->title,
-		    'description' => $this->description,
-		    'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
-		    'createdBy' => $this->createdBy->getFullName(),
-	    ];
+        return [
+            'title' => $this->title,
+            'description' => $this->description,
+            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+            'createdBy' => $this->createdBy->getFullName(),
+        ];
     }
-    
 }

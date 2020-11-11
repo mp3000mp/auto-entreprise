@@ -93,18 +93,18 @@ class WorkedTime
 
         return $this;
     }
+
     public function jsonize()
     {
-    	return [
-    		'id' => $this->id,
-		    'workedDays' => $this->workedDays,
-		    'date' => $this->date->format('Y-m-d'),
-		    'user' => [
-		    	'id' => $this->user->getId(),
-			    'fullName' => $this->user->getFullName(),
-		    ],
-		    'tender' => $this->tender->getId(),
-	    ];
+        return [
+            'id' => $this->id,
+            'workedDays' => $this->workedDays,
+            'date' => $this->date->format('Y-m-d'),
+            'user' => [
+                'id' => $this->user->getId(),
+                'fullName' => $this->user->getFullName(),
+            ],
+            'tender' => $this->tender->getId(),
+        ];
     }
-    
 }

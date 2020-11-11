@@ -4,7 +4,6 @@ namespace App\Service\Utils;
 
 trait TranslatableTrait
 {
-
     /**
      * @var bool|string
      */
@@ -14,11 +13,11 @@ trait TranslatableTrait
      */
     protected $translationArgs = [];
 
-
     /**
      * @return bool|string
      */
-    public function getTranslationDomain() {
+    public function getTranslationDomain()
+    {
         return $this->translationDomain;
     }
 
@@ -27,26 +26,25 @@ trait TranslatableTrait
      *
      * @return $this
      */
-    public function setTranslationDomain($translationDomain):self{
+    public function setTranslationDomain($translationDomain): self
+    {
         $this->translationDomain = $translationDomain;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getTranslationArgs():array {
+    public function getTranslationArgs(): array
+    {
         return $this->translationArgs;
     }
 
     /**
-     * @param array $translationArgs
-     *
      * @return $this
      */
-    public function setTranslationArgs(array $translationArgs):self{
+    public function setTranslationArgs(array $translationArgs): self
+    {
         $this->translationArgs = $translationArgs;
+
         return $this;
     }
-
 }

@@ -6,19 +6,15 @@ use App\Entity\OpportunityStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-
 class OpportunityStatusFixtures extends Fixture
 {
-
-	public function __construct()
-	{
-
-	}
+    public function __construct()
+    {
+    }
 
     public function load(ObjectManager $manager)
     {
-
-    	$arrStatusLabel = [
+        $arrStatusLabel = [
             [
                 'en' => 'Track',
                 'fr' => 'Piste',
@@ -59,7 +55,7 @@ class OpportunityStatusFixtures extends Fixture
                 'en' => 'Canceled',
                 'fr' => 'Annulé',
             ],
-	    ];
+        ];
 
         $position = 10;
         foreach ($arrStatusLabel as $label) {
@@ -71,6 +67,5 @@ class OpportunityStatusFixtures extends Fixture
         }
 
         $manager->flush();
-
     }
 }

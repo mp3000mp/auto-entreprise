@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,16 +16,16 @@ class MeanOfPayment
      * @ORM\Column(type="integer")
      */
     private $id;
-	
-	/**
-	 * @ORM\Column(type="smallint")
-	 */
-	private $position;
-	
-	/**
-	 * @ORM\Column(type="json_array")
-	 */
-	private $trad;
+
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $position;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $trad;
 
     public function __construct()
     {
@@ -37,29 +36,28 @@ class MeanOfPayment
     {
         return $this->id;
     }
-	
-	public function getTrad()
-	{
-		return $this->trad;
-	}
-	
-	public function setTrad($trad): self
-	{
-		$this->trad = $trad;
-		
-		return $this;
-	}
-	
-	public function getPosition(): ?int
-	{
-		return $this->position;
-	}
-	
-	public function setPosition(int $position): self
-	{
-		$this->position = $position;
-		
-		return $this;
-	}
 
+    public function getTrad()
+    {
+        return $this->trad;
+    }
+
+    public function setTrad($trad): self
+    {
+        $this->trad = $trad;
+
+        return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
+    }
 }

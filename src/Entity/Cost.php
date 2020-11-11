@@ -89,18 +89,15 @@ class Cost
 
         return $this;
     }
-	
-	/**
-	 * @return array
-	 */
-    public function jsonize():array
+
+    public function jsonize(): array
     {
-    	return [
-    		'id' => $this->id,
-    		'date' => $this->date->format('Y-m-d'),
-		    'amount' => $this->amount,
-		    'description' => $this->description,
-		    'type' => $this->type->jsonize(),
-	    ];
+        return [
+            'id' => $this->id,
+            'date' => $this->date->format('Y-m-d'),
+            'amount' => $this->amount,
+            'description' => $this->description,
+            'type' => $this->type->jsonize(),
+        ];
     }
 }

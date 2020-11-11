@@ -11,20 +11,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Opportunity
 {
-	
-	
-	const STATUS_TRACKED = 1;
-	const STATUS_TENDER_ONGOING = 2;
-	const STATUS_DEVELOP_ONGOING = 3;
-	const STATUS_DELIVERED = 4; // recette
-	const STATUS_BILLED = 5;
-	const STATUS_PAYED = 6;
-	const STATUS_CANCELED = 7;
-	const STATUS_TENDER_SENT = 8;
-	const STATUS_NEED_ONGOING = 9;
-	const STATUS_NEED_SENT = 10;
-	
-	
+    const STATUS_TRACKED = 1;
+    const STATUS_TENDER_ONGOING = 2;
+    const STATUS_DEVELOP_ONGOING = 3;
+    const STATUS_DELIVERED = 4; // recette
+    const STATUS_BILLED = 5;
+    const STATUS_PAYED = 6;
+    const STATUS_CANCELED = 7;
+    const STATUS_TENDER_SENT = 8;
+    const STATUS_NEED_ONGOING = 9;
+    const STATUS_NEED_SENT = 10;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -52,7 +49,7 @@ class Opportunity
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -77,16 +74,16 @@ class Opportunity
      * @ORM\Column(type="datetime", nullable=false)
      */
     private $trackedAt;
-	
-	/**
-	 * @ORM\Column(type="datetime", nullable=true)
-	 */
-	private $deliveredAt;
-	
-	/**
-	 * @ORM\Column(type="datetime", nullable=true)
-	 */
-	private $forecastedDelivery;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $deliveredAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $forecastedDelivery;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
@@ -129,12 +126,12 @@ class Opportunity
      * @ORM\Column(type="text", nullable=true)
      */
     private $comments;
-	
-	/**
-	 * @ORM\OneToMany(targetEntity="App\Entity\OpportunityStatusLog", mappedBy="opportunity")
-	 * @ORM\OrderBy({"createdAt" = "ASC"})
-	 */
-	private $statusLogs;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\OpportunityStatusLog", mappedBy="opportunity")
+     * @ORM\OrderBy({"createdAt" = "ASC"})
+     */
+    private $statusLogs;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -222,54 +219,51 @@ class Opportunity
 
         return $this;
     }
-	
-	/**
-	 * @return \DateTimeInterface
-	 */
-	public function getDeliveredAt() {
-                                 		return $this->deliveredAt;
-                                 	}
-	
-	/**
-	 * @param \DateTimeInterface|null $deliveredAt
-	 *
-	 * @return $this
-	 */
-	public function setDeliveredAt(?\DateTimeInterface $deliveredAt ): self {
-                                 		$this->deliveredAt = $deliveredAt;
-                                 		return $this;
-                                 	}
-	
-	/**
-	 * @return \DateTimeInterface
-	 */
-	public function getForecastedDelivery() {
-                                 		return $this->forecastedDelivery;
-                                 	}
-	
-	/**
-	 * @param \DateTimeInterface|null $forecastedDelivery
-	 *
-	 * @return $this
-	 */
-	public function setForecastedDelivery(?\DateTimeInterface $forecastedDelivery ): self {
-                                 		$this->forecastedDelivery = $forecastedDelivery;
-                                 		return $this;
-                                 	}
-	
-	/**
-	 * @return \DateTimeInterface|null
-	 */
+
+    /**
+     * @return \DateTimeInterface
+     */
+    public function getDeliveredAt()
+    {
+        return $this->deliveredAt;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setDeliveredAt(?\DateTimeInterface $deliveredAt): self
+    {
+        $this->deliveredAt = $deliveredAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTimeInterface
+     */
+    public function getForecastedDelivery()
+    {
+        return $this->forecastedDelivery;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setForecastedDelivery(?\DateTimeInterface $forecastedDelivery): self
+    {
+        $this->forecastedDelivery = $forecastedDelivery;
+
+        return $this;
+    }
+
     public function getBilledAt(): ?\DateTimeInterface
     {
         return $this->billedAt;
     }
-	
-	/**
-	 * @param \DateTimeInterface|null $billedAt
-	 *
-	 * @return Opportunity
-	 */
+
+    /**
+     * @return Opportunity
+     */
     public function setBilledAt(?\DateTimeInterface $billedAt): self
     {
         $this->billedAt = $billedAt;
@@ -429,9 +423,10 @@ class Opportunity
 
         return $this;
     }
-    
-    public function getNextVersion(){
-    	return count($this->getTenders())+1;
+
+    public function getNextVersion()
+    {
+        return count($this->getTenders()) + 1;
     }
 
     public function getComments(): ?string
@@ -445,38 +440,37 @@ class Opportunity
 
         return $this;
     }
-	
-	
-	/**
-	 * @return Collection|OpportunityStatusLog[]
-	 */
-	public function getStatusLogs(): Collection
-                                 	{
-                                 		return $this->statusLogs;
-                                 	}
-	
-	public function addStatusLog(OpportunityStatusLog $statusLog): self
-                                 	{
-                                 		if (!$this->statusLogs->contains($statusLog)) {
-                                 			$this->statusLogs[] = $statusLog;
-                                 			$statusLog->setOpportunity($this);
-                                 		}
-                                 		
-                                 		return $this;
-                                 	}
-	
-	public function removeStatusLog(OpportunityStatusLog $statusLog): self
-                                 	{
-                                 		if ($this->statusLogs->contains($statusLog)) {
-                                 			$this->statusLogs->removeElement($statusLog);
-                                 			// set the owning side to null (unless already changed)
-                                 			if ($statusLog->getOpportunity() === $this) {
-                                 				$statusLog->setOpportunity(null);
-                                 			}
-                                 		}
-                                 		
-                                 		return $this;
-                                 	}
+
+    /**
+     * @return Collection|OpportunityStatusLog[]
+     */
+    public function getStatusLogs(): Collection
+    {
+        return $this->statusLogs;
+    }
+
+    public function addStatusLog(OpportunityStatusLog $statusLog): self
+    {
+        if (!$this->statusLogs->contains($statusLog)) {
+            $this->statusLogs[] = $statusLog;
+            $statusLog->setOpportunity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStatusLog(OpportunityStatusLog $statusLog): self
+    {
+        if ($this->statusLogs->contains($statusLog)) {
+            $this->statusLogs->removeElement($statusLog);
+            // set the owning side to null (unless already changed)
+            if ($statusLog->getOpportunity() === $this) {
+                $statusLog->setOpportunity(null);
+            }
+        }
+
+        return $this;
+    }
 
     public function getBillFileDocx(): ?string
     {
