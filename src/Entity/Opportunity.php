@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,140 +12,188 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Opportunity
 {
-    const STATUS_TRACKED = 1;
-    const STATUS_TENDER_ONGOING = 2;
-    const STATUS_DEVELOP_ONGOING = 3;
-    const STATUS_DELIVERED = 4; // recette
-    const STATUS_BILLED = 5;
-    const STATUS_PAYED = 6;
-    const STATUS_CANCELED = 7;
-    const STATUS_TENDER_SENT = 8;
-    const STATUS_NEED_ONGOING = 9;
-    const STATUS_NEED_SENT = 10;
+    public const STATUS_TRACKED = 1;
+    public const STATUS_TENDER_ONGOING = 2;
+    public const STATUS_DEVELOP_ONGOING = 3;
+    public const STATUS_DELIVERED = 4; // recette
+    public const STATUS_BILLED = 5;
+    public const STATUS_PAYED = 6;
+    public const STATUS_CANCELED = 7;
+    public const STATUS_TENDER_SENT = 8;
+    public const STATUS_NEED_ONGOING = 9;
+    public const STATUS_NEED_SENT = 10;
 
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @var string
      */
     private $ref;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @var string
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="opportunities")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var Company|null
      */
     private $company;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @var DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $canceledAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $billedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $payedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $purchasedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=false)
+     *
+     * @var DateTime
      */
     private $trackedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $deliveredAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $forecastedDelivery;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     *
+     * @var string|null
      */
     private $customerRef1;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     *
+     * @var string|null
      */
     private $customerRef2;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     *
+     * @var string|null
      */
     private $paymentRef;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Contact", inversedBy="opportunities")
+     *
+     * @var ArrayCollection<int, Contact>
      */
     private $contacts;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\OpportunityStatus")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var OpportunityStatus|null
      */
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\MeanOfPayment")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var MeanOfPayment|null
      */
     private $meanOfPayment;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tender", mappedBy="opportunity")
+     *
+     * @var ArrayCollection<int, Tender>
      */
     private $tenders;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string|null
      */
     private $comments;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\OpportunityStatusLog", mappedBy="opportunity")
      * @ORM\OrderBy({"createdAt" = "ASC"})
+     *
+     * @var ArrayCollection<int, OpportunityStatusLog>
      */
     private $statusLogs;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @var string|null
      */
     private $billFileDocx;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @var string|null
      */
     private $billFilePdf;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\OpportunityFile", mappedBy="opportunity")
+     *
+     * @var ArrayCollection<int, OpportunityFile>
      */
     private $opportunityFiles;
 
@@ -196,52 +245,43 @@ class Opportunity
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getCanceledAt(): ?\DateTimeInterface
+    public function getCanceledAt(): ?DateTime
     {
         return $this->canceledAt;
     }
 
-    public function setCanceledAt(?\DateTimeInterface $canceledAt): self
+    public function setCanceledAt(?DateTime $canceledAt): self
     {
         $this->canceledAt = $canceledAt;
 
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
-    public function getDeliveredAt()
+    public function getDeliveredAt(): DateTime
     {
         return $this->deliveredAt;
     }
 
-    /**
-     * @return $this
-     */
-    public function setDeliveredAt(?\DateTimeInterface $deliveredAt): self
+    public function setDeliveredAt(?DateTime $deliveredAt): self
     {
         $this->deliveredAt = $deliveredAt;
 
         return $this;
     }
 
-    /**
-     * @return \DateTimeInterface
-     */
-    public function getForecastedDelivery()
+    public function getForecastedDelivery(): DateTime
     {
         return $this->forecastedDelivery;
     }
@@ -249,14 +289,14 @@ class Opportunity
     /**
      * @return $this
      */
-    public function setForecastedDelivery(?\DateTimeInterface $forecastedDelivery): self
+    public function setForecastedDelivery(?DateTime $forecastedDelivery): self
     {
         $this->forecastedDelivery = $forecastedDelivery;
 
         return $this;
     }
 
-    public function getBilledAt(): ?\DateTimeInterface
+    public function getBilledAt(): ?DateTime
     {
         return $this->billedAt;
     }
@@ -264,43 +304,43 @@ class Opportunity
     /**
      * @return Opportunity
      */
-    public function setBilledAt(?\DateTimeInterface $billedAt): self
+    public function setBilledAt(?DateTime $billedAt): self
     {
         $this->billedAt = $billedAt;
 
         return $this;
     }
 
-    public function getPayedAt(): ?\DateTimeInterface
+    public function getPayedAt(): ?DateTime
     {
         return $this->payedAt;
     }
 
-    public function setPayedAt(?\DateTimeInterface $payedAt): self
+    public function setPayedAt(?DateTime $payedAt): self
     {
         $this->payedAt = $payedAt;
 
         return $this;
     }
 
-    public function getPurchasedAt(): ?\DateTimeInterface
+    public function getPurchasedAt(): ?DateTime
     {
         return $this->purchasedAt;
     }
 
-    public function setPurchasedAt(?\DateTimeInterface $purchasedAt): self
+    public function setPurchasedAt(?DateTime $purchasedAt): self
     {
         $this->purchasedAt = $purchasedAt;
 
         return $this;
     }
 
-    public function getTrackedAt(): ?\DateTimeInterface
+    public function getTrackedAt(): ?DateTime
     {
         return $this->trackedAt;
     }
 
-    public function setTrackedAt(?\DateTimeInterface $trackedAt): self
+    public function setTrackedAt(?DateTime $trackedAt): self
     {
         $this->trackedAt = $trackedAt;
 
@@ -344,7 +384,7 @@ class Opportunity
     }
 
     /**
-     * @return Collection|Contact[]
+     * @return ArrayCollection<int, Contact>
      */
     public function getContacts(): Collection
     {
@@ -394,7 +434,7 @@ class Opportunity
     }
 
     /**
-     * @return Collection|Tender[]
+     * @return ArrayCollection<int, Tender>
      */
     public function getTenders(): Collection
     {
@@ -424,7 +464,7 @@ class Opportunity
         return $this;
     }
 
-    public function getNextVersion()
+    public function getNextVersion(): int
     {
         return count($this->getTenders()) + 1;
     }
@@ -442,7 +482,7 @@ class Opportunity
     }
 
     /**
-     * @return Collection|OpportunityStatusLog[]
+     * @return ArrayCollection<int, OpportunityStatusLog>
      */
     public function getStatusLogs(): Collection
     {
@@ -497,7 +537,7 @@ class Opportunity
     }
 
     /**
-     * @return Collection|OpportunityFile[]
+     * @return ArrayCollection<int, OpportunityFile>
      */
     public function getOpportunityFiles(): Collection
     {

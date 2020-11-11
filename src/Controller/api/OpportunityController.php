@@ -1,11 +1,11 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * User: mperret
-     * Date: 24/10/2018
-     * Time: 16:37.
-     */
+/**
+ * Created by PhpStorm.
+ * User: mperret
+ * Date: 24/10/2018
+ * Time: 16:37.
+ */
 
 namespace App\Controller\api;
 
@@ -24,10 +24,8 @@ namespace App\Controller\api;
     {
         /**
          * @Route("/api/opportunity", name="api.opportunity.index")
-         *
-         * @return Response
          */
-        public function index(Request $request)
+        public function index(Request $request): Response
         {
             // render
             return $this->render('opportunity/index.html.twig', [
@@ -41,7 +39,7 @@ namespace App\Controller\api;
          *
          * @throws \Exception
          */
-        public function uploadFile(Opportunity $opportunity, Request $request)
+        public function uploadFile(Opportunity $opportunity, Request $request): Response
         {
             $opportunityFile = new OpportunityFile();
             $opportunityFile->setCreatedAt(new \DateTime());

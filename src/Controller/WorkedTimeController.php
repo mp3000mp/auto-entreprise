@@ -1,11 +1,11 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * Tender: mperret
-     * Date: 24/10/2018
-     * Time: 16:37.
-     */
+/**
+ * Created by PhpStorm.
+ * Tender: mperret
+ * Date: 24/10/2018
+ * Time: 16:37.
+ */
 
 namespace App\Controller;
 
@@ -19,16 +19,10 @@ namespace App\Controller;
 
     class WorkedTimeController extends AbstractController
     {
-        public function __construct()
-        {
-        }
-
         /**
          * @Route("/time/{id}/edit", name="worked_time.edit", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function edit(Request $request, WorkedTime $workedTime)
+        public function edit(Request $request, WorkedTime $workedTime): Response
         {
             $form = $this->createForm(WorkedTimeType::class, $workedTime);
             $form->handleRequest($request);
@@ -40,7 +34,7 @@ namespace App\Controller;
 
                 return $this->json([
                     'status' => '1',
-                    'workedTime' => $this->jsonizer->jsonizeEntity($workedTime),
+                    'workedTime' => $workedTime->jsonize(),
                     'totalWorkedDays' => $workedTime->getTender()->getTotalWorkedDays(),
                 ]);
 
@@ -56,10 +50,8 @@ namespace App\Controller;
 
         /**
          * @Route("/tender/{id}/time/new", name="tender.worked_time.new")
-         *
-         * @return Response
          */
-        public function new(Tender $tender, Request $request)
+        public function new(Tender $tender, Request $request): Response
         {
             $time = new WorkedTime();
             $time->setTender($tender);

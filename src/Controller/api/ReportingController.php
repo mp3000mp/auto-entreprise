@@ -1,11 +1,11 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * User: mperret
-     * Date: 24/10/2018
-     * Time: 16:37.
-     */
+/**
+ * Created by PhpStorm.
+ * User: mperret
+ * Date: 24/10/2018
+ * Time: 16:37.
+ */
 
 namespace App\Controller\api;
 
@@ -19,10 +19,8 @@ namespace App\Controller\api;
     {
         /**
          * @Route("/api/reporting", name="api.reporting.index")
-         *
-         * @return Response
          */
-        public function index(Request $request)
+        public function index(Request $request): Response
         {
             // render
             return $this->render('reporting/index.html.twig', [
@@ -36,7 +34,7 @@ namespace App\Controller\api;
          *
          * @throws \Doctrine\DBAL\DBALException
          */
-        public function show(string $report, Request $request, ReportingRepository $rep)
+        public function show(string $report, Request $request, ReportingRepository $rep): Response
         {
             // todo gestion droits
 

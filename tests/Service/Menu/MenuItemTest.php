@@ -10,20 +10,9 @@ use PHPUnit\Framework\TestCase;
  */
 class MenuItemTest extends TestCase
 {
-    /** @var MenuItem */
-    private $menuItem;
-
-    /**
-     * MenuItemTest constructor.
-     *
-     * @param null   $name
-     * @param string $dataName
-     */
-    public function __construct($name = null, array $data = [], $dataName = '')
+    private function getMenuItem(): MenuItem
     {
-        parent::__construct($name, $data, $dataName);
-
-        $this->menuItem = new MenuItem([
+        return new MenuItem([
             'route' => 'user.index',
             'html' => 'entity.User.label',
             'translation_args' => ['%count%' => 2],
@@ -35,17 +24,14 @@ class MenuItemTest extends TestCase
     /**
      * @dataProvider checkActiveProvider
      */
-    public function testCheckActive($currentUrl, $expected)
+    public function testCheckActive(string $currentUrl, bool $expected): void
     {
-        $r = $this->menuItem->checkActive($currentUrl);
+        $r = $this->getMenuItem()->checkActive($currentUrl);
 
-        $this->assertEquals($expected, $r);
+        self::assertEquals($expected, $r);
     }
 
-    /**
-     * @return array
-     */
-    public function checkActiveProvider()
+    public function checkActiveProvider(): array
     {
         return [
             'is active' => ['/user/1/edit', true],

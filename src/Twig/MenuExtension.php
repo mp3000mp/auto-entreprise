@@ -16,7 +16,7 @@ class MenuExtension extends AbstractExtension
     /**
      * @return array|\Twig_Function[]
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('gen_menu', [$this, 'gen_menu'], ['needs_environment' => true]),
@@ -24,15 +24,11 @@ class MenuExtension extends AbstractExtension
     }
 
     /**
-     * @param $currentUrl
-     *
-     * @return string
-     *
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function gen_menu(Environment $environment, $currentUrl)
+    public function gen_menu(Environment $environment, string $currentUrl): string
     {
         // new builder
         $currentUrlParams = '';

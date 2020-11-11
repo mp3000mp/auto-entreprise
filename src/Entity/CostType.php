@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,27 +10,35 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CostType
 {
-    const TYPE_TAXES = 1;
+    public const TYPE_TAXES = 1;
 
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="smallint")
+     *
+     * @var int
      */
     private $position;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
+     *
+     * @var array
      */
     private $trad;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Cost", mappedBy="type")
+     *
+     * @var ArrayCollection<int, Cost>
      */
     private $costs;
 
@@ -45,12 +52,12 @@ class CostType
         return $this->id;
     }
 
-    public function getTrad()
+    public function getTrad(): array
     {
         return $this->trad;
     }
 
-    public function setTrad($trad): self
+    public function setTrad(array $trad): self
     {
         $this->trad = $trad;
 
@@ -58,9 +65,9 @@ class CostType
     }
 
     /**
-     * @return Collection|Cost[]
+     * @return ArrayCollection<int, Cost>
      */
-    public function getCosts(): Collection
+    public function getCosts(): ArrayCollection
     {
         return $this->costs;
     }

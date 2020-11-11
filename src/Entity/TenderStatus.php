@@ -13,16 +13,22 @@ class TenderStatus
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="smallint")
+     *
+     * @var int
      */
     private $position;
 
     /**
      * @ORM\Column(type="json")
+     *
+     * @var array
      */
     private $trad = [];
 
@@ -48,7 +54,7 @@ class TenderStatus
         return $this->trad;
     }
 
-    public function setTrad($trad): self
+    public function setTrad(array $trad): self
     {
         $this->trad = $trad;
 

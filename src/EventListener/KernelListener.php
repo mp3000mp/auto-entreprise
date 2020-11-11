@@ -12,7 +12,7 @@ namespace App\EventListener;
         /**
          * se lance avant l'authentication.
          */
-        public function onKernelRequestPreAuth(RequestEvent $event)
+        public function onKernelRequestPreAuth(RequestEvent $event): void
         {
             // get request
             $request = $event->getRequest();

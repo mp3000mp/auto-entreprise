@@ -1,11 +1,11 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * Opportunity: mperret
-     * Date: 24/10/2018
-     * Time: 16:37.
-     */
+/**
+ * Created by PhpStorm.
+ * Opportunity: mperret
+ * Date: 24/10/2018
+ * Time: 16:37.
+ */
 
 namespace App\Controller;
 
@@ -25,10 +25,8 @@ namespace App\Controller;
     {
         /**
          * @Route("/opportunity", name="opportunity.index")
-         *
-         * @return Response
          */
-        public function index(Request $request)
+        public function index(Request $request): Response
         {
             $list = $this->getDoctrine()->getRepository(Opportunity::class)
                          ->findAll();
@@ -42,11 +40,9 @@ namespace App\Controller;
         /**
          * @Route("/opportunity/{id}", name="opportunity.show", requirements={"id"="\d+"})
          *
-         * @return Response
-         *
          * @throws \Exception
          */
-        public function show(Opportunity $opportunity, TranslatorInterface $translator)
+        public function show(Opportunity $opportunity, TranslatorInterface $translator): Response
         {
             // formulaire nouveau fichier
             $file = new OpportunityFile();
@@ -78,10 +74,8 @@ namespace App\Controller;
 
         /**
          * @Route("/opportunity/{id}/edit", name="opportunity.edit", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function edit(Request $request, Opportunity $opportunity)
+        public function edit(Request $request, Opportunity $opportunity): Response
         {
             $form = $this->createForm(OpportunityType::class, $opportunity, [
                 'action' => 'edit',
@@ -109,7 +103,7 @@ namespace App\Controller;
          *
          * @throws \Exception
          */
-        public function new(Request $request)
+        public function new(Request $request): Response
         {
             $opportunity = new Opportunity();
             $opportunity->setCreatedAt(new \DateTime());

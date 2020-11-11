@@ -1,11 +1,11 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * Tender: mperret
-     * Date: 24/10/2018
-     * Time: 16:37.
-     */
+/**
+ * Created by PhpStorm.
+ * Tender: mperret
+ * Date: 24/10/2018
+ * Time: 16:37.
+ */
 
 namespace App\Controller;
 
@@ -21,10 +21,8 @@ namespace App\Controller;
     {
         /**
          * @Route("/tender-row/{id}", name="tender_row.show", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function show(TenderRow $tenderRow)
+        public function show(TenderRow $tenderRow): Response
         {
             return $this->render('tender_row/show.html.twig', [
                 'tenderRow' => $tenderRow,
@@ -33,10 +31,8 @@ namespace App\Controller;
 
         /**
          * @Route("/tender-row/{id}/edit", name="tender_row.edit", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function edit(Request $request, TenderRow $tenderRow)
+        public function edit(Request $request, TenderRow $tenderRow): Response
         {
             $form = $this->createForm(TenderRowType::class, $tenderRow, [
                 'action' => 'edit',
@@ -59,10 +55,8 @@ namespace App\Controller;
 
         /**
          * @Route("/tender-row/new", name="tender_row.new")
-         *
-         * @return Response
          */
-        public function new(Request $request)
+        public function new(Request $request): Response
         {
             $tenderRow = new TenderRow();
 

@@ -2,6 +2,7 @@
 
 namespace App\Service\JsonTranslator;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -9,6 +10,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class JsonTranslator
 {
+    /**
+     * @var Request|null
+     */
     private $request;
 
     public function __construct(RequestStack $requestStack)
@@ -21,7 +25,7 @@ class JsonTranslator
      */
     public function trans(?array $json): string
     {
-        if (null == $json) {
+        if (null === $json) {
             return '';
         }
         if (isset($json[$this->request->getLocale()])) {

@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -18,61 +18,85 @@ class User implements UserInterface, \Serializable
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=55, unique=true)
+     *
+     * @var string
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @var string
      */
     private $password;
 
     /**
      * @ORM\Column(type="smallint")
+     *
+     * @var int
      */
     private $nb_failed_connexion = 0;
 
     /**
      * @ORM\Column(type="boolean")
+     *
+     * @var bool
      */
-    private $is_active;
+    private $is_active = false;
 
     /**
      * @ORM\Column(type="string", length=55)
+     *
+     * @var string
      */
     private $first_name;
 
     /**
      * @ORM\Column(type="string", length=55)
+     *
+     * @var string
      */
     private $last_name;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $password_updated_at;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @var string|null
      */
     private $reset_password_token;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $reset_password_date;
 
     /**
      * @ORM\Column(type="json", nullable=false)
+     *
+     * @var array
      */
     private $roles = [];
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\WorkedTime", mappedBy="user")
+     *
+     * @var ArrayCollection<int, WorkedTime>
      */
     private $workedTimes;
 
@@ -228,7 +252,7 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    public function getPasswordUpdatedAt(): ?\DateTimeInterface
+    public function getPasswordUpdatedAt(): ?DateTime
     {
         return $this->password_updated_at;
     }
@@ -236,24 +260,21 @@ class User implements UserInterface, \Serializable
     /**
      * @return User
      */
-    public function setPasswordUpdatedAt(\DateTimeInterface $password_updated_at): self
+    public function setPasswordUpdatedAt(DateTime $password_updated_at): self
     {
         $this->password_updated_at = $password_updated_at;
 
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getSalt()
+    public function getSalt(): ?string
     {
         // you *may* need a real salt depending on your encoder
         // see section on salt below
         return null;
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 
@@ -285,18 +306,12 @@ class User implements UserInterface, \Serializable
             ) = unserialize($serialized, ['allowed_classes' => false]);
     }
 
-    /**
-     * @return bool
-     */
-    public function isAccountNonLocked()
+    public function isAccountNonLocked(): bool
     {
         return $this->nb_failed_connexion <= 3;
     }
 
-    /**
-     * @return string
-     */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->email;
     }
@@ -306,9 +321,6 @@ class User implements UserInterface, \Serializable
         return $this->reset_password_token;
     }
 
-    /**
-     * @return User
-     */
     public function setResetPasswordToken(?string $reset_password_token): self
     {
         $this->reset_password_token = $reset_password_token;
@@ -316,30 +328,27 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    public function getResetPasswordDate(): ?\DateTimeInterface
+    public function getResetPasswordDate(): ?DateTime
     {
         return $this->reset_password_date;
     }
 
-    /**
-     * @return User
-     */
-    public function setResetPasswordDate(?\DateTimeInterface $reset_password_date): self
+    public function setResetPasswordDate(?DateTime $reset_password_date): self
     {
         $this->reset_password_date = $reset_password_date;
 
         return $this;
     }
 
-    public function getFullName()
+    public function getFullName(): string
     {
         return $this->first_name.' '.$this->last_name;
     }
 
     /**
-     * @return Collection|WorkedTime[]
+     * @return ArrayCollection<int, WorkedTime>
      */
-    public function getWorkedTimes(): Collection
+    public function getWorkedTimes(): ArrayCollection
     {
         return $this->workedTimes;
     }

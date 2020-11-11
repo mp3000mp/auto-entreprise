@@ -1,11 +1,11 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * Tender: mperret
-     * Date: 24/10/2018
-     * Time: 16:37.
-     */
+/**
+ * Created by PhpStorm.
+ * Tender: mperret
+ * Date: 24/10/2018
+ * Time: 16:37.
+ */
 
 namespace App\Controller;
 
@@ -21,10 +21,8 @@ namespace App\Controller;
     {
         /**
          * @Route("/tender", name="tender.index")
-         *
-         * @return Response
          */
-        public function index(Request $request)
+        public function index(Request $request): Response
         {
             $list = $this->getDoctrine()->getRepository(Tender::class)
                          ->findAll();
@@ -37,10 +35,8 @@ namespace App\Controller;
 
         /**
          * @Route("/tender/{id}", name="tender.show", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function show(Tender $tender)
+        public function show(Tender $tender): Response
         {
             return $this->render('tender/show.html.twig', [
                 'tender' => $tender,
@@ -55,10 +51,8 @@ namespace App\Controller;
 
         /**
          * @Route("/tender/{id}/edit", name="tender.edit", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function edit(Request $request, Tender $tender)
+        public function edit(Request $request, Tender $tender): Response
         {
             $form = $this->createForm(TenderType::class, $tender, [
                 'action' => 'edit',
@@ -81,10 +75,8 @@ namespace App\Controller;
 
         /**
          * @Route("/tender/new", name="tender.new")
-         *
-         * @return Response
          */
-        public function new(Request $request)
+        public function new(Request $request): Response
         {
             $tender = new Tender();
             $tender->setCreatedAt(new \DateTime());

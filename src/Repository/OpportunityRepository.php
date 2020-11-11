@@ -22,7 +22,7 @@ class OpportunityRepository extends ServiceEntityRepository
     /*
      * get last opened opportunities
      */
-    public function findWelcomeDashboard()
+    public function findWelcomeDashboard(): array
     {
         return $this->createQueryBuilder('o')
             ->innerJoin('o.tenders', 't')

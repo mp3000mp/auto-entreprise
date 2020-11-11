@@ -12,43 +12,30 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class JsonTranslatorTest extends TestCase
 {
-    /** @var RequestStack */
-    private $requestStack;
-
-    /**
-     * JsonTranslatorTest constructor.
-     *
-     * @param null   $name
-     * @param string $dataName
-     */
-    public function __construct($name = null, array $data = [], $dataName = '')
+    private function getRequestStack(): RequestStack
     {
-        parent::__construct($name, $data, $dataName);
-
         $requestStack = new RequestStack();
         $request = new Request();
         $request->setDefaultLocale('en');
         $requestStack->push($request);
-        $this->requestStack = $requestStack;
+
+        return $requestStack;
     }
 
     /**
      * @dataProvider transProvider
      */
-    public function testTrans($locale, $json, $expected)
+    public function testTrans(string $locale, array $json, string $expected): void
     {
-        $this->requestStack->getCurrentRequest()->setLocale($locale);
-        $jsonTrans = new JsonTranslator($this->requestStack);
+        $requestStack = $this->getRequestStack();
+        $requestStack->getCurrentRequest()->setLocale($locale);
+        $jsonTrans = new JsonTranslator($requestStack);
         $r = $jsonTrans->trans($json);
 
-        $this->assertEquals($expected, $r);
-        //return $r;
+        self::assertEquals($expected, $r);
     }
 
-    /**
-     * @return array
-     */
-    public function transProvider()
+    public function transProvider(): array
     {
         $trad = ['fr' => 'oui', 'en' => 'yes'];
 

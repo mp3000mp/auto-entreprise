@@ -10,8 +10,6 @@ namespace App\EventListener;
      */
     class SecurityListener
     {
-        protected $em;
-
         /**
          * SecurityListener constructor.
          */
@@ -22,7 +20,7 @@ namespace App\EventListener;
         /**
          * si echec.
          */
-        public function onAuthenticationFailure(AuthenticationFailureEvent $event)
+        public function onAuthenticationFailure(AuthenticationFailureEvent $event): void
         {
             // normalement impossible d'arriver ici
         }
@@ -30,7 +28,7 @@ namespace App\EventListener;
         /**
          * si success.
          */
-        public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
+        public function onSecurityInteractiveLogin(InteractiveLoginEvent $event): void
         {
         }
     }

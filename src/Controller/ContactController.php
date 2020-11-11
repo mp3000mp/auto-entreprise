@@ -1,11 +1,11 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * User: mperret
-     * Date: 24/10/2018
-     * Time: 16:37.
-     */
+/**
+ * Created by PhpStorm.
+ * User: mperret
+ * Date: 24/10/2018
+ * Time: 16:37.
+ */
 
 namespace App\Controller;
 
@@ -21,10 +21,8 @@ namespace App\Controller;
     {
         /**
          * @Route("/contact", name="contact.index")
-         *
-         * @return Response
          */
-        public function index(Request $request)
+        public function index(Request $request): Response
         {
             $list = $this->getDoctrine()->getRepository(Contact::class)
                               ->findAll();
@@ -37,10 +35,8 @@ namespace App\Controller;
 
         /**
          * @Route("/contact/{id}", name="contact.show", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function show(Contact $contact)
+        public function show(Contact $contact): Response
         {
             return $this->render('contact/show.html.twig', [
                 'contact' => $contact,
@@ -49,10 +45,8 @@ namespace App\Controller;
 
         /**
          * @Route("/contact/{id}/edit", name="contact.edit", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function edit(Request $request, Contact $contact)
+        public function edit(Request $request, Contact $contact): Response
         {
             $form = $this->createForm(ContactType::class, $contact, []);
             $form->handleRequest($request);
@@ -73,10 +67,8 @@ namespace App\Controller;
 
         /**
          * @Route("/contact/new", name="contact.new")
-         *
-         * @return Response
          */
-        public function new(Request $request)
+        public function new(Request $request): Response
         {
             $contact = new Contact();
 

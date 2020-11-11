@@ -35,7 +35,7 @@ class Menu
     /**
      * Menu constructor.
      */
-    public function __construct($currentUrl)
+    public function __construct(string $currentUrl)
     {
         $this->currentUrl = $currentUrl;
     }
@@ -55,7 +55,7 @@ class Menu
     /**
      * @return $this
      */
-    public function setBrand(string $brand)
+    public function setBrand(string $brand): self
     {
         $this->brand = $brand;
 
@@ -75,7 +75,7 @@ class Menu
     /**
      * @return $this
      */
-    public function setLangs(array $langs)
+    public function setLangs(array $langs): self
     {
         $this->langs = $langs;
 

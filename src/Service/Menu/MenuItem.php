@@ -65,7 +65,7 @@ namespace App\Service\Menu;
             $this->setDefaultProp();
         }
 
-        protected function configureOptions()
+        protected function configureOptions(): void
         {
             $this->resolver->setDefaults([
                 'route_args' => [],
@@ -78,7 +78,7 @@ namespace App\Service\Menu;
             $this->resolver->setRequired(['route', 'html']);
         }
 
-        protected function setDefaultProp()
+        protected function setDefaultProp(): void
         {
             $this->options = $this->resolver->resolve($this->options);
             $this->route = $this->options['route'];
@@ -94,7 +94,7 @@ namespace App\Service\Menu;
         /**
          * @return MenuItem[]
          */
-        public function getSubItems()
+        public function getSubItems(): array
         {
             return $this->subItems;
         }
@@ -102,7 +102,7 @@ namespace App\Service\Menu;
         /**
          * @return $this
          */
-        public function addSubItem(MenuItem $item)
+        public function addSubItem(MenuItem $item): self
         {
             $this->subItems[] = $item;
 
@@ -124,10 +124,7 @@ namespace App\Service\Menu;
             return $this->icon;
         }
 
-        /**
-         * @return bool
-         */
-        public function checkActive(string $currentUrl)
+        public function checkActive(string $currentUrl): bool
         {
             if (null != $this->regexActive) {
                 $this->isActive = (preg_match($this->regexActive, $currentUrl));

@@ -14,7 +14,7 @@ namespace App\Form\Type;
 
     class CostType extends AbstractMPType
     {
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults([
                 'data_class' => Cost::class,
@@ -22,7 +22,7 @@ namespace App\Form\Type;
             $resolver->setRequired([]);
         }
 
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('type', EntityType::class, [

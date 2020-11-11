@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OpportunityStatusLogRepository")
@@ -13,29 +15,39 @@ class OpportunityStatusLog
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Opportunity", inversedBy="statusLogs")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var Opportunity
      */
     private $opportunity;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var UserInterface
      */
     private $createdBy;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @var DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\OpportunityStatus")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var OpportunityStatus
      */
     private $status;
 
@@ -56,24 +68,24 @@ class OpportunityStatusLog
         return $this;
     }
 
-    public function getCreatedBy(): ?User
+    public function getCreatedBy(): ?UserInterface
     {
         return $this->createdBy;
     }
 
-    public function setCreatedBy(?User $user): self
+    public function setCreatedBy(?UserInterface $user): self
     {
         $this->createdBy = $user;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $date): self
+    public function setCreatedAt(DateTime $date): self
     {
         $this->createdAt = $date;
 

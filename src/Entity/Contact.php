@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,42 +14,58 @@ class Contact
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=55)
+     *
+     * @var string
      */
     private $last_name;
 
     /**
      * @ORM\Column(type="string", length=55)
+     *
+     * @var string
      */
     private $first_name;
 
     /**
      * @ORM\Column(type="string", length=55)
+     *
+     * @var string
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=15, nullable=true)
+     *
+     * @var string|null
      */
     private $phone;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="contacts")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var Company|null
      */
     private $company;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Opportunity", mappedBy="contacts")
+     *
+     * @var ArrayCollection<int, Opportunity>
      */
     private $opportunities;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string|null
      */
     private $comments;
 
@@ -125,9 +140,9 @@ class Contact
     }
 
     /**
-     * @return Collection|Opportunity[]
+     * @return ArrayCollection<int, Opportunity>
      */
-    public function getOpportunities(): Collection
+    public function getOpportunities(): ArrayCollection
     {
         return $this->opportunities;
     }

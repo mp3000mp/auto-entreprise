@@ -8,7 +8,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractMPType extends AbstractType
 {
+    /**
+     * @var TranslatorInterface
+     */
     protected $translator;
+
+    /**
+     * @var JsonTranslator
+     */
     protected $jsonTranslator;
 
     public function __construct(TranslatorInterface $translator, JsonTranslator $jsonTranslator)
@@ -27,9 +34,6 @@ abstract class AbstractMPType extends AbstractType
         return $this->translator->trans($id, $params, $domain, $locale);
     }
 
-    /**
-     * @param $json
-     */
     protected function jsonTrans(array $json): string
     {
         return $this->jsonTranslator->trans($json);

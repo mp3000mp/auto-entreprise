@@ -21,7 +21,7 @@ class CostRepository extends ServiceEntityRepository
     /**
      * @return Cost[]|array
      */
-    public function findAll()
+    public function findAll(): array
     {
         return $this->findBy([], ['date' => 'DESC']);
     }

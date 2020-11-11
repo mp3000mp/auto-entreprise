@@ -1,11 +1,11 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * User: mperret
-     * Date: 24/10/2018
-     * Time: 16:37.
-     */
+/**
+ * Created by PhpStorm.
+ * User: mperret
+ * Date: 24/10/2018
+ * Time: 16:37.
+ */
 
 namespace App\Controller;
 
@@ -19,10 +19,8 @@ namespace App\Controller;
     {
         /**
          * @Route("/reporting", name="reporting.index")
-         *
-         * @return Response
          */
-        public function indexAction(Request $request, TranslatorInterface $translator)
+        public function indexAction(Request $request, TranslatorInterface $translator): Response
         {
             // render
             return $this->render('reporting/index.html.twig', [

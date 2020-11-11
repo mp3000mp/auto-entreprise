@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,38 +14,52 @@ class OpportunityFile
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @var string
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=500)
+     *
+     * @var string
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @var string
      */
     private $path;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Opportunity", inversedBy="opportunityFiles")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var Opportunity
      */
     private $opportunity;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var User
      */
     private $createdBy;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @var DateTime
      */
     private $createdAt;
 
@@ -113,12 +128,12 @@ class OpportunityFile
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 

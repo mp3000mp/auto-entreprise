@@ -19,6 +19,9 @@ namespace App\Form\Type;
 
     class TenderType extends AbstractMPType
     {
+        /**
+         * @var string
+         */
         protected $doc_tendersPath;
 
         public function __construct(TranslatorInterface $translator, JsonTranslator $jsonTranslator, string $doc_tendersPath)
@@ -27,7 +30,7 @@ namespace App\Form\Type;
             $this->doc_tendersPath = $doc_tendersPath;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults([
                 'data_class' => Tender::class,
@@ -36,7 +39,7 @@ namespace App\Form\Type;
             $resolver->setRequired([]);
         }
 
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('opportunity', EntityType::class, [
@@ -88,7 +91,7 @@ namespace App\Form\Type;
             $builder->addEventListener(FormEvents::SUBMIT, [$this, 'onSubmit']);
         }
 
-        public function onSubmit(FormEvent $event)
+        public function onSubmit(FormEvent $event): void
         {
             $form = $event->getForm();
             $tender = $form->getData();

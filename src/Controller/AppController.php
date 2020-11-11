@@ -22,10 +22,8 @@ class AppController extends AbstractController
 {
     /**
      * @Route("/", name="app.home")
-     *
-     * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         // get data
         $opportunities = $this->getDoctrine()->getRepository(Opportunity::class)
@@ -39,10 +37,8 @@ class AppController extends AbstractController
 
     /**
      * @Route("/language/{code}", name="app.language", requirements={"code"="[a-z]{2}"})
-     *
-     * @return Response
      */
-    public function language(Request $request, $code)
+    public function language(Request $request, string $code): Response
     {
         // si langue pas possible
         if (!in_array($code, ['fr', 'en'])) {

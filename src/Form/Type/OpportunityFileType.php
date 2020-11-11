@@ -23,8 +23,9 @@ namespace App\Form\Type;
      */
     class OpportunityFileType extends AbstractMPType
     {
-        protected $translator;
-
+        /**
+         * @var string
+         */
         protected $doc_path;
 
         public function __construct(TranslatorInterface $translator, JsonTranslator $jsonTranslator, string $doc_path)
@@ -33,7 +34,7 @@ namespace App\Form\Type;
             $this->doc_path = $doc_path;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults([
                 'data_class' => OpportunityFile::class,
@@ -42,7 +43,7 @@ namespace App\Form\Type;
             $resolver->setRequired([]);
         }
 
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('opportunity', EntityType::class, [
@@ -67,7 +68,7 @@ namespace App\Form\Type;
             $builder->addEventListener(FormEvents::SUBMIT, [$this, 'onSubmit']);
         }
 
-        public function buildView(FormView $view, FormInterface $form, array $options)
+        public function buildView(FormView $view, FormInterface $form, array $options): void
         {
             parent::buildView($view, $form, $options);
 
@@ -78,7 +79,7 @@ namespace App\Form\Type;
             }
         }
 
-        public function onSubmit(FormEvent $event)
+        public function onSubmit(FormEvent $event): void
         {
             $form = $event->getForm();
             $opportunityFile = $form->getData();

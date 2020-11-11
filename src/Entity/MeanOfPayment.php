@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,22 +13,27 @@ class MeanOfPayment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="smallint")
+     *
+     * @var int
      */
     private $position;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
+     *
+     * @var array
      */
     private $trad;
 
     public function __construct()
     {
-        $this->zzz = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -37,12 +41,12 @@ class MeanOfPayment
         return $this->id;
     }
 
-    public function getTrad()
+    public function getTrad(): array
     {
         return $this->trad;
     }
 
-    public function setTrad($trad): self
+    public function setTrad(array $trad): self
     {
         $this->trad = $trad;
 

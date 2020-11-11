@@ -13,32 +13,44 @@ class TenderRow
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="smallint")
+     *
+     * @var int
      */
     private $position;
 
     /**
      * @ORM\Column(type="float")
+     *
+     * @var float
      */
     private $soldDays;
 
     /**
      * @ORM\Column(type="string", length=55)
+     *
+     * @var string
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @var string
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Tender", inversedBy="tenderRows")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var Tender
      */
     private $tender;
 

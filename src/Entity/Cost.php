@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,27 +14,37 @@ class Cost
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @var DateTime
      */
     private $date;
 
     /**
      * @ORM\Column(type="text")
+     *
+     * @var string
      */
     private $description;
 
     /**
      * @ORM\Column(type="float")
+     *
+     * @var float
      */
     private $amount;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\CostType", inversedBy="costs")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var CostType|null
      */
     private $type;
 
@@ -42,12 +53,12 @@ class Cost
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?DateTime
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate(DateTime $date): self
     {
         $this->date = $date;
 

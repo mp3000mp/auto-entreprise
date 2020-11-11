@@ -1,11 +1,11 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * User: mperret
-     * Date: 24/10/2018
-     * Time: 16:37.
-     */
+/**
+ * Created by PhpStorm.
+ * User: mperret
+ * Date: 24/10/2018
+ * Time: 16:37.
+ */
 
 namespace App\Controller;
 
@@ -20,10 +20,8 @@ namespace App\Controller;
     {
         /**
          * @Route("/user", name="user.index")
-         *
-         * @return Response
          */
-        public function index(Request $request)
+        public function index(Request $request): Response
         {
             $list = $this->getDoctrine()->getRepository(User::class)
                          ->findAll();
@@ -36,10 +34,8 @@ namespace App\Controller;
 
         /**
          * @Route("/user/{id}", name="user.show", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function show(User $user)
+        public function show(User $user): Response
         {
             return $this->render('user/show.html.twig', [
                 'user' => $user,
@@ -48,10 +44,8 @@ namespace App\Controller;
 
         /**
          * @Route("/user/{id}/edit", name="user.edit", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function edit(Request $request, User $user)
+        public function edit(Request $request, User $user): Response
         {
             $form = $this->createForm(UserType::class, $user, []);
             $form->handleRequest($request);
@@ -72,10 +66,8 @@ namespace App\Controller;
 
         /**
          * @Route("/user/new", name="user.new")
-         *
-         * @return Response
          */
-        public function new(Request $request)
+        public function new(Request $request): Response
         {
             $user = new User();
 

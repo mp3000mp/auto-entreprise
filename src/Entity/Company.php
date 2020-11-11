@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,41 +14,57 @@ class Company
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     *
+     * @var string
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=100)
+     *
+     * @var string
      */
     private $street1;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     *
+     * @var string|null
      */
     private $street2;
 
     /**
      * @ORM\Column(type="string", length=55)
+     *
+     * @var string
      */
     private $city;
 
     /**
      * @ORM\Column(type="string", length=10)
+     *
+     * @var string
      */
     private $postcode;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Contact", mappedBy="company")
+     *
+     * @var ArrayCollection<int, Contact>
      */
     private $contacts;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Opportunity", mappedBy="company")
+     *
+     * @var ArrayCollection<int, Opportunity>
      */
     private $opportunities;
 
@@ -125,9 +140,9 @@ class Company
     }
 
     /**
-     * @return Collection|Contact[]
+     * @return ArrayCollection<int, Contact>
      */
-    public function getContacts(): Collection
+    public function getContacts(): ArrayCollection
     {
         return $this->contacts;
     }
@@ -156,9 +171,9 @@ class Company
     }
 
     /**
-     * @return Collection|Opportunity[]
+     * @return ArrayCollection<int, Opportunity>
      */
-    public function getOpportunities(): Collection
+    public function getOpportunities(): ArrayCollection
     {
         return $this->opportunities;
     }

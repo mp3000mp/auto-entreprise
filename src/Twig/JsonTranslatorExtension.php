@@ -8,6 +8,9 @@ use Twig\TwigFilter;
 
 class JsonTranslatorExtension extends AbstractExtension
 {
+    /**
+     * @var JsonTranslator
+     */
     private $jsonTranslator;
 
     public function __construct(JsonTranslator $jsonTranslator)
@@ -15,14 +18,14 @@ class JsonTranslatorExtension extends AbstractExtension
         $this->jsonTranslator = $jsonTranslator;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('jsonTrans', [$this, 'jsonTrans']),
         ];
     }
 
-    public function jsonTrans($json)
+    public function jsonTrans(array $json): string
     {
         return $this->jsonTranslator->trans($json);
     }

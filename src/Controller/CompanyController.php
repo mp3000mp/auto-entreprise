@@ -1,11 +1,11 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * User: mperret
-     * Date: 24/10/2018
-     * Time: 16:37.
-     */
+/**
+ * Created by PhpStorm.
+ * User: mperret
+ * Date: 24/10/2018
+ * Time: 16:37.
+ */
 
 namespace App\Controller;
 
@@ -20,10 +20,8 @@ namespace App\Controller;
     {
         /**
          * @Route("/company", name="company.index")
-         *
-         * @return Response
          */
-        public function index(Request $request)
+        public function index(Request $request): Response
         {
             $list = $this->getDoctrine()->getRepository(Company::class)
                 ->findAll();
@@ -36,10 +34,8 @@ namespace App\Controller;
 
         /**
          * @Route("/company/{id}", name="company.show", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function show(Company $company)
+        public function show(Company $company): Response
         {
             return $this->render('company/show.html.twig', [
                 'company' => $company,
@@ -48,12 +44,8 @@ namespace App\Controller;
 
         /**
          * @Route("/company/{id}/edit", name="company.edit", requirements={"id"="\d+"})
-         *
-         * @param Company $contact
-         *
-         * @return Response
          */
-        public function edit(Request $request, Company $company)
+        public function edit(Request $request, Company $company): Response
         {
             $form = $this->createForm(CompanyType::class, $company, []);
             $form->handleRequest($request);
@@ -74,10 +66,8 @@ namespace App\Controller;
 
         /**
          * @Route("/company/new", name="company.new")
-         *
-         * @return Response
          */
-        public function new(Request $request)
+        public function new(Request $request): Response
         {
             $company = new Company();
 

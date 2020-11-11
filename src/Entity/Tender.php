@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,93 +12,125 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tender
 {
-    const STATUS_SENT = 2;
-    const STATUS_ACCEPTED = 3;
-    const STATUS_REFUSED = 4;
-    const STATUS_CANCELED = 5;
+    public const STATUS_SENT = 2;
+    public const STATUS_ACCEPTED = 3;
+    public const STATUS_REFUSED = 4;
+    public const STATUS_CANCELED = 5;
 
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\TenderStatus")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var TenderStatus
      */
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Opportunity", inversedBy="tenders")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var Opportunity
      */
     private $opportunity;
 
     /**
      * @ORM\Column(type="smallint")
+     *
+     * @var int
      */
     private $version;
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $averageDailyRate;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @var DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $acceptedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $canceledAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $refusedAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
      */
     private $sentAt;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\TenderRow", mappedBy="tender")
+     *
+     * @var ArrayCollection<int, TenderRow>
      */
     private $tenderRows;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string|null
      */
     private $comments;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Workedtime", mappedBy="tender")
+     *
+     * @var ArrayCollection<int, WorkedTime>
      */
     private $workedTimes;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\TenderStatusLog", mappedBy="tender")
      * @ORM\OrderBy({"createdAt" = "ASC"})
+     *
+     * @var ArrayCollection<int, TenderStatusLog>
      */
     private $statusLogs;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @var string|null
      */
     private $tenderFileDocx;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @var string|null
      */
     private $tenderFilePdf;
 
@@ -161,60 +194,60 @@ class Tender
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getAcceptedAt(): ?\DateTimeInterface
+    public function getAcceptedAt(): ?DateTime
     {
         return $this->acceptedAt;
     }
 
-    public function setAcceptedAt(?\DateTimeInterface $acceptedAt): self
+    public function setAcceptedAt(?DateTime $acceptedAt): self
     {
         $this->acceptedAt = $acceptedAt;
 
         return $this;
     }
 
-    public function getCanceledAt(): ?\DateTimeInterface
+    public function getCanceledAt(): ?DateTime
     {
         return $this->canceledAt;
     }
 
-    public function setCanceledAt(?\DateTimeInterface $canceledAt): self
+    public function setCanceledAt(?DateTime $canceledAt): self
     {
         $this->canceledAt = $canceledAt;
 
         return $this;
     }
 
-    public function getRefusedAt(): ?\DateTimeInterface
+    public function getRefusedAt(): ?DateTime
     {
         return $this->refusedAt;
     }
 
-    public function setRefusedAt(?\DateTimeInterface $refusedAt): self
+    public function setRefusedAt(?DateTime $refusedAt): self
     {
         $this->refusedAt = $refusedAt;
 
         return $this;
     }
 
-    public function getSentAt(): ?\DateTimeInterface
+    public function getSentAt(): ?DateTime
     {
         return $this->sentAt;
     }
 
-    public function setSentAt(?\DateTimeInterface $sentAt): self
+    public function setSentAt(?DateTime $sentAt): self
     {
         $this->sentAt = $sentAt;
 
@@ -222,7 +255,7 @@ class Tender
     }
 
     /**
-     * @return Collection|TenderRow[]
+     * @return ArrayCollection<int, TenderRow>
      */
     public function getTenderRows(): Collection
     {
@@ -252,7 +285,7 @@ class Tender
         return $this;
     }
 
-    public function getSoldDays()
+    public function getSoldDays(): int
     {
         $soldDays = 0;
         foreach ($this->tenderRows as $tenderRow) {
@@ -262,7 +295,7 @@ class Tender
         return $soldDays;
     }
 
-    public function getAmount()
+    public function getAmount(): int
     {
         $amount = 0;
         foreach ($this->tenderRows as $tenderRow) {
@@ -272,7 +305,7 @@ class Tender
         return $amount;
     }
 
-    public function getNextPosition()
+    public function getNextPosition(): int
     {
         return count($this->getTenderRows()) + 1;
     }
@@ -290,7 +323,7 @@ class Tender
     }
 
     /**
-     * @return Collection|WorkedTime[]
+     * @return ArrayCollection<int, WorkedTime>
      */
     public function getWorkedTimes(): Collection
     {
@@ -311,16 +344,12 @@ class Tender
     {
         if ($this->workedTimes->contains($workedTime)) {
             $this->workedTimes->removeElement($workedTime);
-            // set the owning side to null (unless already changed)
-            if ($workedTime->getUser() === $this) {
-                $workedTime->setUser(null);
-            }
         }
 
         return $this;
     }
 
-    public function getTotalWorkedDays()
+    public function getTotalWorkedDays(): int
     {
         $n = 0;
         foreach ($this->workedTimes as $worked_time) {
@@ -331,7 +360,7 @@ class Tender
     }
 
     /**
-     * @return Collection|TenderStatusLog[]
+     * @return ArrayCollection<int, TenderStatusLog>
      */
     public function getStatusLogs(): Collection
     {
@@ -385,7 +414,7 @@ class Tender
         return $this;
     }
 
-    public function jsonize()
+    public function jsonize(): array
     {
         return [
             'id' => $this->id,

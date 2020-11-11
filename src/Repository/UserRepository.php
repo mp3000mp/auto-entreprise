@@ -6,6 +6,7 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -25,11 +26,9 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
      *
      * @param string $username
      *
-     * @return mixed|\Symfony\Component\Security\Core\User\UserInterface|null
-     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($username): ?UserInterface
     {
         return $this->createQueryBuilder('u')
                     ->where('u.email = :email')

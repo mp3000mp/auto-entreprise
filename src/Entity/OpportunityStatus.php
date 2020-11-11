@@ -13,16 +13,22 @@ class OpportunityStatus
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="json")
+     *
+     * @var array
      */
     private $trad = [];
 
     /**
      * @ORM\Column(type="smallint")
+     *
+     * @var int
      */
     private $position;
 
@@ -48,7 +54,7 @@ class OpportunityStatus
         return $this->trad;
     }
 
-    public function setTrad($trad): self
+    public function setTrad(array $trad): self
     {
         $this->trad = $trad;
 

@@ -23,10 +23,8 @@ class SecurityController extends AbstractController
      * page login normale.
      *
      * @Route("/login", name="login")
-     *
-     * @return Response
      */
-    public function login(AuthorizationCheckerInterface $authChecker, AuthenticationUtils $authenticationUtils)
+    public function login(AuthorizationCheckerInterface $authChecker, AuthenticationUtils $authenticationUtils): Response
     {
         // si déjà authentifié => home
         if ($authChecker->isGranted('ROLE_USER')) {
@@ -52,10 +50,8 @@ class SecurityController extends AbstractController
      * @Route("/forgottenpass/{email}", name="security.forgottenpass", requirements={"email"=".*"})
      *
      * @param $email
-     *
-     * @return Response
      */
-    public function forgottenPasswordAction($email)
+    public function forgottenPasswordAction(string $email): Response
     {
         // render
         return $this->render('app/index.html.twig', [
@@ -65,7 +61,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/logincheck", name="login_check", methods={"POST"})
      */
-    public function loginCheck()
+    public function loginCheck(): void
     {
         // def route
     }
@@ -73,7 +69,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/logout", name="logout")
      */
-    public function logout()
+    public function logout(): void
     {
         // def route
     }
@@ -81,7 +77,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/profile", name="security.my_account")
      */
-    public function myAccount(Request $request)
+    public function myAccount(Request $request): Response
     {
         $user = $this->getUser();
 

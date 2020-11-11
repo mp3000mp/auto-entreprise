@@ -13,7 +13,7 @@ class MenuTest extends TestCase
     /** @var Menu */
     private $menu;
 
-    private function initItems($currentUrl)
+    private function initItems(string $currentUrl): void
     {
         $this->menu = new Menu($currentUrl);
         $this->menu->addItem([
@@ -54,19 +54,16 @@ class MenuTest extends TestCase
     /**
      * @dataProvider getSubItemsProvider
      */
-    public function testGetSubItems($currentUrl, $expected)
+    public function testGetSubItems(string $currentUrl, int $expected): void
     {
         $this->initItems($currentUrl);
 
         $r = $this->menu->getSubItems();
 
-        $this->assertEquals($expected, count($r));
+        self::assertEquals($expected, count($r));
     }
 
-    /**
-     * @return array
-     */
-    public function getSubItemsProvider()
+    public function getSubItemsProvider(): array
     {
         return [
             'there are sub items' => ['/opportunity/new', 2],

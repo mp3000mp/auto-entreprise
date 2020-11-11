@@ -1,11 +1,11 @@
 <?php
 
-    /**
-     * Created by PhpStorm.
-     * User: mperret
-     * Date: 24/10/2018
-     * Time: 16:37.
-     */
+/**
+ * Created by PhpStorm.
+ * User: mperret
+ * Date: 24/10/2018
+ * Time: 16:37.
+ */
 
 namespace App\Controller;
 
@@ -21,10 +21,8 @@ namespace App\Controller;
     {
         /**
          * @Route("/cost", name="cost.index")
-         *
-         * @return Response
          */
-        public function index(Request $request, ReportingRepository $rep)
+        public function index(Request $request, ReportingRepository $rep): Response
         {
             $list = $this->getDoctrine()->getRepository(Cost::class)
                               ->findAll();
@@ -52,10 +50,8 @@ namespace App\Controller;
 
         /**
          * @Route("/cost/{id}/edit", name="cost.edit", requirements={"id"="\d+"})
-         *
-         * @return Response
          */
-        public function edit(Request $request, Cost $cost)
+        public function edit(Request $request, Cost $cost): Response
         {
             $form = $this->createForm(CostType::class, $cost, []);
             $form->handleRequest($request);
@@ -80,10 +76,8 @@ namespace App\Controller;
 
         /**
          * @Route("/cost/new", name="cost.new")
-         *
-         * @return Response
          */
-        public function new(Request $request)
+        public function new(Request $request): Response
         {
             $cost = new Cost();
 

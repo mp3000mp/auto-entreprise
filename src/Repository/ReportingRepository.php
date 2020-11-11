@@ -6,7 +6,13 @@ use Doctrine\DBAL\Connection;
 
 class ReportingRepository
 {
+    /**
+     * @var Connection
+     */
     protected $conn;
+    /**
+     * @var string
+     */
     private $interval = 'Q';
 
     public function __construct(Connection $conn)
@@ -14,10 +20,7 @@ class ReportingRepository
         $this->conn = $conn;
     }
 
-    /**
-     * @return string
-     */
-    private function generatedateField($reportType)
+    private function generatedateField(string $reportType): string
     {
         if ('M' == $this->interval) {
             return 'DATE_FORMAT(o.'.$reportType.", '%m/%Y')";
@@ -29,14 +32,14 @@ class ReportingRepository
     }
 
     /**
-     * @param $interval "M,Q,Y"
+     * interval can be "M,Q,Y".
      */
-    public function setInterval($interval)
+    public function setInterval(string $interval): void
     {
         $this->interval = $interval;
     }
 
-    public function createXTable()
+    public function createXTable(): string
     {
         $now = new \DateTime();
         $d = new \DateTime('2018-07-01');
@@ -59,13 +62,9 @@ class ReportingRepository
     }
 
     /**
-     * @param $reportType
-     *
-     * @return array
-     *
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function rptgTurnover($reportType)
+    public function rptgTurnover(string $reportType): array
     {
         $reportDate = [
             'turnover' => 'payed_at',
@@ -96,7 +95,7 @@ class ReportingRepository
         return $this->convertChartJs($data);
     }
 
-    private function convertChartJs($data)
+    private function convertChartJs(array $data): array
     {
         $structuredData = [
             'labels' => array_keys($data),

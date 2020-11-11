@@ -22,7 +22,7 @@ namespace App\EventListener;
             $this->tokenStorage = $tokenStorage;
         }
 
-        public function onFlush(OnFlushEventArgs $args)
+        public function onFlush(OnFlushEventArgs $args): void
         {
             $em = $args->getEntityManager();
             $uow = $em->getUnitOfWork();

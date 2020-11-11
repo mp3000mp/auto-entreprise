@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -14,30 +15,39 @@ class WorkedTime
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="float")
+     *
+     * @var float
      */
     private $workedDays;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Tender", inversedBy="workedTimes")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var Tender
      */
     private $tender;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="workedTimes")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @var User
      */
     private $user;
 
     /**
      * @Assert\LessThanOrEqual("now")
-     *
      * @ORM\Column(type="datetime")
+     *
+     * @var DateTime
      */
     private $date;
 
@@ -82,19 +92,19 @@ class WorkedTime
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?DateTime
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate(DateTime $date): self
     {
         $this->date = $date;
 
         return $this;
     }
 
-    public function jsonize()
+    public function jsonize(): array
     {
         return [
             'id' => $this->id,
