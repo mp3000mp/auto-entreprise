@@ -1,9 +1,11 @@
 Gestion de micro entreprise
 =============
 
+Manage your contacts, opportunities, tenders, incomes, taxes and costs in this amazing application. 
+
 [![In Progress](https://img.shields.io/badge/in%20progress-yes-red)](https://img.shields.io/badge/in%20progress-yes-red)
 
-todo
+This is just a POC.
 
 Documentation
 -------------
@@ -13,7 +15,23 @@ todo
 Installation
 ------------
 
-todo
+Clone this repository
+```
+git clone https://github.com/mp3000mp/auto-entreprise.git
+```
+
+Install scripts and database
+```shell
+composer install
+npm install
+npm run build
+php bin/console doctrine:database:create
+php bin/console doctrine:schema:create
+php bin/console doctrine:fixtures:load
+```
+
+Copy .env to .env.local and adapt to your configuration
+
 
 License
 -------
