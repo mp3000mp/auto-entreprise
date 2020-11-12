@@ -40,7 +40,8 @@
                 </div>#}
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
 
-                <a @click="test" href="{{ path('security.forgottenpass', {'email':''}) }}" title="{{ 'security.forgotten_password'|trans }}">{{ 'security.forgotten_password'|trans }}</a>
+                {# <a @click="test" href="{{ path('security.forgottenpass', {'email':''}) }}" title="{{ 'security.forgotten_password'|trans }}">{{ 'security.forgotten_password'|trans }}</a>#}
+                <a href="{{ path('forgotten_password') }}">{{ 'security.password.forgotten.label'|trans }}</a>
 
                 <button type="submit" class="float-right btn btn-primary">
                     {{ 'security.login'|trans }} <i class="fa fa-sign-in-alt"></i>

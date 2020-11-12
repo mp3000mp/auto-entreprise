@@ -5,6 +5,22 @@ app:
         500: Unexpected error
     home: Accueil
 
+email:
+    autosend: Cet email a été envoyé automatiquement, merci de ne pas y répondre.
+    greetings: Cordialement
+    hello: Bonjour
+    signature: L'équipe MP3000MP
+    subject:
+        forgottenpassword: Mot de passe oublié
+        welcome: Bienvenue sur Clinfile
+    welcome:
+        part1: "Votre compte MP3000MP vient d'être créé."
+        part2: 'Cliquer sur le lien suivant pour accéder à vos applications :'
+    forgottenpassword:
+        part1: 'Avez-vous oublier votre mot de passe ?'
+        part2: 'Cliquer sur le lien suivant pour en générer un nouveau :'
+        part3: "Si vous n'êtes pas à l'origine de ce message, merci de l'ignorer."
+
 entity:
     Company:
         action:
@@ -133,10 +149,28 @@ menu:
     reporting: Rapports
 
 security:
-    forgotten_password: Mot de passe oublié
     login: Connection
     logout: Déconnection
     missing_email: Email manquant
+    password:
+        change: Modifier le mot de passe
+        confirm: Confirmer le mot de passe
+        create: Créer un mot de passe
+        current: Mot de passe actuel
+        expired: Le mot de passe est expiré
+        forgotten:
+            err:
+                missing_email: Votre adresse email est requise pour vous envoyer un lien de réinitialisation de mot de passe.
+            label: Mot de passe oublié
+        generate: Générer un nouveau mot de passe
+        label: Mot de passe
+        new: Nouveau mot de passe
+        reset: Réinitialisation du mot de passe
+        reset_token:
+            err:
+                expired: Ce lien est expiré, merci d'en regénérer un ou de contacter votre administrateur.
+                account_not_found: Compte introuvable ou inactif, merci de contacter votre administrateur.
+            success: Un lien de réinitialisation de mot de passe vous a été envoyé.
     remember_me: Se souvenir
     reset_password: Réinitialiser mot de passe
 

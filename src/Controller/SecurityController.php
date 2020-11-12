@@ -48,8 +48,6 @@ class SecurityController extends AbstractController
      * on génère un token et on envoi un mail avec lien reset.
      *
      * @Route("/forgottenpass/{email}", name="security.forgottenpass", requirements={"email"=".*"})
-     *
-     * @param $email
      */
     public function forgottenPasswordAction(string $email): Response
     {

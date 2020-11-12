@@ -40,3 +40,5 @@ services:
         tags:
             - { name: kernel.event_listener, priority: 20, event: kernel.request, method: onKernelRequestPreAuth }
 
+    App\Service\Mailer\MailerService:
+        arguments: [ '%env(APP_ENV)%', '%env(EMAIL_FROM)%', '%env(EMAIL_ADMIN)%',]
