@@ -25,72 +25,84 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=55, unique=true)
+     *
      * @var string
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
      * @var string
      */
     private $password;
 
     /**
      * @ORM\Column(type="smallint")
+     *
      * @var int
      */
     private $nb_failed_connexion = 0;
 
     /**
      * @ORM\Column(type="boolean")
+     *
      * @var bool
      */
     private $is_active = false;
 
     /**
      * @ORM\Column(type="string", length=55)
+     *
      * @var string
      */
     private $first_name;
 
     /**
      * @ORM\Column(type="string", length=55)
+     *
      * @var string
      */
     private $last_name;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
      * @var DateTime|null
      */
     private $password_updated_at;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
      * @var string|null
      */
     private $reset_password_token;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
      * @var DateTime|null
      */
     private $resetPasswordAt;
 
     /**
      * @ORM\Column(type="json", nullable=false)
+     *
      * @var array
      */
     private $roles = [];
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\WorkedTime", mappedBy="user")
+     *
      * @var ArrayCollection<int, WorkedTime>
      */
     private $workedTimes;
 
     /**
      * @ORM\Column(type="string", length=2)
+     *
      * @var string
      */
     private $locale = 'fr';
@@ -343,7 +355,7 @@ class User implements UserInterface, \Serializable
     /**
      * @return ArrayCollection<int, WorkedTime>
      */
-    public function getWorkedTimes(): ArrayCollection
+    public function getWorkedTimes(): Collection
     {
         return $this->workedTimes;
     }
@@ -380,5 +392,4 @@ class User implements UserInterface, \Serializable
     {
         $this->locale = $locale;
     }
-
 }

@@ -2,5 +2,5 @@
 #    kernel_event:
 #        authenticators:
 #            - main
-#        priority: 1
+#        priority: -20
 #    user_provider: App\Entity\User

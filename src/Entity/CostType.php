@@ -67,7 +67,7 @@ class CostType
     /**
      * @return ArrayCollection<int, Cost>
      */
-    public function getCosts(): ArrayCollection
+    public function getCosts(): Collection
     {
         return $this->costs;
     }

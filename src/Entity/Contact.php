@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
+use App\Service\AuditTrail\AuditrailableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ContactRepository")
  */
-class Contact
+class Contact implements AuditrailableInterface
 {
     /**
      * @ORM\Id()
@@ -79,6 +81,16 @@ class Contact
         return $this->id;
     }
 
+    public function getAuditTrailString(): string
+    {
+        return $this->getFullName();
+    }
+
+    public function getFieldsToBeAuditTrailed(): array
+    {
+        return [];
+    }
+
     public function getLastName(): ?string
     {
         return $this->last_name;
@@ -142,7 +154,7 @@ class Contact
     /**
      * @return ArrayCollection<int, Opportunity>
      */
-    public function getOpportunities(): ArrayCollection
+    public function getOpportunities(): Collection
     {
         return $this->opportunities;
     }
