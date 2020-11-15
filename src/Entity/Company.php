@@ -204,10 +204,6 @@ class Company implements AuditrailableInterface
     {
         if ($this->opportunities->contains($opportunity)) {
             $this->opportunities->removeElement($opportunity);
-            // set the owning side to null (unless already changed)
-            if ($opportunity->getCompany() === $this) {
-                $opportunity->setCompany(null);
-            }
         }
 
         return $this;
