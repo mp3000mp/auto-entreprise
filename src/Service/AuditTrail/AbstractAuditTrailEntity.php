@@ -43,7 +43,7 @@ abstract class AbstractAuditTrailEntity
     protected $reason;
 
     /**
-     * @ORM\Column(type="smallint", options={"comment": "1=insert, 2=update, 3=delete, 4=attach, 5=detach"})
+     * @ORM\Column(type="smallint", options={"comment": "1=insert, 2=update, 3=delete"})
      *
      * @var int
      */

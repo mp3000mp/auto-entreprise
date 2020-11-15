@@ -64,4 +64,9 @@ class MeanOfPayment
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->trad['fr'];
+    }
 }

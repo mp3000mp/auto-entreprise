@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Service\AuditTrail\AuditrailableInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\OpportunityRepository")
  */
-class Opportunity
+class Opportunity implements AuditrailableInterface
 {
     public const STATUS_TRACKED = 1;
     public const STATUS_TENDER_ONGOING = 2;
@@ -37,7 +38,7 @@ class Opportunity
      *
      * @var string
      */
-    private $ref;
+    private $ref = '';
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -50,7 +51,7 @@ class Opportunity
      * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="opportunities")
      * @ORM\JoinColumn(nullable=false)
      *
-     * @var Company|null
+     * @var Company
      */
     private $company;
 
@@ -209,7 +210,17 @@ class Opportunity
         return $this->id;
     }
 
-    public function getRef(): ?string
+    public function getAuditTrailString(): string
+    {
+        return $this->getRef();
+    }
+
+    public function getFieldsToBeIgnored(): array
+    {
+        return [];
+    }
+
+    public function getRef(): string
     {
         return $this->ref;
     }
@@ -238,14 +249,14 @@ class Opportunity
         return $this->company;
     }
 
-    public function setCompany(?Company $company): self
+    public function setCompany(Company $company): self
     {
         $this->company = $company;
 
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTime
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
@@ -269,7 +280,7 @@ class Opportunity
         return $this;
     }
 
-    public function getDeliveredAt(): DateTime
+    public function getDeliveredAt(): ?DateTime
     {
         return $this->deliveredAt;
     }
@@ -281,7 +292,7 @@ class Opportunity
         return $this;
     }
 
-    public function getForecastedDelivery(): DateTime
+    public function getForecastedDelivery(): ?DateTime
     {
         return $this->forecastedDelivery;
     }

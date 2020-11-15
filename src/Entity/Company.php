@@ -86,7 +86,7 @@ class Company implements AuditrailableInterface
         return $this->getName();
     }
 
-    public function getFieldsToBeAuditTrailed(): array
+    public function getFieldsToBeIgnored(): array
     {
         return [];
     }

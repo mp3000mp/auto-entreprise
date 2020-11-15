@@ -86,7 +86,7 @@ class Contact implements AuditrailableInterface
         return $this->getFullName();
     }
 
-    public function getFieldsToBeAuditTrailed(): array
+    public function getFieldsToBeIgnored(): array
     {
         return [];
     }

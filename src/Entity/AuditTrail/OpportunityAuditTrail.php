@@ -2,29 +2,29 @@
 
 namespace App\Entity\AuditTrail;
 
-use App\Entity\Contact;
+use App\Entity\Opportunity;
 use App\Service\AuditTrail\AbstractAuditTrailEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  */
-class ContactAuditTrail extends AbstractAuditTrailEntity
+class OpportunityAuditTrail extends AbstractAuditTrailEntity
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Contact")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Opportunity")
      * @ORM\JoinColumn(nullable=false)
      *
-     * @var Contact
+     * @var Opportunity
      */
     private $entity;
 
-    public function getEntity(): Contact
+    public function getEntity(): Opportunity
     {
         return $this->entity;
     }
 
-    public function setEntity(Contact $entity): void
+    public function setEntity(Opportunity $entity): void
     {
         $this->entity = $entity;
     }

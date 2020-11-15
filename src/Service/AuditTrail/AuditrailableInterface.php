@@ -6,6 +6,5 @@ interface AuditrailableInterface
 {
     public function getAuditTrailString(): string;
 
-    public function getFieldsToBeAuditTrailed(): array;
-
+    public function getFieldsToBeIgnored(): array;
 }
