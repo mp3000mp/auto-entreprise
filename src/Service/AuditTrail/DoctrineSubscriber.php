@@ -1,10 +1,7 @@
 <?php
 
-namespace App\EventListener;
+namespace App\Service\AuditTrail;
 
-use App\Service\AuditTrail\AbstractAuditTrailEntity;
-use App\Service\AuditTrail\AuditrailableInterface;
-use App\Service\AuditTrail\AuditTrailException;
 use DateTime;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
@@ -159,7 +156,7 @@ class DoctrineSubscriber implements EventSubscriber
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
             $auditTrailEntity = $this->auditTrailInsert($uow, $entity);
             if (null !== $auditTrailEntity) {
-                $toBePersisted[] = $auditTrailEntity;
+                $toBePersisted[spl_object_id($entity)] = $auditTrailEntity;
             }
         }
 
@@ -167,7 +164,7 @@ class DoctrineSubscriber implements EventSubscriber
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
             $auditTrailEntity = $this->auditTrailUpdate($uow, $entity);
             if (null !== $auditTrailEntity) {
-                $toBePersisted[] = $auditTrailEntity;
+                $toBePersisted[spl_object_id($entity)] = $auditTrailEntity;
             }
         }
         foreach ($uow->getScheduledCollectionUpdates() as $collection) {
@@ -176,23 +173,38 @@ class DoctrineSubscriber implements EventSubscriber
             $before = $collection->getSnapShot();
             $auditTrailEntity = $this->getAuditTrailEntity($entity);
             if (null !== $auditTrailEntity) {
-                $auditTrailEntity->setModifType(2);
-                $details = [$mapping['fieldName'] => ['added' => [], 'removed' => []]];
-                // added
-                foreach ($collection as $assocEntity) {
-                    if (!in_array($assocEntity, $before)) {
-                        $details[$mapping['fieldName']]['added'][] = $this->getChangeString($assocEntity);
+                if(array_key_exists(spl_object_id($entity),$toBePersisted)){
+                    $auditTrailEntity = $toBePersisted[spl_object_id($entity)];
+                    $details = $auditTrailEntity->getDetails();
+                    $details[$mapping['fieldName']] = [];
+                    // added
+                    foreach ($collection as $assocEntity) {
+                        if (!in_array($assocEntity, $before)) {
+                            $details[$mapping['fieldName']][] = $this->getChangeString($assocEntity);
+                        }
                     }
-                }
-                // removed
-                foreach ($before as $assocEntity) {
-                    if (!$collection->contains($assocEntity)) {
-                        $details[$mapping['fieldName']]['removed'][] = $this->getChangeString($assocEntity);
+                    if (!empty($details[$mapping['fieldName']])) {
+                        $auditTrailEntity->setDetails($details);
                     }
-                }
-                if (!empty($details[$mapping['fieldName']]['added']) || $details[$mapping['fieldName']]['removed']) {
-                    $auditTrailEntity->setDetails($details);
-                    $toBePersisted[] = $auditTrailEntity;
+                }else{
+                    $auditTrailEntity->setModifType(2);
+                    $details = [$mapping['fieldName'] => ['added' => [], 'removed' => []]];
+                    // added
+                    foreach ($collection as $assocEntity) {
+                        if (!in_array($assocEntity, $before)) {
+                            $details[$mapping['fieldName']]['added'][] = $this->getChangeString($assocEntity);
+                        }
+                    }
+                    // removed
+                    foreach ($before as $assocEntity) {
+                        if (!$collection->contains($assocEntity)) {
+                            $details[$mapping['fieldName']]['removed'][] = $this->getChangeString($assocEntity);
+                        }
+                    }
+                    if (!empty($details[$mapping['fieldName']]['added']) || $details[$mapping['fieldName']]['removed']) {
+                        $auditTrailEntity->setDetails($details);
+                        $toBePersisted[spl_object_id($entity)] = $auditTrailEntity;
+                    }
                 }
             }
         }
