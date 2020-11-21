@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  mariadb:
+    image: mariadb:10.4
+    restart: on-failure
+    volumes:
+      - ./docker/mariadb/db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: user1
+      MYSQL_PASSWORD: password1
+
+  adminer:
+    image: adminer
+    restart: on-failure
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mariadb
+
+  php_apache:
+    build: ./docker/php_apache
+    restart: on-failure
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/php_apache/sites-enabled:/etc/apache2/sites-enabled
+    depends_on:
+      - mariadb
+
+  maildev:
+    image: djfarrelly/maildev
+    restart: on-failure
+    ports:
+      - "1080:80"
