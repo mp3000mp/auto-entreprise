@@ -1,0 +1,20 @@
+{% extends '@Mp3000mpTOS/layout.html.twig' %}
+
+{% block mp3000mp_tos %}
+<p>
+    My terms of service...
+</p>
+
+{% if is_granted('IS_AUTHENTICATED_FULLY') and not alreadySigned %}
+    <form method="post" action="{{ path('mp3000mp_tos.post') }}">
+        <p style="color: red; display: {{ error is defined ? 'block' : 'none'}};">{{ 'submit_error'|trans({},
+            'Mp3000mpTOSBundle') }}</p>
+        <label for="mp3000mp-tos">
+            <input type="checkbox" name="mp3000mp-tos" id="mp3000mp-tos" value="agreed" required="required" />
+            {{ 'i_agree'|trans({}, 'Mp3000mpTOSBundle') }}
+        </label>
+        <input type="submit" value="{{ 'submit_button_label'|trans({}, 'Mp3000mpTOSBundle') }}" />
+    </form>
+{% endif %}
+
+{% endblock %}
