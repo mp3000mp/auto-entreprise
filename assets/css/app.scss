@@ -15,6 +15,30 @@ $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 
 
 
+body {
+  background-color: $c-grey-light;
+  color: $c-grey-dark;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: $c-grey-dark;
+    color: $c-grey-light;
+  }
+  table {
+    &.table {
+      color: $c-grey-light;
+    }
+  }
+  .card {
+    background-color: $c-grey-dark;
+  }
+  .list-group-item {
+    background-color: $c-grey-dark;
+  }
+}
+
+
+
 .c-red{
   color: $c-red;
 }
@@ -34,7 +58,7 @@ $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
   padding: 0;
   min-width: 102px;
   text-align: center;
-  
+
   a{
     text-align: center;
   }
