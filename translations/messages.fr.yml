@@ -129,9 +129,11 @@ field:
 form:
     add: Ajouter
     archive: Archiver
+    back: Retour
     cancel: Annuler
     create: Créer
     delete: Supprimer
+    next: Suivant
     new: Nouveau
     remove: Supprimer
     restore: Restaurer

@@ -6,6 +6,7 @@
     {{ form_start(form) }}
     {{ form_widget(form) }}
     <button type="submit" class="btn btn-primary" type="submit">{{ 'form.create'|trans }}</button>
+    <a href="{{ path('tender.show', {'id': app.request.query.get('tender_id')}) }}" class="btn btn-secondary">{{ 'form.back'|trans }}</a>
     {{ form_end(form) }}
 
 {% endblock %}

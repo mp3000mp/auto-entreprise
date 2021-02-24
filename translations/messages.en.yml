@@ -127,10 +127,12 @@ field:
 form:
     add: Add
     archive: Archive
+    back: Back
     cancel: Cancel
     create: Create
     delete: Delete
     edit: Edit
+    next: Next
     new: New
     remove: Remove
     restore: Restore
