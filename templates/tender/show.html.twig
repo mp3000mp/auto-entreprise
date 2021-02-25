@@ -25,12 +25,15 @@
         <h2>{{ 'entity.TenderRow.label'|trans({'%count%': 2}) }}</h2>
         <a class="btn btn-primary" href="{{ path('tender_row.new', {'tender_id': tender.id}) }}">{{ 'entity.TenderRow.action.new'|trans }}</a><br />
         <table class="table table-striped">
+        <thead>
             <tr>
                 <th>{{ 'entity.TenderRow.field.title'|trans }}</th>
                 <th>{{ 'field.description'|trans }}</th>
                 <th>{{ 'entity.Tender.field.sold_days'|trans }}</th>
                 <th>{{ 'entity.Tender.field.amount'|trans }}</th>
             </tr>
+        </thead>
+        <tbody>
             {% for tenderRow in tender.tenderRows %}
                 <tr>
                     <td><a href="{{ path('tender_row.show', {'id': tenderRow.id}) }}">{{ tenderRow.position }}. {{ tenderRow.title }}</a></td>
@@ -39,8 +42,16 @@
                     <td>{{ tenderRow.soldDays*tender.averageDailyRate }}</td>
                 </tr>
             {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr class="total">
+                <th colspan="2">Total</th>
+                <td>{{ totalSoldDays }}</td>
+                <td>{{ totalSoldDays*tender.averageDailyRate }}</td>
+            </tr>
+        <tfoot>
         </table>
-        <u class="float-right mr-3"><strong>{{ 'entity.Tender.field.average_daily_rate'|trans }}: {{ tender.averageDailyRate }}</strong></u>
+        <div class="float-right mr-3 text-decoration-underline"><strong>{{ 'entity.Tender.field.average_daily_rate'|trans }}: {{ tender.averageDailyRate }}</strong></div>
 
         <h2>
             {{ 'entity.WorkedTime.label'|trans({'%count%': 2}) }}

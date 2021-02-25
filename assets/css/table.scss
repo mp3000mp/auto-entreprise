@@ -1,9 +1,20 @@
 
-table{
+table.table {
   border-left: 1px solid $c-blue;
   margin-top: 10px;
-}
 
-table tr:hover{
-  background-color: $c-grey-light;
+  td, th {
+    padding: 0.2rem;
+  }
+
+  tbody {
+    tr:hover{
+      background-color: $c-grey-light;
+      color: $c-grey-dark;
+    }
+  }
+
+  tr.total {
+    font-weight: bold;
+  }
 }

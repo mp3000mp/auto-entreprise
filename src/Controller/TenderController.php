@@ -38,6 +38,10 @@ namespace App\Controller;
          */
         public function show(Tender $tender): Response
         {
+            $soldDays = array_map(function($tenderRow){
+                return $tenderRow->getSoldDays();
+            }, $tender->getTenderRows()->toArray());
+
             return $this->render('tender/show.html.twig', [
                 'tender' => $tender,
                 'vjsData' => [
@@ -46,6 +50,7 @@ namespace App\Controller;
                         return $workedTime->jsonize();
                     }, $tender->getWorkedTimes()->toArray()),
                 ],
+                'totalSoldDays' => array_sum($soldDays),
             ]);
         }
 
