@@ -173,7 +173,7 @@ class DoctrineSubscriber implements EventSubscriber
             $before = $collection->getSnapShot();
             $auditTrailEntity = $this->getAuditTrailEntity($entity);
             if (null !== $auditTrailEntity) {
-                if(array_key_exists(spl_object_id($entity),$toBePersisted)){
+                if (array_key_exists(spl_object_id($entity), $toBePersisted)) {
                     $auditTrailEntity = $toBePersisted[spl_object_id($entity)];
                     $details = $auditTrailEntity->getDetails();
                     $details[$mapping['fieldName']] = [];
@@ -186,7 +186,7 @@ class DoctrineSubscriber implements EventSubscriber
                     if (!empty($details[$mapping['fieldName']])) {
                         $auditTrailEntity->setDetails($details);
                     }
-                }else{
+                } else {
                     $auditTrailEntity->setModifType(2);
                     $details = [$mapping['fieldName'] => ['added' => [], 'removed' => []]];
                     // added

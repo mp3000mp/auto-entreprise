@@ -38,7 +38,7 @@ namespace App\Controller;
          */
         public function show(Tender $tender): Response
         {
-            $soldDays = array_map(function($tenderRow){
+            $soldDays = array_map(function ($tenderRow) {
                 return $tenderRow->getSoldDays();
             }, $tender->getTenderRows()->toArray());
 
