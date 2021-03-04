@@ -8,3 +8,4 @@ twig:
     globals:
         siret: '%env(resolve:SIRET)%'
         secu: '%env(resolve:SECU)%'
+        version: '%env(resolve:VERSION)%'

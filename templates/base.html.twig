@@ -29,9 +29,13 @@
         </div>
     </main>
 
-        {% block javascripts %}
-            <script src="{{ asset('build/runtime.js') }}"></script>
-            <script src="{{ asset('build/app.js') }}"></script>
-        {% endblock %}
+    <footer class="container-fluid">
+        v{{ version }} - <a href="https://github.com/mp3000mp/auto-entreprise" title="github">mp3000mp</a>
+    </footer>
+
+    {% block javascripts %}
+        <script src="{{ asset('build/runtime.js') }}"></script>
+        <script src="{{ asset('build/app.js') }}"></script>
+    {% endblock %}
     </body>
 </html>
