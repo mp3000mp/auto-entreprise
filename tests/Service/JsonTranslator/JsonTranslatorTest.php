@@ -25,7 +25,7 @@ class JsonTranslatorTest extends TestCase
     /**
      * @dataProvider transProvider
      */
-    public function testTrans(string $locale, array $json, string $expected): void
+    public function testTrans(string $locale, ?array $json, string $expected): void
     {
         $requestStack = $this->getRequestStack();
         $requestStack->getCurrentRequest()->setLocale($locale);

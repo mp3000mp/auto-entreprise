@@ -31,7 +31,7 @@ services:
       - mariadb
 
   maildev:
-    image: djfarrelly/maildev
+    image: maildev/maildev
     restart: on-failure
     ports:
       - "1080:80"
