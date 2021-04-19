@@ -1,4 +1,6 @@
 {
+    "name": "mp3000mp/auto-entreprise",
+    "description": "Manage your contacts, opportunities, tenders, incomes, taxes and costs in this amazing application. ",
     "type": "project",
     "license": "Apache-2.0",
     "require": {

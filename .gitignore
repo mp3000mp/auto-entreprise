@@ -35,3 +35,8 @@ package-lock.json
 
 ### docker
 /docker/mariadb/db
+
+### ansible
+/ansible/vars.yml
+/ansible/roles/*/vars/main.yml
+/ansible/roles/build_back/template/.env.local.j2

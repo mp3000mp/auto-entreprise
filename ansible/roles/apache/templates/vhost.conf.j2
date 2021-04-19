@@ -1,0 +1,8 @@
+<VirtualHost *:80>
+        ServerName {{ server_name }}
+        ProxyPreserveHost On
+
+        ProxyPass / http://localhost:{{ proxy_port }}/
+        ProxyPassReverse / http://localhost:{{ proxy_port }}/
+        ProxyPassReverseCookieDomain localhost {{ server_name }}
+</VirtualHost>

@@ -1,0 +1,9 @@
+- name: Npm install
+  npm:
+    ci: true
+    path: "{{ app_directory }}"
+
+- name: Npm run build
+  shell:
+    cmd: npm run build
+    chdir: "{{ app_directory }}"

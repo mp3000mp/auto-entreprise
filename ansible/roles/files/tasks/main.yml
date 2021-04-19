@@ -1,0 +1,73 @@
+- name: Create directory
+  become: true
+  become_user: root
+  file:
+    path: "{{ app_directory }}"
+    state: directory
+    owner: "{{ maintainer_user }}"
+    group: "{{ maintainer_user }}"
+    mode: '755'
+    recurse: true
+
+- name: Deploy files
+  copy:
+    src: '{{ playbook_dir }}/../{{ item }}'
+    dest: "{{ app_directory }}/"
+    owner: "{{ maintainer_user }}"
+    group: "{{ maintainer_user }}"
+    mode: '755'
+  loop:
+    - '.env'
+    - 'composer.json'
+    - 'composer.lock'
+    - 'docker-compose.yml'
+    - 'package.json'
+    - 'package-lock.json'
+    - 'symfony.lock'
+    - 'webpack.config.js'
+
+- name: Deploy directories
+  synchronize:
+    delete: true
+    src: '{{ playbook_dir }}/../{{ item }}'
+    dest: "{{ app_directory }}/"
+    recursive: true
+    rsync_opts:
+      - "--chown={{ maintainer_user }}:{{ maintainer_user }}"
+      - '--chmod=0755'
+  loop:
+    - 'assets'
+    - 'bin'
+    - 'config'
+    - 'src'
+    - 'templates'
+    - 'translations'
+
+- name: Deploy dockerfiles
+  synchronize:
+    delete: true
+    src: '{{ playbook_dir }}/../docker'
+    dest: "{{ app_directory }}/"
+    recursive: true
+    rsync_opts:
+      - "--chown={{ maintainer_user }}:{{ maintainer_user }}"
+      - '--chmod=0755'
+      - '--exclude=db'
+
+- name: Deploy public
+  synchronize:
+    delete: true
+    src: '{{ playbook_dir }}/../public'
+    dest: "{{ app_directory }}/"
+    recursive: true
+    rsync_opts:
+      - "--chown={{ maintainer_user }}:{{ maintainer_user }}"
+      - '--chmod=0755'
+      - '--exclude=build'
+
+- name: Remove files
+  file:
+    state: absent
+    path: "{{ app_directory }}/{{ item }}"
+  loop:
+    - 'bin/phpunit'

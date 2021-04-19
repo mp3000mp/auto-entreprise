@@ -1,0 +1,21 @@
+- name: Create vhost
+  become: true
+  become_user: root
+  template:
+    src: template/vhost.conf.j2
+    dest: "/etc/apache2/sites-available/{{ server_name }}.conf"
+    owner: "{{ maintainer_user }}"
+    group: "{{ maintainer_user }}"
+    mode: '0644'
+
+- name: Enable site
+  become: true
+  become_user: root
+  command: a2ensite {{ server_name }}
+
+- name: Certbot
+  become: true
+  become_user: root
+  shell:
+    cmd: "certbot --apache --agree-tos --non-interactive -d {{ server_name }} -m {{ admin_email }}"
+  notify: restart apache2

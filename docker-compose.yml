@@ -1,13 +1,17 @@
 version: '3'
 
 services:
+  # todo create base + password var non gittées
   mariadb:
     image: mariadb:10.4
     restart: on-failure
     volumes:
       - ./docker/mariadb/db:/var/lib/mysql
+#      - ./docker/mariadb/conf/my.cnf:/etc/mysql/conf.d/my.cnf
+#      - ./docker/mariadb/log:/var/log/mysql
     environment:
       MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: auto_entreprise
       MYSQL_USER: user1
       MYSQL_PASSWORD: password1
 
@@ -23,10 +27,11 @@ services:
     build: ./docker/php_apache
     restart: on-failure
     ports:
-      - "80:80"
+      - "8081:80"
     volumes:
       - .:/var/www/html
       - ./docker/php_apache/sites-enabled:/etc/apache2/sites-enabled
+#      - ./docker/php_apache/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini
     depends_on:
       - mariadb
 
