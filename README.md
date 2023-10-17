@@ -26,8 +26,17 @@ composer install
 npm install
 npm run build
 php bin/console doctrine:database:create
-php bin/console doctrine:schema:create
+php bin/console doctrine:migration:migrate
 php bin/console doctrine:fixtures:load
+```
+
+OR 
+ - change ansible/inventory/hosts
+ - change ansible/vars.yml 
+ - change ansible/roles/build_back/template/.env.local.j2
+
+```shell
+ansible-playbook -i ansible/inventory/hosts ansible/site.yml
 ```
 
 Copy .env to .env.local and adapt to your configuration

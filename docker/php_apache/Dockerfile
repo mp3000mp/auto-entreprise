@@ -18,9 +18,10 @@ RUN docker-php-ext-install pdo_mysql intl \
     && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.remote_host = host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-RUN mkdir -p /var/www/html/var \
+RUN mkdir -p /var/www/html/var /var/www/html/var/log /var/www/html/var/cache \
     && chown -R $(id -u):$(id -g) /var/www/html/var \
-    && chmod -R 775 /var/www/html/var
+    && chmod -R 777 /var/www/html/var
+# todo 777...
 
 # config apache
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \

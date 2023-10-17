@@ -1,5 +1,6 @@
 app_directory: /var/www/auto-entreprise
 maintainer_user: user1
+
 server_name: mp3000.fr
 proxy_port: 8081
 admin_email: mperret@mp3000.fr

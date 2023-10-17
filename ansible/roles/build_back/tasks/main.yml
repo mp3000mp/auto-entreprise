@@ -21,4 +21,8 @@
     cmd: docker-compose exec php_apache bash -l -c "php bin/console doctrine:migration:migrate --no-interaction"
     chdir: "{{ app_directory }}"
 
-# problème de droits sur /var/cache
+# todo only first time
+#- name: Composer fixtures
+#  shell:
+#    cmd: docker-compose exec php_apache bash -l -c "php bin/console doctrine:fixtures:load -e dev"
+#    chdir: "{{ app_directory }}"

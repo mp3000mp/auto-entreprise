@@ -18,8 +18,8 @@ services:
   adminer:
     image: adminer
     restart: on-failure
-    ports:
-      - '8080:8080'
+#    ports:
+#      - '8080:8080'
     depends_on:
       - mariadb
 
@@ -38,5 +38,5 @@ services:
   maildev:
     image: maildev/maildev
     restart: on-failure
-    ports:
-      - "1080:80"
+#    ports:
+#      - "1080:80"
