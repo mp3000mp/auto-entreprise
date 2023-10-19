@@ -13,18 +13,18 @@ class OpportunityStatusLog
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Opportunity::class, inversedBy: 'statusLogs')]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private Opportunity $Opportunity;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private User $createdBy;
 
     #[ORM\Column]
     private \DateTime $createdAt;
 
     #[ORM\ManyToOne(targetEntity: OpportunityStatus::class)]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private OpportunityStatus $status;
 
     public function getId(): ?int

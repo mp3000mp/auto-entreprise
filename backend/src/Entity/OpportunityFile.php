@@ -22,11 +22,11 @@ class OpportunityFile
     private string $path;
 
     #[ORM\ManyToOne(targetEntity: Opportunity::class, inversedBy: 'opportunityFiles')]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private Opportunity $opportunity;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private User $createdBy;
 
     #[ORM\Column]

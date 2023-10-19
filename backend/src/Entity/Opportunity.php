@@ -23,55 +23,56 @@ class Opportunity implements AuditrailableInterface
     private string $description;
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'opportunities')]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private Company $company;
 
     #[ORM\Column]
     private \DateTime $createdAt;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $canceledAt;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $billedAt;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $payedAt;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $purchasedAt;
 
     #[ORM\Column]
     private \DateTime $trackedAt;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $deliveredAt;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $forecastedDelivery;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $customerRef1 = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $customerRef2 = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $paymentRef = null;
 
     /**
      * @var ArrayCollection<int, Contact>
      */
     #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'opportunities')]
+    #[ORM\JoinTable('opportunity_contact')]
     private Collection $contacts;
 
     #[ORM\ManyToOne(targetEntity: OpportunityStatus::class)]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private OpportunityStatus $status;
 
     #[ORM\ManyToOne(targetEntity: MeanOfPayment::class)]
-    #[ORM\JoinColumn]
-    private MeanOfPayment $meanOfPayment;
+    #[ORM\JoinColumn(nullable: true)]
+    private ?MeanOfPayment $meanOfPayment;
 
     /**
      * @var ArrayCollection<int, Tender>
@@ -80,7 +81,7 @@ class Opportunity implements AuditrailableInterface
     #[ORM\OrderBy(['version' => 'DESC'])]
     private Collection $tenders;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $comments = null;
 
     /**
@@ -90,10 +91,10 @@ class Opportunity implements AuditrailableInterface
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $statusLogs;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $billFileDocx = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $billFilePdf = null;
 
     /**
@@ -327,12 +328,12 @@ class Opportunity implements AuditrailableInterface
         return $this;
     }
 
-    public function getMeanOfPayment(): MeanOfPayment
+    public function getMeanOfPayment(): ?MeanOfPayment
     {
         return $this->meanOfPayment;
     }
 
-    public function setMeanOfPayment(MeanOfPayment $meanOfPayment): self
+    public function setMeanOfPayment(?MeanOfPayment $meanOfPayment): self
     {
         $this->meanOfPayment = $meanOfPayment;
 

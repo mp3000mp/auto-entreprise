@@ -21,7 +21,7 @@ class Company implements AuditrailableInterface
     #[ORM\Column(length: 100)]
     private string $street1;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $street2;
 
     #[ORM\Column(length: 55)]

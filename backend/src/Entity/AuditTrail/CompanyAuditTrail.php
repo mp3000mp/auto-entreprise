@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class CompanyAuditTrail extends AbstractAuditTrailEntity
 {
     #[ORM\ManyToOne(targetEntity: Company::class)]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private Company $entity;
 
     public function getEntity(): Company

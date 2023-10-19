@@ -24,7 +24,7 @@ class User implements UserInterface, \Serializable
     #[ORM\Column(length: 55, unique: true)]
     private string $username;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $password = null;
 
     /**

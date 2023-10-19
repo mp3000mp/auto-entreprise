@@ -18,11 +18,11 @@ class WorkedTime
 
     // todo opportunity ?
     #[ORM\ManyToOne(targetEntity: Tender::class, inversedBy: 'workedTimes')]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private Tender $tender;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'workedTimes')]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private User $user;
 
     #[Assert\LessThanOrEqual('now')]

@@ -26,7 +26,7 @@ class TenderRow
     private string $description;
 
     #[ORM\ManyToOne(targetEntity: Tender::class, inversedBy: 'tenderRows')]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private Tender $tender;
 
     public function getId(): ?int

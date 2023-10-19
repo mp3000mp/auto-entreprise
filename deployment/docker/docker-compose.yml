@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  mariadb:
+    image: mariadb:10.9
+    user: "1000:1000"
+    environment:
+      MARIADB_ROOT_PASSWORD: "$MARIADB_ROOT_PASSWORD"
+      MARIADB_DATABASE: "$MARIADB_DATABASE"
+      MARIADB_USER: "$MARIADB_USER"
+      MARIADB_PASSWORD: "$MARIADB_PASSWORD"
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mariadb/db:/var/lib/mysql
+      - ./mariadb/conf/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mariadb/log:/var/log/mysql
+
+  mariadb_test:
+    image: mariadb:10.9
+    user: "1000:1000"
+    environment:
+      MARIADB_ROOT_PASSWORD: secret
+      MARIADB_DATABASE: media_scrapper_test
+      MARIADB_USER: user1
+      MARIADB_PASSWORD: password1
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mariadb_test/db:/var/lib/mysql
+      - ./mariadb_test/conf/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mariadb/log:/var/log/mysql
+
+  adminer:
+    image: adminer
+    user: "1000:1000"
+    ports:
+      - '5001:8080'
+    depends_on:
+      - mariadb

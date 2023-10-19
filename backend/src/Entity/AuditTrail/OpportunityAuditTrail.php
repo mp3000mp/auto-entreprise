@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class OpportunityAuditTrail extends AbstractAuditTrailEntity
 {
     #[ORM\ManyToOne(targetEntity: Opportunity::class)]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private Opportunity $entity;
 
     public function getEntity(): Opportunity

@@ -16,11 +16,11 @@ class Tender
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: TenderStatus::class)]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private TenderStatus $status;
 
     #[ORM\ManyToOne(targetEntity: Opportunity::class, inversedBy: 'tenders')]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private Opportunity $opportunity;
 
     #[ORM\Column]
@@ -32,16 +32,16 @@ class Tender
     #[ORM\Column]
     private \DateTime $createdAt;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $acceptedAt;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $canceledAt;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $refusedAt;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTime $sentAt;
 
     /**
@@ -51,7 +51,7 @@ class Tender
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $tenderRows;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $comments = null;
 
     /**
@@ -67,10 +67,10 @@ class Tender
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $statusLogs;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $tenderFileDocx = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $tenderFilePdf = null;
 
     public function __construct()

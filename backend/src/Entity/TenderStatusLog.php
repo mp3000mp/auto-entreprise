@@ -13,18 +13,18 @@ class TenderStatusLog
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Tender::class, inversedBy: 'statusLogs')]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private Tender $tender;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private User $createdBy;
 
     #[ORM\Column]
     private \DateTime $createdAt;
 
     #[ORM\ManyToOne(targetEntity: TenderStatus::class)]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private TenderStatus $status;
 
     public function getId(): ?int

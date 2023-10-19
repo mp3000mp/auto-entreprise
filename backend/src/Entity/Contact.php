@@ -24,23 +24,23 @@ class Contact implements AuditrailableInterface
     private string $first_name;
 
     #[ORM\Column(length: 55, unique: true)]
-    private ?string $email;
+    private string $email;
 
-    #[ORM\Column(length: 15)]
+    #[ORM\Column(length: 15, nullable: true)]
     private ?string $phone = null;
 
     // todo old companies
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'contacts')]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private Company $company;
 
     /**
      * @var ArrayCollection<int, Opportunity>
      */
-    #[ORM\ManyToMany(targetEntity: Opportunity::class, inversedBy: 'contacts')]
+    #[ORM\ManyToMany(targetEntity: Opportunity::class, mappedBy: 'contacts')]
     private Collection $opportunities;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $comments = null;
 
     public function __construct()

@@ -11,9 +11,10 @@ abstract class AbstractAuditTrailEntity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
     protected ?User $user;
 
     #[ORM\Column]
@@ -29,7 +30,7 @@ abstract class AbstractAuditTrailEntity
     /**
      * @var array<string, mixed>
      */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: 'json', nullable: true)]
     protected ?array $details;
 
     public function getId(): int

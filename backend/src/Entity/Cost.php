@@ -22,7 +22,7 @@ class Cost
     private float $amount;
 
     #[ORM\ManyToOne(targetEntity: CostType::class)]
-    #[ORM\JoinColumn]
+    #[ORM\JoinColumn(nullable: false)]
     private CostType $type;
 
     public function getId(): ?int
