@@ -21,7 +21,7 @@ services:
     user: "1000:1000"
     environment:
       MARIADB_ROOT_PASSWORD: secret
-      MARIADB_DATABASE: media_scrapper_test
+      MARIADB_DATABASE: auto_entreprise_test
       MARIADB_USER: user1
       MARIADB_PASSWORD: password1
     ports:

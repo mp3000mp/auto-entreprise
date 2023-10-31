@@ -79,7 +79,8 @@
         "cs": "php-cs-fixer fix --dry-run --allow-risky=yes",
         "csf": "php-cs-fixer fix --allow-risky=yes",
         "ps": "phpstan analyse -c phpstan.dist.neon",
-        "tu": "vendor/bin/simple-phpunit",
+        "tu": "vendor/bin/simple-phpunit --testdox",
+        "tu2": "phpunit --bootstrap ./tests/bootstrap.php --testdox ./tests/",
         "post-install-cmd": [
             "@auto-scripts"
         ],

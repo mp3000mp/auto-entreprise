@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity]
 #[UniqueEntity(fields: 'email')]
 #[UniqueEntity(fields: 'username')]
-class User implements UserInterface, \Serializable
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -130,10 +130,9 @@ class User implements UserInterface, \Serializable
     {
     }
 
-    /** @see \Serializable::serialize() */
-    public function serialize()
+    public function __serialize(): array
     {
-        return serialize([
+        return [
             $this->id,
             $this->email,
             $this->username,
@@ -141,21 +140,19 @@ class User implements UserInterface, \Serializable
             $this->roles,
             // see section on salt below
             // $this->salt,
-        ]);
+        ];
     }
 
-    /** @see \Serializable::unserialize() */
-    public function unserialize($serialized): void
+    public function __unserialize(array $serialized): void
     {
-        list(
+        [
             $this->id,
             $this->email,
             $this->username,
             $this->password,
             $this->roles,
-            // see section on salt below
             // $this->salt
-        ) = unserialize($serialized, ['allowed_classes' => false]);
+        ] = $serialized;
     }
 
     /**
