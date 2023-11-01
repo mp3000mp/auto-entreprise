@@ -1,0 +1,32 @@
+@import '~bootstrap/scss/functions';
+
+@import 'bootstrap-vars-override';
+
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/variables-dark';
+
+@import 'bootstrap-maps-override';
+
+@import '~bootstrap/scss/maps';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/root';
+
+@import '~bootstrap/scss/utilities';
+@import '~bootstrap/scss/reboot';
+@import '~bootstrap/scss/type';
+@import '~bootstrap/scss/images';
+@import '~bootstrap/scss/containers';
+@import '~bootstrap/scss/grid';
+@import '~bootstrap/scss/helpers';
+
+@import '~bootstrap/scss/forms';
+@import '~bootstrap/scss/buttons';
+@import '~bootstrap/scss/nav';
+@import '~bootstrap/scss/badge';
+@import '~bootstrap/scss/close';
+@import '~bootstrap/scss/toasts';
+@import '~bootstrap/scss/spinners';
+
+@import '~bootstrap/scss/utilities/api';
+
+@import 'layout';
