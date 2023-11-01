@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
 class TenderStatusLog
@@ -21,10 +22,12 @@ class TenderStatusLog
     private User $createdBy;
 
     #[ORM\Column]
+    #[Groups(['tender_show'])]
     private \DateTime $createdAt;
 
     #[ORM\ManyToOne(targetEntity: TenderStatus::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['tender_show'])]
     private TenderStatus $status;
 
     public function getId(): ?int

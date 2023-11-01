@@ -6,10 +6,11 @@
     "require": {
         "php": ">=8.1",
         "ext-ctype": "*",
-        "ext-mbstring": "*",
         "ext-iconv": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
         "ext-mysql": "*",
+        "api-platform/core": "^3.2",
         "doctrine/doctrine-bundle": "^2.10",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.16",
@@ -79,8 +80,8 @@
         "cs": "php-cs-fixer fix --dry-run --allow-risky=yes",
         "csf": "php-cs-fixer fix --allow-risky=yes",
         "ps": "phpstan analyse -c phpstan.dist.neon",
-        "tu": "vendor/bin/simple-phpunit --testdox",
-        "tu2": "phpunit --bootstrap ./tests/bootstrap.php --testdox ./tests/",
+        "tu2": "vendor/bin/simple-phpunit --testdox",
+        "tu": "bin/phpunit --testdox",
         "post-install-cmd": [
             "@auto-scripts"
         ],

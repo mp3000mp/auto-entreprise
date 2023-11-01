@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 // todo unique constraint tender, position
 #[ORM\Entity]
@@ -11,18 +12,23 @@ class TenderRow
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['tender_show'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['tender_show'])]
     private int $position;
 
     #[ORM\Column]
+    #[Groups(['tender_show'])]
     private float $soldDays;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['tender_show'])]
     private string $title;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['tender_show'])]
     private string $description;
 
     #[ORM\ManyToOne(targetEntity: Tender::class, inversedBy: 'tenderRows')]

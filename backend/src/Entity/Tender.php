@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,42 +11,54 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 // unique constraint opportunity, version
 #[ORM\Entity]
+#[ApiResource(
+    operations: [
+        new Get(normalizationContext: ['groups' => 'tender_show']),
+    ]
+)]
 class Tender
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['home'])]
+    #[Groups(['tender_show', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: TenderStatus::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['home'])]
+    #[Groups(['tender_show', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     private TenderStatus $status;
 
     #[ORM\ManyToOne(targetEntity: Opportunity::class, inversedBy: 'tenders')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['tender_show'])]
     private Opportunity $opportunity;
 
     #[ORM\Column]
+    #[Groups(['tender_show', 'opportunity_show'])]
     private int $version;
 
     #[ORM\Column]
+    #[Groups(['tender_show'])]
     private int $averageDailyRate;
 
     #[ORM\Column]
     private \DateTime $createdAt;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['tender_show'])]
     private ?\DateTime $acceptedAt;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['tender_show'])]
     private ?\DateTime $canceledAt;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['tender_show'])]
     private ?\DateTime $refusedAt;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['tender_show'])]
     private ?\DateTime $sentAt;
 
     /**
@@ -52,15 +66,18 @@ class Tender
      */
     #[ORM\OneToMany(targetEntity: TenderRow::class, mappedBy: 'tender')]
     #[ORM\OrderBy(['position' => 'ASC'])]
+    #[Groups(['tender_show'])]
     private Collection $tenderRows;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['tender_show'])]
     private ?string $comments = null;
 
     /**
      * @var ArrayCollection<int, WorkedTime>
      */
     #[ORM\OneToMany(targetEntity: WorkedTime::class, mappedBy: 'tender')]
+    #[Groups(['tender_show'])]
     private Collection $workedTimes;
 
     /**
@@ -68,12 +85,15 @@ class Tender
      */
     #[ORM\OneToMany(targetEntity: TenderStatusLog::class, mappedBy: 'tender')]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
+    #[Groups(['tender_show'])]
     private Collection $statusLogs;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['tender_show'])]
     private ?string $tenderFileDocx = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['tender_show'])]
     private ?string $tenderFilePdf = null;
 
     public function __construct()
@@ -228,7 +248,7 @@ class Tender
         return $soldDays;
     }
 
-    #[Groups(['home'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     public function getAmount(): int
     {
         $amount = 0;

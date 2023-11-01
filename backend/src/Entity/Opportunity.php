@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\OpportunityRepository;
 use App\Service\AuditTrail\AuditrailableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,59 +13,74 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OpportunityRepository::class)]
+#[ApiResource(
+    operations: [
+        new GetCollection(normalizationContext: ['groups' => 'opportunity_list']),
+        new Get(normalizationContext: ['groups' => 'opportunity_show']),
+    ]
+)]
 class Opportunity implements AuditrailableInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['home'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Groups(['home'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     private string $ref;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['home'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     private string $description;
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'opportunities')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['home'])]
+    #[Groups(['opportunity_list', 'opportunity_show'])]
     private Company $company;
 
     #[ORM\Column]
     private \DateTime $createdAt;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?\DateTime $canceledAt;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?\DateTime $billedAt;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?\DateTime $payedAt;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?\DateTime $purchasedAt;
 
     #[ORM\Column]
+    #[Groups(['opportunity_show'])]
     private \DateTime $trackedAt;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?\DateTime $deliveredAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['home'])]
+    #[Groups(['opportunity_list', 'opportunity_show'])]
     private ?\DateTime $forecastedDelivery;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?string $customerRef1 = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?string $customerRef2 = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?string $paymentRef = null;
 
     /**
@@ -70,15 +88,17 @@ class Opportunity implements AuditrailableInterface
      */
     #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'opportunities')]
     #[ORM\JoinTable('opportunity_contact')]
+    #[Groups(['opportunity_show'])]
     private Collection $contacts;
 
     #[ORM\ManyToOne(targetEntity: OpportunityStatus::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['home'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     private OpportunityStatus $status;
 
     #[ORM\ManyToOne(targetEntity: MeanOfPayment::class)]
     #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?MeanOfPayment $meanOfPayment;
 
     /**
@@ -86,9 +106,11 @@ class Opportunity implements AuditrailableInterface
      */
     #[ORM\OneToMany(targetEntity: Tender::class, mappedBy: 'opportunity')]
     #[ORM\OrderBy(['version' => 'DESC'])]
+    #[Groups(['opportunity_show'])]
     private Collection $tenders;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?string $comments = null;
 
     /**
@@ -96,18 +118,22 @@ class Opportunity implements AuditrailableInterface
      */
     #[ORM\OneToMany(targetEntity: OpportunityStatusLog::class, mappedBy: 'opportunity')]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
+    #[Groups(['opportunity_show'])]
     private Collection $statusLogs;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?string $billFileDocx = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['opportunity_show'])]
     private ?string $billFilePdf = null;
 
     /**
      * @var ArrayCollection<int, OpportunityFile>
      */
     #[ORM\OneToMany(targetEntity: OpportunityFile::class, mappedBy: 'opportunity')]
+    #[Groups(['opportunity_show'])]
     private Collection $opportunityFiles;
 
     public function __construct()
@@ -369,7 +395,7 @@ class Opportunity implements AuditrailableInterface
         return $this;
     }
 
-    #[Groups(['home'])]
+    #[Groups(['opportunity_list', 'company_show', 'contact_show'])]
     public function getLastTender(): ?Tender
     {
         $lastTender = null;

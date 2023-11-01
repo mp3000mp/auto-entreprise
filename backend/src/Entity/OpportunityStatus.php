@@ -18,7 +18,7 @@ class OpportunityStatus
     private int $position;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['home'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     private string $label;
 
     public function getId(): ?int

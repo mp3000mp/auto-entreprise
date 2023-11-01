@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Service\AuditTrail\AuditrailableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,39 +12,52 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
+#[ApiResource(
+    operations: [
+        new GetCollection(normalizationContext: ['groups' => 'company_list']),
+        new Get(normalizationContext: ['groups' => 'company_show']),
+    ]
+)]
 class Company implements AuditrailableInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['company_list', 'company_show', 'contact_show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['home'])]
+    #[Groups(['opportunity_list', 'company_list', 'company_show', 'contact_show'])]
     private string $name;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['company_show'])]
     private string $street1;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['company_show'])]
     private ?string $street2;
 
     #[ORM\Column(length: 55)]
+    #[Groups(['company_show'])]
     private string $city;
 
     #[ORM\Column(length: 10)]
+    #[Groups(['company_show'])]
     private string $postcode;
 
     /**
      * @var ArrayCollection<int, Contact>
      */
     #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'company')]
+    #[Groups(['company_show'])]
     private Collection $contacts;
 
     /**
      * @var ArrayCollection<int, Opportunity>
      */
     #[ORM\OneToMany(targetEntity: Opportunity::class, mappedBy: 'company')]
+    #[Groups(['company_show'])]
     private Collection $opportunities;
 
     public function __construct()

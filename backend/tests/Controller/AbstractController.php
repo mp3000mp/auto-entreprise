@@ -14,6 +14,9 @@ abstract class AbstractController extends WebTestCase
 {
     use TestUtilsTrait;
 
+    /**
+     * @var array<string, string>
+     */
     private array $userByRole = [
         'ROLE_USER' => 'user',
     ];
@@ -74,6 +77,9 @@ abstract class AbstractController extends WebTestCase
         // $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $data['token']));
     }
 
+    /**
+     * @return array<string, mixed>|mixed[]
+     */
     protected function getResponseJson(Response $response): array
     {
         return json_decode($response->getContent(), true);

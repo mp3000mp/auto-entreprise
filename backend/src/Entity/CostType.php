@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
 class CostType
@@ -16,6 +17,7 @@ class CostType
     private int $position;
 
     #[ORM\Column(length: 55)]
+    #[Groups(['cost_list'])]
     private string $label;
 
     public function getId(): ?int

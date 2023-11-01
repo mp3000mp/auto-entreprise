@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
 class OpportunityFile
@@ -10,12 +11,15 @@ class OpportunityFile
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['opportunity_show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['opportunity_show'])]
     private string $title;
 
     #[ORM\Column(length: 500)]
+    #[Groups(['opportunity_show'])]
     private string $description;
 
     #[ORM\Column(length: 255)]
@@ -30,6 +34,7 @@ class OpportunityFile
     private User $createdBy;
 
     #[ORM\Column]
+    #[Groups(['opportunity_show'])]
     private \DateTime $createdAt;
 
     public function getId(): ?int

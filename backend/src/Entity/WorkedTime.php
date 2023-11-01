@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
@@ -11,9 +12,11 @@ class WorkedTime
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['tender_show'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['tender_show'])]
     private float $workedDays;
 
     // todo opportunity ?
@@ -27,6 +30,7 @@ class WorkedTime
 
     #[Assert\LessThanOrEqual('now')]
     #[ORM\Column]
+    #[Groups(['tender_show'])]
     private \DateTime $date;
 
     public function getId(): ?int

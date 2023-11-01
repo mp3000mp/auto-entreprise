@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
 class MeanOfPayment
@@ -16,6 +17,7 @@ class MeanOfPayment
     private int $position;
 
     #[ORM\Column(length: 55)]
+    #[Groups(['opportunity_show'])]
     private string $label;
 
     public function __construct()

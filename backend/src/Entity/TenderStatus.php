@@ -18,7 +18,7 @@ class TenderStatus
     private int $position;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['home'])]
+    #[Groups(['tender_show', 'opportunity_list', 'company_show', 'contact_show'])]
     private string $label;
 
     public function getId(): ?int
