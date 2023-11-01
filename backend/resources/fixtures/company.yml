@@ -1,0 +1,7 @@
+App\Entity\Company:
+  company{1..5}:
+    name (unique): '<name()>'
+    city: '<city()>'
+    postCode: '<postcode()>'
+    street1: '<streetName()>'
+    street2: '20%? <streetName()>'

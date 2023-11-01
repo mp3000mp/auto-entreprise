@@ -1,0 +1,31 @@
+App\Entity\OpportunityStatus:
+  opportunityStatus10:
+    position: 10
+    label: Piste
+  opportunityStatus20:
+    position: 20
+    label: Expr. besoin en cours
+  opportunityStatus30:
+    position: 30
+    label: Expr. besoin en envoyée
+  opportunityStatus40:
+    position: 40
+    label: Devis en cours
+  opportunityStatus50:
+    position: 50
+    label: Devis envoyé
+  opportunityStatus60:
+    position: 60
+    label: Dev en cours
+  opportunityStatus70:
+    position: 70
+    label: Recette
+  opportunityStatus80:
+    position: 80
+    label: Facture envoyée
+  opportunityStatus90:
+    position: 90
+    label: Payé
+  opportunityStatus100:
+    position: 100
+    label: Annulé

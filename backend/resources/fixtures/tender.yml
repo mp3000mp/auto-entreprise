@@ -1,0 +1,30 @@
+App\Entity\Tender:
+  tender_base (template):
+    createdAt: '<dateTimeBetween(2023-01-01, 2023-12-31)>'
+    averageDailyRate: '<numberBetween(200, 800)>'
+
+  tender_90_1 (extends tender_base):
+    opportunity: '@opportunity90'
+    version: 1
+    status: '@tenderStatus30'
+    sentAt: '<dateTimeBetween($createdAt, 2023-12-31)>'
+    acceptedAt: '<dateTimeBetween($sentAt, 2023-12-31)>'
+
+  tender_60_1 (extends tender_base):
+    opportunity: '@opportunity60'
+    version: 1
+    status: '@tenderStatus30'
+    sentAt: '<dateTimeBetween($createdAt, 2023-12-31)>'
+    acceptedAt: '<dateTimeBetween($sentAt, 2023-12-31)>'
+
+  tender_40_1 (extends tender_base):
+    opportunity: '@opportunity40'
+    version: 1
+    status: '@tenderStatus40'
+    sentAt: '<dateTimeBetween($createdAt, 2023-12-31)>'
+    refusedAt: '<dateTimeBetween($sentAt, 2023-12-31)>'
+
+  tender_40_2 (extends tender_base):
+    opportunity: '@opportunity40'
+    version: 2
+    status: '@tenderStatus10'

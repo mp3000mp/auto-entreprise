@@ -36,7 +36,7 @@ class JsonRequestHelper
     {
         // json schema
         $jsonData = json_decode($rawData);
-        $jsonSchema = json_decode(file_get_contents($this->pathSchemas.$schema.'.json'));
+        $jsonSchema = json_decode(file_get_contents($this->pathSchemas.'/'.$schema.'.json'));
         $this->jsonValidator->validate($jsonData, $jsonSchema);
         if (!$this->jsonValidator->isValid()) {
             $err = "JSON does not validate. Violations:\n";

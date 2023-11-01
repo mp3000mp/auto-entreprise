@@ -6,6 +6,7 @@ use App\Service\AuditTrail\AuditrailableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
 class Company implements AuditrailableInterface
@@ -16,6 +17,7 @@ class Company implements AuditrailableInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['home'])]
     private string $name;
 
     #[ORM\Column(length: 100)]

@@ -24,12 +24,9 @@ class OpportunityRepository extends ServiceEntityRepository
     public function findWelcomeDashboard(): array
     {
         return $this->createQueryBuilder('o')
-            ->innerJoin('o.tenders', 't')
-            ->innerJoin('t.tenderRows', 'tr')
-            ->where('t.status IN (2,3)')
+            ->leftJoin('o.tenders', 't')
             ->orderBy('t.sentAt', 'DESC')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 }

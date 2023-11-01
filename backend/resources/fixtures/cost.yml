@@ -1,0 +1,6 @@
+App\Entity\Cost:
+  cost{1..10}:
+    type: '@costType*'
+    date: '<dateTimeBetween(2023-01-01, 2023-12-31)>'
+    description: '<sentence(2)>'
+    amount: '<numberBetween(10, 500)>'

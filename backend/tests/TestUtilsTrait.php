@@ -7,6 +7,7 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 trait TestUtilsTrait
 {
@@ -23,7 +24,8 @@ trait TestUtilsTrait
         $purger = new ORMPurger($this->em, []);
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
         $loader = new ContainerAwareLoader(self::getContainer());
-        $loader->addFixture(new AppFixtures());
+        $paramBag = self::getContainer()->get(ParameterBagInterface::class);
+        $loader->addFixture(new AppFixtures($paramBag));
         $executor = new ORMExecutor($this->em, $purger);
         $executor->execute($loader->getFixtures());
     }

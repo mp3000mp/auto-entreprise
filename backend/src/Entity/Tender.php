@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 // unique constraint opportunity, version
 #[ORM\Entity]
@@ -13,10 +14,12 @@ class Tender
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['home'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: TenderStatus::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['home'])]
     private TenderStatus $status;
 
     #[ORM\ManyToOne(targetEntity: Opportunity::class, inversedBy: 'tenders')]
@@ -225,6 +228,7 @@ class Tender
         return $soldDays;
     }
 
+    #[Groups(['home'])]
     public function getAmount(): int
     {
         $amount = 0;

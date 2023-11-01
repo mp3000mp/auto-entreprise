@@ -18,6 +18,6 @@ class AppController extends AbstractController
         /** @var OpportunityRepository $rep */
         $rep = $this->em->getRepository(Opportunity::class);
 
-        return $this->responseHelper->createResponse($rep->findWelcomeDashboard(), ['opportunity_list']);
+        return $this->responseHelper->createResponse($rep->findWelcomeDashboard(), ['home']);
     }
 }

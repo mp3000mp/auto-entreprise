@@ -1,0 +1,6 @@
+App\Entity\WorkedTime:
+  workedTime{1..10}:
+    user: '@admin'
+    tender: '@tender_*'
+    workedDays: '<numberBetween(1, 5)>'
+    date: '<dateTimeBetween(2023-01-01, 2023-12-31)>'

@@ -1,0 +1,7 @@
+App\Entity\Contact:
+  contact{1..10}:
+    company: '@company*'
+    firstName: '<firstName()>'
+    lastName: '<lastName()>'
+    email (unique): '<email()>'
+    phone (unique): '80%? 06<numerify(########)>'

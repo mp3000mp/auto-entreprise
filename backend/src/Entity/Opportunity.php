@@ -7,6 +7,7 @@ use App\Service\AuditTrail\AuditrailableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OpportunityRepository::class)]
 class Opportunity implements AuditrailableInterface
@@ -14,16 +15,20 @@ class Opportunity implements AuditrailableInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['home'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['home'])]
     private string $ref;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['home'])]
     private string $description;
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'opportunities')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['home'])]
     private Company $company;
 
     #[ORM\Column]
@@ -48,6 +53,7 @@ class Opportunity implements AuditrailableInterface
     private ?\DateTime $deliveredAt;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['home'])]
     private ?\DateTime $forecastedDelivery;
 
     #[ORM\Column(length: 100, nullable: true)]
@@ -68,6 +74,7 @@ class Opportunity implements AuditrailableInterface
 
     #[ORM\ManyToOne(targetEntity: OpportunityStatus::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['home'])]
     private OpportunityStatus $status;
 
     #[ORM\ManyToOne(targetEntity: MeanOfPayment::class)]
@@ -360,6 +367,19 @@ class Opportunity implements AuditrailableInterface
         $this->tenders->removeElement($tender);
 
         return $this;
+    }
+
+    #[Groups(['home'])]
+    public function getLastTender(): ?Tender
+    {
+        $lastTender = null;
+        foreach ($this->tenders as $tender) {
+            if (null === $lastTender || $lastTender->getVersion() < $tender->getVersion()) {
+                $lastTender = $tender;
+            }
+        }
+
+        return $lastTender;
     }
 
     public function getNextVersion(): int
