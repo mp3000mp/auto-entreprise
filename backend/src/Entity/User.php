@@ -25,15 +25,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user_list'])]
+    #[Groups(['user_list', 'me'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 55, unique: true)]
-    #[Groups(['user_list'])]
+    #[Groups(['user_list', 'me'])]
     private string $email;
 
     #[ORM\Column(length: 55, unique: true)]
-    #[Groups(['user_list'])]
+    #[Groups(['user_list', 'me'])]
     private string $username;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -43,6 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string[]
      */
     #[ORM\Column(type: 'json')]
+    #[Groups(['user_list', 'me'])]
     private array $roles = [];
 
     /**

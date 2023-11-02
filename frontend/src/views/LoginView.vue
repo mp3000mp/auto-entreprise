@@ -17,8 +17,12 @@ async function connect() {
     return
   }
   isLoading.value = true
-  await adminStore.login(userName.value, password.value)
-  router.push({ name: 'home' })
+  try {
+    await adminStore.login(userName.value, password.value)
+    router.push({ name: 'home' })
+  } catch (err: unknown) {
+    isLoading.value = false
+  }
 }
 
 onMounted(async () => {

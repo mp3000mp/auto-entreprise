@@ -14,6 +14,13 @@ export class ApiError {
   statusCode = 0
 }
 
+export type ApiClientOptions = {
+  ignoreResponse?: boolean
+}
+const defaultApiClientOptions = {
+  ignoreResponse: false
+}
+
 export class ApiClient {
   baseUrl = config.backendBaseUrl
   headers = {
@@ -22,17 +29,26 @@ export class ApiClient {
     'Content-Type': 'application/json'
   }
 
-  public async query(httpMethod: HttpMethodEnum, url: string, json: any = null) {
-    const options: RequestInit = {
+  public async query(
+    httpMethod: HttpMethodEnum,
+    url: string,
+    json: any = null,
+    options: ApiClientOptions = {}
+  ) {
+    options = {
+      ...defaultApiClientOptions,
+      ...options
+    }
+    const fetchOptions: RequestInit = {
       method: httpMethod,
       headers: this.headers
     }
     if (json !== null) {
-      options.body = JSON.stringify(json)
+      fetchOptions.body = JSON.stringify(json)
     }
     try {
-      const response = await fetch(this.baseUrl + url, options)
-      const jsonResponse = await response.json()
+      const response = await fetch(this.baseUrl + url, fetchOptions)
+      const jsonResponse = options.ignoreResponse ? null : await response.json()
       if (response.ok) {
         return await jsonResponse
       }

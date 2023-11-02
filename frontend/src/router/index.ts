@@ -3,7 +3,7 @@ import AdminView from '../views/AdminView.vue'
 import LoginView from '../views/LoginView.vue'
 
 import { useAdminStore } from '@/stores/admin'
-import HomeView from "@/views/HomeView.vue";
+import HomeView from '@/views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,7 +35,7 @@ router.beforeEach((to, from, next) => {
   if (adminStore.currentUser !== null && to.name === 'login') {
     return next({ name: 'home' })
   }
-  if (to.name === 'admin' && !adminStore.currentUser?.isAdmin) {
+  if (to.name === 'admin' && !adminStore.currentUser) {
     return next({ name: 'home' })
   }
   next()

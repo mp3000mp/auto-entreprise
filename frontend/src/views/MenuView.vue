@@ -1,12 +1,17 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { useAdminStore } from '@/stores/admin'
+import { useRouter } from 'vue-router'
 
 const adminStore = useAdminStore()
+const router = useRouter()
 
 const currentUser = computed(() => adminStore.currentUser)
 
-// todo login/logout
+async function logout() {
+  await adminStore.logout()
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>
@@ -18,6 +23,9 @@ const currentUser = computed(() => adminStore.currentUser)
       <ul class="nav justify-content-end">
         <li class="nav-item" v-if="currentUser">
           <router-link class="nav-link" :to="{ name: 'admin' }">Admin</router-link>
+        </li>
+        <li class="nav-item" v-if="currentUser">
+          <a href="#" @click.prevent="logout" class="nav-link">Logout</a>
         </li>
       </ul>
     </nav>
