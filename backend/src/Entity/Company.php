@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Service\AuditTrail\AuditrailableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,6 +18,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new GetCollection(normalizationContext: ['groups' => 'company_list']),
         new Get(normalizationContext: ['groups' => 'company_show']),
+        new Post(normalizationContext: ['groups' => 'company_show'], denormalizationContext: ['groups' => 'company_write']),
+        new Put(normalizationContext: ['groups' => 'company_show'], denormalizationContext: ['groups' => 'company_write']),
     ]
 )]
 class Company implements AuditrailableInterface
@@ -27,23 +31,23 @@ class Company implements AuditrailableInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['opportunity_list', 'company_list', 'company_show', 'contact_show'])]
+    #[Groups(['opportunity_list', 'company_list', 'company_show', 'contact_show', 'company_write'])]
     private string $name;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['company_show'])]
+    #[Groups(['company_show', 'company_write'])]
     private string $street1;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['company_show'])]
+    #[Groups(['company_show', 'company_write'])]
     private ?string $street2;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['company_show'])]
+    #[Groups(['company_show', 'company_write'])]
     private string $city;
 
     #[ORM\Column(length: 10)]
-    #[Groups(['company_show'])]
+    #[Groups(['company_show', 'company_write'])]
     private string $postcode;
 
     /**

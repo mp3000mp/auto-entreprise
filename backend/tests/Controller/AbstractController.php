@@ -62,19 +62,11 @@ abstract class AbstractController extends WebTestCase
         self::assertEquals($expectedCode, $responseCode);
     }
 
-    protected function loginUser(KernelBrowser $client, string $role = 'ROLE_USER'): void
+    protected function loginUser(?KernelBrowser $client = null, string $role = 'ROLE_USER'): void
     {
         $userRepository = $this->em->getRepository(User::class);
         $testUser = $userRepository->findOneBy(['username' => $this->userByRole[$role]]);
-        $credentials = [
-            'username' => $testUser->getUsername(),
-            'password' => 'Test2000!',
-        ];
-        $client->request('POST', '/api/login', [], [], [], json_encode($credentials));
-        $this->assertResponseCode(200);
-
-        // $data = json_decode($client->getResponse()->getContent(), true);
-        // $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $data['token']));
+        ($client ?? $this->client)->loginUser($testUser);
     }
 
     /**

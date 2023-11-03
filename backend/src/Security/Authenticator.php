@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
@@ -18,13 +19,8 @@ class Authenticator extends AbstractLoginFormAuthenticator
 {
     private const TOO_MANY_ATTEMPT_MSG = 'Too many attempts, please try later.';
 
-    private SerializerInterface $serializer;
-    private RateLimiterFactory $loginRouteLimiter;
-
-    public function __construct(SerializerInterface $serializer, RateLimiterFactory $loginRouteLimiter)
+    public function __construct(private SerializerInterface $serializer, private RateLimiterFactory $loginRouteLimiter, private UrlGeneratorInterface $urlGenerator)
     {
-        $this->serializer = $serializer;
-        $this->loginRouteLimiter = $loginRouteLimiter;
     }
 
     public function start(Request $request, AuthenticationException $authException = null): Response
@@ -36,7 +32,7 @@ class Authenticator extends AbstractLoginFormAuthenticator
 
     public function getLoginUrl(Request $request): string
     {
-        return '/api/login';
+        return $this->urlGenerator->generate('security.login_check');
     }
 
     public function authenticate(Request $request): Passport
