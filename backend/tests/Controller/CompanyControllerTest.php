@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\Company;
-use App\Entity\User;
 
 class CompanyControllerTest extends AbstractController
 {
@@ -47,15 +46,12 @@ class CompanyControllerTest extends AbstractController
         $this->assertResponseCode(201);
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
-        var_dump($jsonResponse);
-
         self::assertArrayHasKey('city', $jsonResponse);
     }
 
     public function testCompanyEdit(): void
     {
         $this->loginUser();
-
         $companies = $this->em->getRepository(Company::class)->findAll();
         $rawCompany = [
             'name' => 'Royal',
@@ -68,8 +64,6 @@ class CompanyControllerTest extends AbstractController
         $this->client->request('PUT', sprintf('/api/companies/%d', $companies[0]->getId()), content: json_encode($rawCompany));
         $this->assertResponseCode(200);
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
-
-        var_dump($jsonResponse);
 
         self::assertArrayHasKey('city', $jsonResponse);
     }

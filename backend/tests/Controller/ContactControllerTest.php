@@ -10,6 +10,7 @@ class ContactControllerTest extends AbstractController
 {
     public function testContactShow(): void
     {
+        $this->loginUser($this->client);
         $contacts = $this->em->getRepository(Contact::class)->findAll();
 
         $this->client->request('GET', sprintf('/api/contacts/%d', $contacts[0]->getId()));

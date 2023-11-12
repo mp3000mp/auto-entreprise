@@ -132,51 +132,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSalt(): ?string
-    {
-        // you *may* need a real salt depending on your encoder
-        // see section on salt below
-        return null;
-    }
-
     public function eraseCredentials(): void
     {
     }
-
-    /*
-    public function __serialize(): array
-    {
-        $r = [
-            $this->id,
-            $this->email,
-            $this->username,
-            $this->password,
-//            $this->roles,
-            // see section on salt below
-            // $this->salt,
-        ];
-        dump($r);
-        return $r;
-    }
-    */
-
-    /**
-     * @param mixed[] $serialized
-     */
-    /*
-    public function __unserialize(array $serialized): void
-    {
-        dump($serialized);
-        [
-            $this->id,
-            $this->email,
-            $this->username,
-            $this->password,
-//            $this->roles,
-            // $this->salt
-        ] = $serialized;
-    }
-    */
 
     /**
      * @return ArrayCollection<int, WorkedTime>

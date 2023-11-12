@@ -9,7 +9,6 @@ use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
@@ -20,7 +19,7 @@ class Authenticator extends AbstractLoginFormAuthenticator
 {
     private const TOO_MANY_ATTEMPT_MSG = 'Too many attempts, please try later.';
 
-    public function __construct(private SerializerInterface $serializer, private RateLimiterFactory $loginRouteLimiter, private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private SerializerInterface $serializer, /*private RateLimiterFactory $loginRouteLimiter,*/ private UrlGeneratorInterface $urlGenerator)
     {
     }
 
@@ -34,6 +33,7 @@ class Authenticator extends AbstractLoginFormAuthenticator
     public function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate('security.login_check');
+//        return $this->urlGenerator->generate('security.login_check');
     }
 
     public function authenticate(Request $request): Passport

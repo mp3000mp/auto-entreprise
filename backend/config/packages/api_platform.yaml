@@ -1,7 +1,6 @@
 api_platform:
     title: Hello API Platform
     version: 1.0.0
-    show_webby: false
     formats:
 #        jsonld: ['application/ld+json']
         json: ['application/json']
@@ -18,5 +17,3 @@ api_platform:
             rfc_7807_compliant_errors: true
     event_listeners_backward_compatibility_layer: false
     keep_legacy_inflector: false
-    swagger:
-        versions: [3]

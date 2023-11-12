@@ -9,11 +9,6 @@ class AppControllerTest extends AbstractController
     public function testAppIndex(): void
     {
         $this->loginUser($this->client);
-//        $this->client->request('POST', '/api/login', content: json_encode(['username' => 'user', 'password' => 'Test2000!']));
-//        var_dump($this->client->getResponse());
-//        $jsonResponse = $this->getResponseJson($this->client->getResponse());
-//        var_dump($jsonResponse);
-//        $this->loginUser($this->client);
 
         $this->client->request('GET', '/api/home');
         $this->assertResponseCode(200);

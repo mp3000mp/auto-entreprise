@@ -12,4 +12,4 @@ return (new PhpCsFixer\Config())
         'void_return' => true,
     ])
     ->setFinder($finder)
-;
+    ;

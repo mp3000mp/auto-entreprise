@@ -28,7 +28,6 @@
         "symfony/framework-bundle": "6.3.*",
         "symfony/http-client": "6.3.*",
         "symfony/intl": "6.3.*",
-        "symfony/lock": "6.3.*",
         "symfony/mailer": "6.3.*",
         "symfony/mime": "6.3.*",
         "symfony/monolog-bundle": "^3.0",
@@ -77,13 +76,15 @@
         "symfony/polyfill-php81": "*"
     },
     "scripts": {
-        "auto-scripts": [
-        ],
         "cs": "php-cs-fixer fix --dry-run --allow-risky=yes",
         "csf": "php-cs-fixer fix --allow-risky=yes",
         "ps": "phpstan analyse -c phpstan.dist.neon",
         "tu": "bin/phpunit --testdox",
         "tuc": "bin/phpunit --testdox --coverage-html coverage",
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
         "post-install-cmd": [
             "@auto-scripts"
         ],
@@ -102,7 +103,7 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
-        "friendsofphp/php-cs-fixer": "^3.35",
+        "friendsofphp/php-cs-fixer": "^3.38",
         "nelmio/alice": "^3.12",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.5",

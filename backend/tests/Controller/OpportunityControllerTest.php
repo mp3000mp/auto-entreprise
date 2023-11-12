@@ -10,6 +10,8 @@ class OpportunityControllerTest extends AbstractController
 {
     public function testOpportunityIndex(): void
     {
+        $this->loginUser($this->client);
+
         $this->client->request('GET', '/api/opportunities');
         $this->assertResponseCode(200);
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
@@ -19,6 +21,7 @@ class OpportunityControllerTest extends AbstractController
 
     public function testOpportunityShow(): void
     {
+        $this->loginUser($this->client);
         $opportunities = $this->em->getRepository(Opportunity::class)->findAll();
 
         $this->client->request('GET', sprintf('/api/opportunities/%d', $opportunities[0]->getId()));

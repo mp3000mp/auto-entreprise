@@ -10,6 +10,7 @@ class TenderControllerTest extends AbstractController
 {
     public function testTenderShow(): void
     {
+        $this->loginUser($this->client);
         $tenders = $this->em->getRepository(Tender::class)->findAll();
 
         $this->client->request('GET', sprintf('/api/tenders/%d', $tenders[0]->getId()));

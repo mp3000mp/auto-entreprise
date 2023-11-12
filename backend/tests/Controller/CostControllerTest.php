@@ -8,6 +8,8 @@ class CostControllerTest extends AbstractController
 {
     public function testCostIndex(): void
     {
+        $this->loginUser($this->client);
+
         $this->client->request('GET', '/api/costs');
         $this->assertResponseCode(200);
         $jsonResponse = $this->getResponseJson($this->client->getResponse());

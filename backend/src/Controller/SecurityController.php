@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route('/api')]
 class SecurityController extends AbstractController
