@@ -15,13 +15,18 @@ security:
             security: false
         main:
 #            lazy: true
-#            provider: users_in_memory
+#            provider: app_user_provider
 
-            custom_authenticators:
-                - App\Security\Authenticator
+            form_login:
+                login_path: app.login
+                check_path: security.login_check
+#            custom_authenticators:
+#                - App\Security\Authenticator
+
             logout:
                 path: security.logout
-            custom_authenticator: App\Security\Authenticator
+
+
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

@@ -10,8 +10,6 @@ export enum HttpMethodEnum {
 
 export class ApiError {
   message = ''
-  error = ''
-  statusCode = 0
 }
 
 export type ApiClientOptions = {

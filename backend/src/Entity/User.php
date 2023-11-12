@@ -143,33 +143,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
     }
 
+    /*
     public function __serialize(): array
     {
-        return [
+        $r = [
             $this->id,
             $this->email,
             $this->username,
             $this->password,
-            $this->roles,
+//            $this->roles,
             // see section on salt below
             // $this->salt,
         ];
+        dump($r);
+        return $r;
     }
+    */
 
     /**
      * @param mixed[] $serialized
      */
+    /*
     public function __unserialize(array $serialized): void
     {
+        dump($serialized);
         [
             $this->id,
             $this->email,
             $this->username,
             $this->password,
-            $this->roles,
+//            $this->roles,
             // $this->salt
         ] = $serialized;
     }
+    */
 
     /**
      * @return ArrayCollection<int, WorkedTime>

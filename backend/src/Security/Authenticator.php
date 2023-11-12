@@ -9,6 +9,7 @@ use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
@@ -37,10 +38,10 @@ class Authenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $limiter = $this->loginRouteLimiter->create($request->getClientIp());
-        if (!$limiter->consume(1)->isAccepted()) {
-            throw new AuthenticationException(self::TOO_MANY_ATTEMPT_MSG);
-        }
+//        $limiter = $this->loginRouteLimiter->create($request->getClientIp());
+//        if (!$limiter->consume(1)->isAccepted()) {
+//            throw new AuthenticationException(self::TOO_MANY_ATTEMPT_MSG);
+//        }
 
         $content = json_decode($request->getContent(), true);
         $password = $request->request->get('password')
