@@ -22,22 +22,17 @@ const defaultApiClientOptions = {
 export class ApiClient {
   baseUrl = config.backendBaseUrl
   headers = {
-    Authorization: 'Bearer ' + config.backendApiKey,
     Accept: 'application/json',
     'Content-Type': 'application/json'
   }
 
-  public async query(
-    httpMethod: HttpMethodEnum,
-    url: string,
-    json: any = null,
-    options: ApiClientOptions = {}
-  ) {
+  public async query(httpMethod: HttpMethodEnum, url: string, json: any = null, options: ApiClientOptions = {}) {
     options = {
       ...defaultApiClientOptions,
       ...options
     }
     const fetchOptions: RequestInit = {
+      credentials: 'include' as RequestCredentials,
       method: httpMethod,
       headers: this.headers
     }

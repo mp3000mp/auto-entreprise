@@ -19,7 +19,7 @@ class Authenticator extends AbstractLoginFormAuthenticator
 {
     private const TOO_MANY_ATTEMPT_MSG = 'Too many attempts, please try later.';
 
-    public function __construct(private SerializerInterface $serializer, /*private RateLimiterFactory $loginRouteLimiter,*/ private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private SerializerInterface $serializer, /* private RateLimiterFactory $loginRouteLimiter, */ private UrlGeneratorInterface $urlGenerator)
     {
     }
 
@@ -33,15 +33,15 @@ class Authenticator extends AbstractLoginFormAuthenticator
     public function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate('security.login_check');
-//        return $this->urlGenerator->generate('security.login_check');
+        //        return $this->urlGenerator->generate('security.login_check');
     }
 
     public function authenticate(Request $request): Passport
     {
-//        $limiter = $this->loginRouteLimiter->create($request->getClientIp());
-//        if (!$limiter->consume(1)->isAccepted()) {
-//            throw new AuthenticationException(self::TOO_MANY_ATTEMPT_MSG);
-//        }
+        //        $limiter = $this->loginRouteLimiter->create($request->getClientIp());
+        //        if (!$limiter->consume(1)->isAccepted()) {
+        //            throw new AuthenticationException(self::TOO_MANY_ATTEMPT_MSG);
+        //        }
 
         $content = json_decode($request->getContent(), true);
         $password = $request->request->get('password')

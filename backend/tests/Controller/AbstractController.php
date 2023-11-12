@@ -62,7 +62,7 @@ abstract class AbstractController extends WebTestCase
         self::assertEquals($expectedCode, $responseCode);
     }
 
-    protected function loginUser(?KernelBrowser $client = null, string $role = 'ROLE_USER'): void
+    protected function loginUser(KernelBrowser $client = null, string $role = 'ROLE_USER'): void
     {
         $userRepository = $this->em->getRepository(User::class);
         $testUser = $userRepository->findOneBy(['username' => $this->userByRole[$role]]);
