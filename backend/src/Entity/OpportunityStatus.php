@@ -2,23 +2,34 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
-// todo enum ?
 #[ORM\Entity]
+#[ApiResource(
+    operations: [
+        new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'opportunity_status_list']),
+    ]
+)]
 class OpportunityStatus
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['opportunity_status_list', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['opportunity_status_list'])]
+    #[Assert\GreaterThan(0)]
     private int $position;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
+    #[Groups(['opportunity_status_list', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
+    #[Assert\NotBlank]
     private string $label;
 
     public function getId(): ?int

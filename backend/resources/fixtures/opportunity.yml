@@ -2,27 +2,32 @@ App\Entity\Opportunity:
   opportunity_base (template):
     ref (unique): '<bothify(######-????????)>'
     description: '<sentence(8)>'
-    company: '@company*'
+    company: '@company_*'
     createdAt: '<dateTimeBetween(2023-01-01, 2023-12-31)>'
-    contacts: '<numberBetween(1, 3)>x @contact*'
+    contacts: '<numberBetween(1, 3)>x @contact_*'
     meanOfPayment: '50%? @meanOfPayment*'
 
-  opportunity90 (extends opportunity_base):
+  opportunity_90 (extends opportunity_base):
     status: '@opportunityStatus90'
     trackedAt: '<(new DateTime("2023-06-01"))>'
     purchasedAt: '<dateTimeBetween($trackedAt, 2023-12-31)>'
     deliveredAt: '<dateTimeBetween($purchasedAt, 2023-12-31)>'
 
-  opportunity60 (extends opportunity_base):
+  opportunity_60 (extends opportunity_base):
     status: '@opportunityStatus60'
     trackedAt: '<(new DateTime("2023-07-01"))>'
     purchasedAt: '<dateTimeBetween($trackedAt, 2023-12-31)>'
 
-  opportunity40 (extends opportunity_base):
+  opportunity_40 (extends opportunity_base):
     status: '@opportunityStatus40'
     trackedAt: '<(new DateTime("2023-08-01"))>'
 
-  opportunity100 (extends opportunity_base):
+  opportunity_100 (extends opportunity_base):
     status: '@opportunityStatus100'
     trackedAt: '<(new DateTime("2023-09-01"))>'
     canceledAt: '<dateTimeBetween($trackedAt, 2023-12-31)>'
+
+  opportunityEmpty (extends opportunity_base):
+    ref (unique): 'empty'
+    status: '@opportunityStatus10'
+    trackedAt: '<(new DateTime("2023-10-01"))>'

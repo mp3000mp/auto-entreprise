@@ -11,13 +11,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[UniqueEntity(fields: 'email')]
 #[UniqueEntity(fields: 'username')]
 #[ApiResource(
     operations: [
-        new GetCollection(normalizationContext: ['groups' => 'user_list']),
+        new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'user_list']),
     ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -30,10 +31,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 55, unique: true)]
     #[Groups(['user_list', 'me'])]
+    #[Assert\NotBlank]
     private string $email;
 
     #[ORM\Column(length: 55, unique: true)]
     #[Groups(['user_list', 'me'])]
+    #[Assert\NotBlank]
     private string $username;
 
     #[ORM\Column(length: 255, nullable: true)]

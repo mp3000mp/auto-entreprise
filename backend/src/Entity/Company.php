@@ -7,22 +7,22 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Service\AuditTrail\AuditrailableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ApiResource(
     operations: [
-        new GetCollection(normalizationContext: ['groups' => 'company_list']),
+        new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'company_list']),
         new Get(normalizationContext: ['groups' => 'company_show']),
         new Post(normalizationContext: ['groups' => 'company_show'], denormalizationContext: ['groups' => 'company_write']),
         new Put(normalizationContext: ['groups' => 'company_show'], denormalizationContext: ['groups' => 'company_write']),
-    ]
+    ],
 )]
-class Company implements AuditrailableInterface
+class Company
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -32,10 +32,12 @@ class Company implements AuditrailableInterface
 
     #[ORM\Column(length: 100)]
     #[Groups(['opportunity_list', 'company_list', 'company_show', 'contact_show', 'company_write'])]
+    #[Assert\NotBlank]
     private string $name;
 
     #[ORM\Column(length: 100)]
     #[Groups(['company_show', 'company_write'])]
+    #[Assert\NotBlank]
     private string $street1;
 
     #[ORM\Column(length: 100, nullable: true)]
@@ -44,10 +46,12 @@ class Company implements AuditrailableInterface
 
     #[ORM\Column(length: 55)]
     #[Groups(['company_show', 'company_write'])]
+    #[Assert\NotBlank]
     private string $city;
 
     #[ORM\Column(length: 10)]
     #[Groups(['company_show', 'company_write'])]
+    #[Assert\NotBlank]
     private string $postcode;
 
     /**
@@ -73,16 +77,6 @@ class Company implements AuditrailableInterface
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getAuditTrailString(): string
-    {
-        return $this->getName();
-    }
-
-    public function getFieldsToBeIgnored(): array
-    {
-        return [];
     }
 
     public function getName(): string

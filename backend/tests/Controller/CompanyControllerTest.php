@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\Company;
+use App\Entity\Contact;
+use App\Entity\Opportunity;
 
 class CompanyControllerTest extends AbstractController
 {
@@ -16,7 +18,7 @@ class CompanyControllerTest extends AbstractController
         $this->assertResponseCode(200);
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
-        self::assertCount(5, $jsonResponse);
+        self::assertCount(6, $jsonResponse);
     }
 
     public function testCompanyShow(): void
@@ -66,5 +68,20 @@ class CompanyControllerTest extends AbstractController
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
         self::assertArrayHasKey('city', $jsonResponse);
+    }
+
+    public function testCompanyDelete(): void
+    {
+        $this->loginUser();
+        $contacts = $this->em->getRepository(Contact::class)->findAll();
+        $opportunities = $this->em->getRepository(Opportunity::class)->findAll();
+        $emptyCompany = $this->em->getRepository(Company::class)->findOneBy(['name' => 'empty']);
+
+        $this->client->request('DELETE', sprintf('/api/companies/%d', $contacts[0]->getCompany()->getId()));
+        $this->assertResponseCode(400);
+        $this->client->request('DELETE', sprintf('/api/companies/%d', $opportunities[0]->getCompany()->getId()));
+        $this->assertResponseCode(400);
+        $this->client->request('DELETE', sprintf('/api/companies/%d', $emptyCompany->getId()));
+        $this->assertResponseCode(204);
     }
 }

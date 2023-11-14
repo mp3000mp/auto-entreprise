@@ -4,16 +4,21 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
-// unique constraint opportunity, version
 #[ORM\Entity]
+#[ORM\UniqueConstraint(columns: ['version', 'opportunity_id'])]
 #[ApiResource(
     operations: [
         new Get(normalizationContext: ['groups' => 'tender_show']),
+        new Post(normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'tender_add']),
+        new Put(normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'tender_edit']),
     ]
 )]
 class Tender
@@ -26,39 +31,41 @@ class Tender
 
     #[ORM\ManyToOne(targetEntity: TenderStatus::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['tender_show', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
-    private TenderStatus $status;
+    #[Groups(['tender_show', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show', 'tender_edit'])]
+    #[Assert\NotBlank]
+    private ?TenderStatus $status = null;
 
     #[ORM\ManyToOne(targetEntity: Opportunity::class, inversedBy: 'tenders')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_add'])]
     private Opportunity $opportunity;
 
     #[ORM\Column]
-    #[Groups(['tender_show', 'opportunity_show'])]
+    #[Groups(['tender_show', 'opportunity_show', 'tender_add', 'tender_edit'])]
+    #[Assert\NotBlank]
     private int $version;
 
     #[ORM\Column]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_add', 'tender_edit'])]
     private int $averageDailyRate;
 
     #[ORM\Column]
     private \DateTime $createdAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_edit'])]
     private ?\DateTime $acceptedAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_edit'])]
     private ?\DateTime $canceledAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_edit'])]
     private ?\DateTime $refusedAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_edit'])]
     private ?\DateTime $sentAt;
 
     /**
@@ -70,7 +77,7 @@ class Tender
     private Collection $tenderRows;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_edit'])]
     private ?string $comments = null;
 
     /**
@@ -89,15 +96,16 @@ class Tender
     private Collection $statusLogs;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_edit'])]
     private ?string $tenderFileDocx = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_edit'])]
     private ?string $tenderFilePdf = null;
 
     public function __construct()
     {
+        $this->createdAt = new \DateTime();
         $this->tenderRows = new ArrayCollection();
         $this->workedTimes = new ArrayCollection();
         $this->statusLogs = new ArrayCollection();
@@ -108,7 +116,7 @@ class Tender
         return $this->id;
     }
 
-    public function getStatus(): TenderStatus
+    public function getStatus(): ?TenderStatus
     {
         return $this->status;
     }

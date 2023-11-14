@@ -1,7 +1,12 @@
 App\Entity\Contact:
-  contact{1..10}:
-    company: '@company*'
+  contact_base (template):
+    company: '@company_*'
     firstName: '<firstName()>'
     lastName: '<lastName()>'
     email (unique): '<email()>'
+
+  contact_{1..10} (extends contact_base):
     phone (unique): '80%? 06<numerify(########)>'
+
+  contactEmpty (extends contact_base):
+    phone: '9999999999'

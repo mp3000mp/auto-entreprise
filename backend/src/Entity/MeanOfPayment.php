@@ -2,22 +2,34 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
+#[ApiResource(
+    operations: [
+        new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'mop_list']),
+    ]
+)]
 class MeanOfPayment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['mop_list', 'opportunity_show'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['mop_list'])]
+    #[Assert\GreaterThan(0)]
     private int $position;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['opportunity_show'])]
+    #[Groups(['mop_list', 'opportunity_show'])]
+    #[Assert\NotBlank]
     private string $label;
 
     public function __construct()

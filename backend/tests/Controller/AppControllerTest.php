@@ -14,7 +14,7 @@ class AppControllerTest extends AbstractController
         $this->assertResponseCode(200);
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
-        self::assertCount(4, $jsonResponse);
+        self::assertCount(5, $jsonResponse);
     }
 
     public function testAppPing(): void

@@ -2,11 +2,23 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
-// todo unique constraint tender, position
 #[ORM\Entity]
+#[ORM\UniqueConstraint(columns: ['position', 'tender_id'])]
+#[ApiResource(
+    operations: [
+        new Post(normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'tender_row_add']),
+        new Put(normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'tender_row_edit']),
+        new Delete(),
+    ]
+)]
 class TenderRow
 {
     #[ORM\Id]
@@ -16,23 +28,28 @@ class TenderRow
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_row_add', 'tender_row_edit'])]
+    #[Assert\GreaterThan(0)]
     private int $position;
 
     #[ORM\Column]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_row_add', 'tender_row_edit'])]
+    #[Assert\GreaterThan(0)]
     private float $soldDays;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_row_add', 'tender_row_edit'])]
+    #[Assert\NotBlank]
     private string $title;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['tender_show'])]
+    #[Groups(['tender_show', 'tender_row_add', 'tender_row_edit'])]
+    #[Assert\NotBlank]
     private string $description;
 
     #[ORM\ManyToOne(targetEntity: Tender::class, inversedBy: 'tenderRows')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['tender_show', 'tender_row_add'])]
     private Tender $tender;
 
     public function getId(): ?int

@@ -4,21 +4,25 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
-use App\Service\AuditTrail\AuditrailableInterface;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[UniqueEntity(fields: 'email')]
 #[ApiResource(
     operations: [
-        new Get(normalizationContext: ['groups' => 'contact_show']),
+        new Get(paginationEnabled: false, normalizationContext: ['groups' => 'contact_show']),
+        new Post(normalizationContext: ['groups' => 'contact_show'], denormalizationContext: ['groups' => 'contact_write']),
+        new Put(normalizationContext: ['groups' => 'contact_show'], denormalizationContext: ['groups' => 'contact_write']),
     ]
 )]
-class Contact implements AuditrailableInterface
+class Contact
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -27,32 +31,34 @@ class Contact implements AuditrailableInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['contact_show', 'company_show'])]
-    private string $last_name;
+    #[Groups(['contact_show', 'company_show', 'contact_write'])]
+    #[Assert\NotBlank]
+    private string $lastName;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['contact_show', 'company_show'])]
-    private string $first_name;
+    #[Groups(['contact_show', 'company_show', 'contact_write'])]
+    #[Assert\NotBlank]
+    private string $firstName;
 
     #[ORM\Column(length: 55, unique: true)]
-    #[Groups(['contact_show'])]
+    #[Groups(['contact_show', 'contact_write'])]
+    #[Assert\Email]
     private string $email;
 
     #[ORM\Column(length: 15, nullable: true)]
-    #[Groups(['contact_show'])]
+    #[Groups(['contact_show', 'contact_write'])]
     private ?string $phone = null;
 
-    // todo old companies
+    // todo company history
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'contacts')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['contact_show'])]
+    #[Groups(['contact_show', 'contact_write'])]
     private Company $company;
 
     /**
      * @var ArrayCollection<int, Opportunity>
      */
     #[ORM\ManyToMany(targetEntity: Opportunity::class, mappedBy: 'contacts')]
-    #[Groups(['contact_show'])]
     private Collection $opportunities;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -69,36 +75,26 @@ class Contact implements AuditrailableInterface
         return $this->id;
     }
 
-    public function getAuditTrailString(): string
-    {
-        return $this->getEmail();
-    }
-
-    public function getFieldsToBeIgnored(): array
-    {
-        return [];
-    }
-
     public function getLastName(): string
     {
-        return $this->last_name;
+        return $this->lastName;
     }
 
-    public function setLastName(string $last_name): self
+    public function setLastName(string $lastName): self
     {
-        $this->last_name = $last_name;
+        $this->lastName = $lastName;
 
         return $this;
     }
 
     public function getFirstName(): string
     {
-        return $this->first_name;
+        return $this->firstName;
     }
 
-    public function setFirstName(string $first_name): self
+    public function setFirstName(string $firstName): self
     {
-        $this->first_name = $first_name;
+        $this->firstName = $firstName;
 
         return $this;
     }

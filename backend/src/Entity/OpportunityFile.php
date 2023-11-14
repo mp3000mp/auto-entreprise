@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 class OpportunityFile
@@ -16,10 +17,12 @@ class OpportunityFile
 
     #[ORM\Column(length: 255)]
     #[Groups(['opportunity_show'])]
+    #[Assert\NotBlank]
     private string $title;
 
     #[ORM\Column(length: 500)]
     #[Groups(['opportunity_show'])]
+    #[Assert\NotBlank]
     private string $description;
 
     #[ORM\Column(length: 255)]

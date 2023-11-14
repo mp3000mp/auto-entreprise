@@ -3,14 +3,21 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ApiResource(
     operations: [
-        new GetCollection(normalizationContext: ['groups' => 'cost_list']),
+        new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'cost_list']),
+        new Post(normalizationContext: ['groups' => 'cost_list'], denormalizationContext: ['groups' => 'cost_write']),
+        new Put(normalizationContext: ['groups' => 'cost_list'], denormalizationContext: ['groups' => 'cost_write']),
+        new Delete(),
     ]
 )]
 class Cost
@@ -22,20 +29,22 @@ class Cost
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['cost_list'])]
+    #[Groups(['cost_list', 'cost_write'])]
     private \DateTime $date;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['cost_list'])]
+    #[Groups(['cost_list', 'cost_write'])]
+    #[Assert\NotBlank]
     private string $description;
 
     #[ORM\Column]
-    #[Groups(['cost_list'])]
+    #[Groups(['cost_list', 'cost_write'])]
+    #[Assert\GreaterThan(0)]
     private float $amount;
 
     #[ORM\ManyToOne(targetEntity: CostType::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['cost_list'])]
+    #[Groups(['cost_list', 'cost_write'])]
     private CostType $type;
 
     public function getId(): ?int
