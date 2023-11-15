@@ -1,15 +1,49 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { useAdminStore } from '@/stores/admin'
+import { useSecurityStore } from '@/stores/security'
 import { useRouter } from 'vue-router'
 
-const adminStore = useAdminStore()
+const securityStore = useSecurityStore()
 const router = useRouter()
 
-const currentUser = computed(() => adminStore.currentUser)
+const links = [
+  {
+    label: 'Opportunités',
+    to: {name: 'opportunities'},
+  },
+  {
+    label: 'Devis',
+    to: {name: 'opportunities'},
+  },
+  {
+    label: 'Contacts',
+    to: {name: 'contacts'},
+  },
+  {
+    label: 'Clients',
+    to: {name: 'companies'},
+  },
+  {
+    label: 'Coûts',
+    to: {name: 'costs'},
+  },
+  {
+    label: 'Reporting',
+    to: {name: 'reporting'},
+  },
+]
+const adminLinks = [
+  {
+    label: 'Utilisateurs',
+    to: {name: 'users'},
+  },
+  {
+    label: 'Mon compte',
+    to: {name: 'account'},
+  },
+]
 
 async function logout() {
-  await adminStore.logout()
+  await securityStore.logout()
   router.push({ name: 'login' })
 }
 </script>
@@ -17,14 +51,21 @@ async function logout() {
 <template>
   <header class="container-fluid border-bottom">
     <nav class="d-flex align-items-center justify-content-between">
-      <h1 class="navbar-brand">
-        <router-link :to="{ name: 'home' }">MP3000 AE</router-link>
-      </h1>
+      <div class="d-flex align-items-center">
+        <h1 class="navbar-brand">
+          <router-link :to="{ name: 'home' }">MP3000 AE</router-link>
+        </h1>
+        <ul class="nav">
+          <li class="nav-item" v-for="link in links" :key="link.label">
+            <router-link class="nav-link" :to="link.to">{{ link.label }}</router-link>
+          </li>
+        </ul>
+      </div>
       <ul class="nav justify-content-end">
-        <li class="nav-item" v-if="currentUser">
-          <router-link class="nav-link" :to="{ name: 'admin' }">Admin</router-link>
+        <li class="nav-item" v-for="link in adminLinks" :key="link.label">
+          <router-link class="nav-link" :to="link.to">{{ link.label }}</router-link>
         </li>
-        <li class="nav-item" v-if="currentUser">
+        <li class="nav-item">
           <a href="#" @click.prevent="logout" class="nav-link">Logout</a>
         </li>
       </ul>

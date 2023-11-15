@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import { useAdminStore } from '@/stores/admin'
+import { useUserStore } from '@/stores/user'
 
-const adminStore = useAdminStore()
+const userStore = useUserStore()
 
 const isLoading = ref(false)
 
-const users = computed(() => adminStore.users)
+const users = computed(() => userStore.users)
 
 onMounted(async () => {
   isLoading.value = true
-  await adminStore.fetchUsers()
+  await userStore.fetchUsers()
   isLoading.value = false
 })
 </script>

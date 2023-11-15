@@ -1,4 +1,4 @@
-import type { User } from '@/stores/admin/types'
+import type { User } from '@/stores/user/types'
 
 export function initCurrentUser(): User | null {
   const json = sessionStorage.getItem('me')

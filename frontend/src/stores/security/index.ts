@@ -1,25 +1,13 @@
 import { defineStore } from 'pinia'
-import type { User } from '@/stores/admin/types'
-import ApiClient, { ApiError, HttpMethodEnum } from '@/misc/api-client'
+import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
 import { useNotificationStore } from '@/stores/notification'
-import { initCurrentUser, persistCurrentUser } from '@/stores/admin/utils'
+import { initCurrentUser, persistCurrentUser } from '@/stores/security/utils'
 
-export const useAdminStore = defineStore('admin', {
+export const useSecurityStore = defineStore('security', {
   state: () => ({
     currentUser: initCurrentUser(),
-    users: [] as User[]
   }),
   actions: {
-    async fetchUsers() {
-      try {
-        this.users = await ApiClient.query(HttpMethodEnum.GET, '/api/users')
-      } catch (err: unknown) {
-        if (err instanceof ApiError) {
-          const notificationStore = useNotificationStore()
-          notificationStore.addError('Error while loading users: ' + err.message)
-        }
-      }
-    },
     async login(username: string, password: string) {
       try {
         this.currentUser = await ApiClient.query(HttpMethodEnum.POST, '/api/login', {
@@ -45,6 +33,6 @@ export const useAdminStore = defineStore('admin', {
       } finally {
         persistCurrentUser(this.currentUser)
       }
-    }
+    },
   }
 })

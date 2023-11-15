@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import type { Ref } from 'vue'
 import { nextTick, onMounted, ref } from 'vue'
-import { useAdminStore } from '@/stores/admin'
+import { useSecurityStore } from '@/stores/security'
 import { useRouter } from 'vue-router'
 
-const adminStore = useAdminStore()
+const securityStore = useSecurityStore()
 const router = useRouter()
 
 const isLoading = ref(false)
@@ -18,7 +18,7 @@ async function connect() {
   }
   isLoading.value = true
   try {
-    await adminStore.login(userName.value, password.value)
+    await securityStore.login(userName.value, password.value)
     router.push({ name: 'home' })
   } catch (err: unknown) {
     isLoading.value = false
