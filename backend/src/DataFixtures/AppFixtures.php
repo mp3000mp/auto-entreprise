@@ -7,6 +7,7 @@ use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Nelmio\Alice\Faker\Provider\AliceProvider;
 use Nelmio\Alice\Loader\NativeLoader;
+use Nelmio\Alice\ObjectSet;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class AppFixtures extends Fixture
@@ -20,16 +21,28 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        // system
+        $objectSet = $this->loadConfig($manager, 'app1.yml');
+        // fixtures
+        $this->loadConfig($manager, 'app2.yml', $objectSet->getParameters(), $objectSet->getObjects());
+    }
+
+    /**
+     * @param mixed[] $parameters
+     * @param mixed[] $objects
+     */
+    public function loadConfig(ObjectManager $manager, string $name, array $parameters = [], array $objects = []): ObjectSet
+    {
         $faker = Factory::create('fr_FR');
         $faker->addProvider(new AliceProvider());
         $loader = new NativeLoader($faker);
 
-        // system
-        $os = $loader->loadFile($this->fixturesPath.'/app.yml');
+        $os = $loader->loadFile($this->fixturesPath.'/'.$name, $parameters, $objects);
         foreach ($os->getObjects() as $o) {
             $manager->persist($o);
         }
-
         $manager->flush();
+
+        return $os;
     }
 }

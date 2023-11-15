@@ -9,6 +9,7 @@ use App\Entity\Contact;
 use App\Entity\MeanOfPayment;
 use App\Entity\Opportunity;
 use App\Entity\OpportunityStatus;
+use App\Entity\OpportunityStatusLog;
 use App\Entity\Tender;
 use App\Enum\MeanOfPaymentEnum;
 use App\Enum\OpportunityStatusEnum;
@@ -54,6 +55,9 @@ class OpportunityControllerTest extends AbstractController
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
         self::assertArrayHasKey('ref', $jsonResponse);
+        self::assertEquals(OpportunityStatusEnum::TRACKED->value, $jsonResponse['status']['label']);
+        $logs = $this->em->getRepository(OpportunityStatusLog::class)->findBy(['opportunity' => $jsonResponse['id']]);
+        self::assertCount(1, $logs);
     }
 
     // todo test inconsistent status with dates
@@ -94,6 +98,8 @@ class OpportunityControllerTest extends AbstractController
 
         self::assertArrayHasKey('contacts', $jsonResponse);
         self::assertCount(2, $jsonResponse['contacts']);
+        $logs = $this->em->getRepository(OpportunityStatusLog::class)->findBy(['opportunity' => $jsonResponse['id']]);
+        self::assertCount(2, $logs);
     }
 
     public function testOpportunityDelete(): void

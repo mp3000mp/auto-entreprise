@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
@@ -18,8 +19,8 @@ class OpportunityStatusLog
     private Opportunity $opportunity;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private User $createdBy;
+    #[ORM\JoinColumn(nullable: true)]
+    private ?UserInterface $createdBy;
 
     #[ORM\Column]
     #[Groups(['opportunity_show'])]
@@ -47,12 +48,12 @@ class OpportunityStatusLog
         return $this;
     }
 
-    public function getCreatedBy(): User
+    public function getCreatedBy(): ?UserInterface
     {
         return $this->createdBy;
     }
 
-    public function setCreatedBy(User $user): self
+    public function setCreatedBy(?UserInterface $user): self
     {
         $this->createdBy = $user;
 

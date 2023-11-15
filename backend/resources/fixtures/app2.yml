@@ -1,0 +1,10 @@
+include:
+  # opportunity
+  - opportunity.yml
+  - tender.yml
+  - tender-row.yml
+  - worked-time.yml
+
+  # cost
+  - cost-type.yml
+  - cost.yml

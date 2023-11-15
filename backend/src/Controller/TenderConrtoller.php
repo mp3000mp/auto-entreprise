@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Company;
-use App\Entity\Opportunity;
 use App\Entity\Tender;
-use App\Enum\OpportunityStatusEnum;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -21,10 +18,11 @@ class TenderConrtoller extends AbstractController
         if (count($tender->getWorkedTimes()) > 0) {
             return $this->jsonError('You cannot remove a tender with worked times.', Response::HTTP_BAD_REQUEST);
         }
-        if (count($tender->getStatusLogs()) > 0) {
+        if (count($tender->getStatusLogs()) > 1) {
             return $this->jsonError('You cannot remove a tender with status logs.', Response::HTTP_BAD_REQUEST);
         }
 
+        $this->em->remove($tender->getStatusLogs()->first());
         $this->em->remove($tender);
         $this->em->flush();
 

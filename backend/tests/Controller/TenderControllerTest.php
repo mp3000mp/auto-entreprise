@@ -8,8 +8,7 @@ use App\Entity\Opportunity;
 use App\Entity\Tender;
 use App\Entity\TenderRow;
 use App\Entity\TenderStatus;
-use App\Enum\MeanOfPaymentEnum;
-use App\Enum\OpportunityStatusEnum;
+use App\Entity\TenderStatusLog;
 use App\Enum\TenderStatusEnum;
 
 class TenderControllerTest extends AbstractController
@@ -29,11 +28,11 @@ class TenderControllerTest extends AbstractController
     public function testTenderAdd(): void
     {
         $this->loginUser($this->client);
-        $opportunities = $this->em->getRepository(Opportunity::class)->findAll();
+        $tenders = $this->em->getRepository(Opportunity::class)->findAll();
         $rawTender = [
-            'version' => 1,
+            'version' => 99,
             'averageDailyRate' => 300,
-            'opportunity' => sprintf('/api/opportunities/%d', $opportunities[0]->getId()),
+            'opportunity' => sprintf('/api/opportunities/%d', $tenders[0]->getId()),
         ];
 
         $this->client->request('POST', '/api/tenders', content: json_encode($rawTender));
@@ -41,16 +40,19 @@ class TenderControllerTest extends AbstractController
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
         self::assertArrayHasKey('averageDailyRate', $jsonResponse);
+        self::assertEquals(TenderStatusEnum::ONGOING->value, $jsonResponse['status']['label']);
+        $logs = $this->em->getRepository(TenderStatusLog::class)->findBy(['tender' => $jsonResponse['id']]);
+        self::assertCount(1, $logs);
     }
 
     // todo test inconsistent status with dates
     public function testTenderEdit(): void
     {
         $this->loginUser();
-        $opportunities = $this->em->getRepository(Tender::class)->findAll();
+        $tenders = $this->em->getRepository(Tender::class)->findAll();
         $status = $this->em->getRepository(TenderStatus::class)->findOneBy(['label' => TenderStatusEnum::SENT]);
-        $rawOpportunity = [
-            'version' => 2,
+        $rawTender = [
+            'version' => 98,
             'averageDailyRate' => 350,
             'sentAt' => '2023-11-10',
             'acceptedAt' => null,
@@ -62,11 +64,13 @@ class TenderControllerTest extends AbstractController
             'tenderFilePdf' => null,
         ];
 
-        $this->client->request('PUT', sprintf('/api/tenders/%d', $opportunities[0]->getId()), content: json_encode($rawOpportunity));
+        $this->client->request('PUT', sprintf('/api/tenders/%d', $tenders[0]->getId()), content: json_encode($rawTender));
         $this->assertResponseCode(200);
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
         self::assertArrayHasKey('averageDailyRate', $jsonResponse);
+        $logs = $this->em->getRepository(TenderStatusLog::class)->findBy(['tender' => $jsonResponse['id']]);
+        self::assertCount(2, $logs);
     }
 
     public function testTenderDelete(): void
