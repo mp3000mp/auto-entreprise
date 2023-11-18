@@ -4,6 +4,8 @@ import { nextTick, onMounted, ref } from 'vue'
 import { useSecurityStore } from '@/stores/security'
 import { useRouter } from 'vue-router'
 
+import Mp3000Button from '@/components/Mp3000Button.vue'
+
 const securityStore = useSecurityStore()
 const router = useRouter()
 
@@ -51,15 +53,13 @@ onMounted(async () => {
         placeholder="Password"
         :disabled="isLoading"
       />
-      <button
+      <mp3000-button
         @click.prevent="connect"
-        class="btn btn-outline-success ms-2"
-        type="submit"
-        :class="isLoading ? 'disabled' : ''"
-      >
-        <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status"></span>
-        <span v-else>OK</span>
-      </button>
+        :is-loading="isLoading"
+        :outline="true"
+        label="OK"
+        class="ms-2"
+      />
     </div>
   </div>
 </template>

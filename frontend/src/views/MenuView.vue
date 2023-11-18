@@ -8,38 +8,38 @@ const router = useRouter()
 const links = [
   {
     label: 'Opportunités',
-    to: {name: 'opportunities'},
+    to: { name: 'opportunities' }
   },
   {
     label: 'Devis',
-    to: {name: 'opportunities'},
+    to: { name: 'opportunities' }
   },
   {
     label: 'Contacts',
-    to: {name: 'contacts'},
+    to: { name: 'contacts' }
   },
   {
     label: 'Clients',
-    to: {name: 'companies'},
+    to: { name: 'companies' }
   },
   {
     label: 'Coûts',
-    to: {name: 'costs'},
+    to: { name: 'costs' }
   },
   {
     label: 'Reporting',
-    to: {name: 'reporting'},
-  },
+    to: { name: 'reporting' }
+  }
 ]
 const adminLinks = [
   {
     label: 'Utilisateurs',
-    to: {name: 'users'},
+    to: { name: 'users' }
   },
   {
     label: 'Mon compte',
-    to: {name: 'account'},
-  },
+    to: { name: 'account' }
+  }
 ]
 
 async function logout() {

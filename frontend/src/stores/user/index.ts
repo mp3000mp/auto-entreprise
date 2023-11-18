@@ -5,19 +5,19 @@ import { useNotificationStore } from '@/stores/notification'
 
 const urlPrefix = '/api/users'
 export const useUserStore = defineStore('user', {
-    state: () => ({
-        users: [] as User[]
-    }),
-    actions: {
-        async fetchUsers() {
-            try {
-                this.users = await ApiClient.query(HttpMethodEnum.GET, urlPrefix)
-            } catch (err: unknown) {
-                if (err instanceof ApiError) {
-                    const notificationStore = useNotificationStore()
-                    notificationStore.addError('Error while loading users: ' + err.message)
-                }
-            }
-        },
+  state: () => ({
+    users: [] as User[]
+  }),
+  actions: {
+    async fetchUsers() {
+      try {
+        this.users = await ApiClient.query(HttpMethodEnum.GET, urlPrefix)
+      } catch (err: unknown) {
+        if (err instanceof ApiError) {
+          const notificationStore = useNotificationStore()
+          notificationStore.addError('Error while loading users: ' + err.message)
+        }
+      }
     }
+  }
 })

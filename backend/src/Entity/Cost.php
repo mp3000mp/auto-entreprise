@@ -28,7 +28,7 @@ class Cost
     #[Groups(['cost_list'])]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'date')]
     #[Groups(['cost_list', 'cost_write'])]
     private \DateTime $date;
 

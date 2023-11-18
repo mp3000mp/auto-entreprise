@@ -5,7 +5,7 @@ import { initCurrentUser, persistCurrentUser } from '@/stores/security/utils'
 
 export const useSecurityStore = defineStore('security', {
   state: () => ({
-    currentUser: initCurrentUser(),
+    currentUser: initCurrentUser()
   }),
   actions: {
     async login(username: string, password: string) {
@@ -33,6 +33,6 @@ export const useSecurityStore = defineStore('security', {
       } finally {
         persistCurrentUser(this.currentUser)
       }
-    },
+    }
   }
 })

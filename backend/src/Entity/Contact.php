@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,6 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(fields: 'email')]
 #[ApiResource(
     operations: [
+        new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'contact_list']),
         new Get(paginationEnabled: false, normalizationContext: ['groups' => 'contact_show']),
         new Post(normalizationContext: ['groups' => 'contact_show'], denormalizationContext: ['groups' => 'contact_write']),
         new Put(normalizationContext: ['groups' => 'contact_show'], denormalizationContext: ['groups' => 'contact_write']),
@@ -27,16 +29,16 @@ class Contact
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['contact_show', 'company_show'])]
+    #[Groups(['contact_list', 'contact_show', 'company_show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['contact_show', 'company_show', 'contact_write'])]
+    #[Groups(['contact_list', 'contact_show', 'company_show', 'contact_write'])]
     #[Assert\NotBlank]
     private string $lastName;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['contact_show', 'company_show', 'contact_write'])]
+    #[Groups(['contact_list', 'contact_show', 'company_show', 'contact_write'])]
     #[Assert\NotBlank]
     private string $firstName;
 
@@ -52,13 +54,14 @@ class Contact
     // todo company history
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'contacts')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['contact_show', 'contact_write'])]
+    #[Groups(['contact_list', 'contact_show', 'contact_write'])]
     private Company $company;
 
     /**
      * @var ArrayCollection<int, Opportunity>
      */
     #[ORM\ManyToMany(targetEntity: Opportunity::class, mappedBy: 'contacts')]
+    #[Groups(['contact_show'])]
     private Collection $opportunities;
 
     #[ORM\Column(type: 'text', nullable: true)]

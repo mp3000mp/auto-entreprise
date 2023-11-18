@@ -25,20 +25,20 @@ onMounted(async () => {
     <div class="table-responsive" v-else>
       <table class="table table-hover">
         <thead>
-        <tr>
-          <th>Id</th>
-          <th>Email</th>
-          <th>Username</th>
-          <th>Roles</th>
-        </tr>
+          <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Roles</th>
+          </tr>
         </thead>
         <tbody>
-        <tr v-for="user in users" :key="user.id">
-          <td>{{ user.id }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.username }}</td>
-          <td>{{ user.roles.join(',') }}</td>
-        </tr>
+          <tr v-for="user in users" :key="user.id">
+            <td>{{ user.id }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.roles.join(',') }}</td>
+          </tr>
         </tbody>
       </table>
     </div>

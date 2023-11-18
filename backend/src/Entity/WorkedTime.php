@@ -42,7 +42,7 @@ class WorkedTime
     #[Groups(['worked_time_add'])]
     private User $user;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'date')]
     #[Groups(['tender_show', 'worked_time_add', 'worked_time_edit'])]
     #[Assert\LessThanOrEqual('now')]
     private \DateTime $date;

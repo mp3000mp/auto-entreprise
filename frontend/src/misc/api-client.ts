@@ -26,7 +26,12 @@ export class ApiClient {
     'Content-Type': 'application/json'
   }
 
-  public async query(httpMethod: HttpMethodEnum, url: string, json: any = null, options: ApiClientOptions = {}) {
+  public async query(
+    httpMethod: HttpMethodEnum,
+    url: string,
+    json: any = null,
+    options: ApiClientOptions = {}
+  ) {
     options = {
       ...defaultApiClientOptions,
       ...options

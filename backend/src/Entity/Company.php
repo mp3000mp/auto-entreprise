@@ -27,11 +27,11 @@ class Company
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['company_list', 'company_show', 'contact_show'])]
+    #[Groups(['company_list', 'company_show', 'contact_list', 'contact_show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['opportunity_list', 'company_list', 'company_show', 'contact_show', 'company_write'])]
+    #[Groups(['opportunity_list', 'company_list', 'company_show', 'contact_list', 'contact_show', 'company_write'])]
     #[Assert\NotBlank]
     private string $name;
 

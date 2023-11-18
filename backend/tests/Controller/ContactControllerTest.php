@@ -10,6 +10,17 @@ use App\Entity\Opportunity;
 
 class ContactControllerTest extends AbstractController
 {
+    public function testContactIndex(): void
+    {
+        $this->loginUser($this->client);
+
+        $this->client->request('GET', '/api/contacts');
+        $this->assertResponseCode(200);
+        $jsonResponse = $this->getResponseJson($this->client->getResponse());
+
+        self::assertCount(11, $jsonResponse);
+    }
+
     public function testContactShow(): void
     {
         $this->loginUser($this->client);

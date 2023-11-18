@@ -21,3 +21,13 @@ h1 {
   flex: 1;
   overflow-y: auto;
 }
+
+.modal {
+  &.show {
+    display: block;
+  }
+}
+
+.cp {
+  cursor: pointer;
+}

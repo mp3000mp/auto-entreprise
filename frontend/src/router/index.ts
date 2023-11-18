@@ -4,13 +4,13 @@ import LoginView from '../views/LoginView.vue'
 
 import { useSecurityStore } from '@/stores/security'
 import HomeView from '@/views/HomeView.vue'
-import OpportunitiesView from "@/views/OpportunitiesView.vue";
-import TendersView from "@/views/TendersView.vue";
-import ContactsView from "@/views/ContactsView.vue";
-import CompaniesView from "@/views/CompaniesView.vue";
-import ReportingView from "@/views/ReportingView.vue";
-import AccountView from "@/views/AccountView.vue";
-import CostsView from "@/views/CostsView.vue";
+import OpportunitiesView from '@/views/OpportunitiesView.vue'
+import TendersView from '@/views/TendersView.vue'
+import ContactsView from '@/views/ContactsView.vue'
+import CompaniesView from '@/views/CompaniesView.vue'
+import ReportingView from '@/views/ReportingView.vue'
+import AccountView from '@/views/AccountView.vue'
+import CostsView from '@/views/CostsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -65,7 +65,7 @@ const router = createRouter({
       path: '/users',
       name: 'users',
       component: UsersView
-    },
+    }
   ]
 })
 
