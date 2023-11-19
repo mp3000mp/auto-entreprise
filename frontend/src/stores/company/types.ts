@@ -1,18 +1,14 @@
-import type {BaseContact, ContactList} from "@/stores/contact/types";
+import type {ListContact} from "@/stores/contact/types";
 
-export type BaseCompany = {
+export interface Company {
     id: number
-    name: string;
-}
-
-export type Company = BaseCompany & {
-    street1: string;
-    street2: string;
-    postCode: string;
-    city: string;
+    name: string
+    street1: string
+    street2: string
+    postCode: string
+    city: string
+    contacts: ListContact[]
     // opportunities
 }
-
-export type CompanyFull = Company & {
-    contacts: BaseContact;
-}
+export type NewCompany = Omit<Company, 'id'|'contacts'|'opportunities'>
+export type ListCompany = Pick<Company, 'id'|'name'>

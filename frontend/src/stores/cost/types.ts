@@ -5,20 +5,19 @@ export type CostType = {
   label: string
 }
 
-type BaseCost = {
+export interface Cost {
   id: number
-  description: string
-  amount: number
-}
-export type CostDtoIn = BaseCost & {
-  date: string
   type: CostType
-}
-export type CostDtoOut = BaseCost & {
-  date: string
-  type: string
-}
-export type Cost = BaseCost & {
   date: Dayjs
-  type: CostType
+  amount: number
+  description: string
 }
+export type NewCost = Omit<Cost, 'id'>
+export type CostDtoIn = Omit<Cost, 'date'> & {
+  date: string
+}
+export type CostDtoOut = Omit<Cost, 'date'|'type'> & {
+  type: string
+  date: string
+}
+export type NewCostDtoOut = Omit<CostDtoOut, 'id'>

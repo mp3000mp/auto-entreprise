@@ -1,15 +1,16 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import {computed, ref, watch} from 'vue'
+import type {Ref} from 'vue'
 import { useCostStore } from '@/stores/cost'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 
 import BootstrapModal from '@/components/BootstrapModal.vue'
-import type { Cost } from '@/stores/cost/types'
+import type {Cost, NewCost} from '@/stores/cost/types'
 
 import Mp3000Button from '@/components/Mp3000Button.vue'
 import dayjs from '@/misc/dayjs'
-
+import DatePicker from "@/components/DatePicker.vue";
 const costStore = useCostStore()
 const emit = defineEmits(['stop-showing'])
 const props = defineProps<{
@@ -18,14 +19,13 @@ const props = defineProps<{
 }>()
 
 const isLoading = ref(false)
-const currentCost = ref(getEmptyCost())
+const currentCost = ref(getEmptyCost()) as Ref<Cost|NewCost>
 const errorMessage = ref('')
 
 const costTypes = computed(() => costStore.costTypes)
 
-function getEmptyCost(): Cost {
+function getEmptyCost(): NewCost {
   return {
-    id: 0,
     type: { id: 0, label: '' },
     date: dayjs(),
     amount: 0,
@@ -33,7 +33,7 @@ function getEmptyCost(): Cost {
   }
 }
 
-function validate(cost: Cost): string {
+function validate(cost: Cost|NewCost): string {
   if (cost.type.id === 0) {
     return 'Type non valide'
   }
@@ -44,13 +44,17 @@ function validate(cost: Cost): string {
 }
 
 async function submit() {
+  console.log(currentCost.value)
   errorMessage.value = validate(currentCost.value)
   if (errorMessage.value !== '') {
+    console.log('popo')
     return
   }
-  await props.cost
+  await (
+      'id' in currentCost.value
       ? costStore.editCost(currentCost.value)
       : costStore.addCost(currentCost.value)
+  )
   emit('stop-showing')
 }
 
@@ -78,12 +82,9 @@ watch(
       </div>
       <div class="form-group">
         <label>Date</label>
-        <vue-date-picker
+        <date-picker
             v-model="currentCost.date"
             :disabled="isLoading"
-            :enable-time-picker="false"
-            format="dd/MM/yyyy"
-            locale="fr"
         />
       </div>
       <div class="form-group">

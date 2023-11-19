@@ -10,7 +10,7 @@ const users = computed(() => userStore.users)
 
 onMounted(async () => {
   isLoading.value = true
-  await userStore.fetchUsers()
+  await userStore.fetch()
   isLoading.value = false
 })
 </script>

@@ -52,7 +52,7 @@ class Company
     #[ORM\Column(length: 10)]
     #[Groups(['company_show', 'company_write'])]
     #[Assert\NotBlank]
-    private string $postcode;
+    private string $postCode;
 
     /**
      * @var ArrayCollection<int, Contact>
@@ -127,14 +127,14 @@ class Company
         return $this;
     }
 
-    public function getPostcode(): string
+    public function getPostCode(): string
     {
-        return $this->postcode;
+        return $this->postCode;
     }
 
-    public function setPostcode(string $postcode): self
+    public function setPostCode(string $postCode): self
     {
-        $this->postcode = $postcode;
+        $this->postCode = $postCode;
 
         return $this;
     }
@@ -147,7 +147,7 @@ class Company
         return $this->contacts;
     }
 
-    public function addContact(Contact $contact): self
+    public function add(Contact $contact): self
     {
         $this->contacts->add($contact);
 

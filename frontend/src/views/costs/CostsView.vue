@@ -3,13 +3,16 @@ import { computed, onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { useCostStore } from '@/stores/cost'
 
-import CostForm from '@/views/forms/CostForm.vue'
+import CostForm from '@/views/costs/CostForm.vue'
 import type { Cost } from '@/stores/cost/types'
+import Mp3000Icon from "@/components/Mp3000Icon.vue";
+import {ListContact} from "@/stores/contact/types";
 
 const costStore = useCostStore()
 
 const isLoading = ref(false)
 const isFormShowing = ref(false)
+const isRemoving = ref(false)
 const currentCost = ref(null) as Ref<Cost | null>
 
 const costs = computed(() => costStore.costs)
@@ -21,6 +24,11 @@ function showForm(cost: Cost | null) {
 function hideForm() {
   isFormShowing.value = false
   currentCost.value = null
+}
+async function remove(cost: Cost) {
+  isRemoving.value = true
+  await costStore.deleteCost(cost.id)
+  isRemoving.value = false
 }
 
 onMounted(async () => {
@@ -54,6 +62,7 @@ onMounted(async () => {
               <a href="#" @click.prevent="showForm(cost)" title="Editer">
                 <font-awesome-icon :icon="['fa', 'pen-to-square']" />
               </a>
+              <mp3000-icon @click.prevent="remove(cost)" icon="trash" title="Supprimer" :is-loading="isRemoving" />
               {{ cost.type.label }}
             </td>
             <td>{{ cost.date.format('YYYY-MM-DD') }}</td>

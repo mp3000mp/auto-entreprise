@@ -39,7 +39,7 @@ abstract class AbstractController extends WebTestCase
         parent::setUp();
     }
 
-    protected function assertResponseCode(int $expectedCode): void
+    protected function assertResponseCode(int $expectedCode, bool $doNotDump = false): void
     {
         $responseCode = $this->client->getResponse()->getStatusCode();
 
@@ -58,7 +58,9 @@ abstract class AbstractController extends WebTestCase
             return;
         }
 
-        dump($responseJson);
+        if (!$doNotDump) {
+            dump($responseJson);
+        }
         self::assertEquals($expectedCode, $responseCode);
     }
 

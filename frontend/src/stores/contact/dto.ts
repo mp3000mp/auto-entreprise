@@ -1,6 +1,6 @@
-import type {Contact, ContactDtoOut} from "@/stores/contact/types";
+import type {Contact, ContactDtoOut, NewContact, NewContactDtoOut} from "@/stores/contact/types";
 
-export function convertContactOut(contact: Contact): ContactDtoOut {
+export function convertContactOut(contact: Contact|NewContact): ContactDtoOut|NewContactDtoOut {
     return {
         ...contact,
         company: '/api/companies/' + contact.company.id,

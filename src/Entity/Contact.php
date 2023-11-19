@@ -163,7 +163,7 @@ class Contact implements AuditrailableInterface
     {
         if (!$this->opportunities->contains($opportunity)) {
             $this->opportunities[] = $opportunity;
-            $opportunity->addContact($this);
+            $opportunity->add($this);
         }
 
         return $this;

@@ -1,16 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import UsersView from '../views/UsersView.vue'
-import LoginView from '../views/LoginView.vue'
+import UsersView from '../views/users/UsersView.vue'
+import LoginView from '../views/security/LoginView.vue'
 
 import { useSecurityStore } from '@/stores/security'
 import HomeView from '@/views/HomeView.vue'
-import OpportunitiesView from '@/views/OpportunitiesView.vue'
-import TendersView from '@/views/TendersView.vue'
-import ContactsView from '@/views/ContactsView.vue'
-import CompaniesView from '@/views/CompaniesView.vue'
-import ReportingView from '@/views/ReportingView.vue'
-import AccountView from '@/views/AccountView.vue'
-import CostsView from '@/views/CostsView.vue'
+import OpportunitiesView from '@/views/opportunities/OpportunitiesView.vue'
+import TendersView from '@/views/tenders/TendersView.vue'
+import ContactsView from '@/views/contacts/ContactsView.vue'
+import CompaniesView from '@/views/companies/CompaniesView.vue'
+import CompanyView from '@/views/companies/CompanyView.vue'
+import ContactView from '@/views/contacts/ContactView.vue'
+import ReportingView from '@/views/reporting/ReportingView.vue'
+import AccountView from '@/views/security/AccountView.vue'
+import CostsView from '@/views/costs/CostsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,9 +44,21 @@ const router = createRouter({
       component: ContactsView
     },
     {
+      path: '/contacts/:id',
+      name: 'contact',
+      component: ContactView,
+      props: route => ({ contactId: Number(route.params.id) })
+    },
+    {
       path: '/companies',
       name: 'companies',
       component: CompaniesView
+    },
+    {
+      path: '/companies/:id',
+      name: 'company',
+      component: CompanyView,
+      props: route => ({ companyId: Number(route.params.id) })
     },
     {
       path: '/costs',
@@ -69,12 +83,17 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  const adminStore = useSecurityStore()
-  if (adminStore.currentUser === null && to.name !== 'login') {
+router.beforeEach(async (to, from, next) => {
+  const securityStore = useSecurityStore()
+
+  if (!securityStore.loggedInChecked) {
+    await securityStore.checkisLoggedIn()
+  }
+
+  if (securityStore.currentUser === null && to.name !== 'login') {
     return next({ name: 'login' })
   }
-  if (adminStore.currentUser !== null && to.name === 'login') {
+  if (securityStore.currentUser !== null && to.name === 'login') {
     return next({ name: 'home' })
   }
   next()

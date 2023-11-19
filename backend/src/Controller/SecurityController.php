@@ -16,6 +16,13 @@ class SecurityController extends AbstractController
         throw new \Exception('Login should be handled by Symfony internal');
     }
 
+    // todo add doc in api platform
+    #[Route('/me', 'users.me', methods: ['GET'])]
+    public function me(): Response
+    {
+        return $this->responseHelper->createResponse($this->getUser(), ['me']);
+    }
+
     #[Route(path: '/logout', name: 'security.logout', methods: ['GET'])]
     public function logout(): Response
     {

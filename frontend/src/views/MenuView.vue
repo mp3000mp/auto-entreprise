@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 import { useSecurityStore } from '@/stores/security'
 import { useRouter } from 'vue-router'
+import {computed} from "vue";
 
 const securityStore = useSecurityStore()
 const router = useRouter()
+
+const currentUser = computed(() => securityStore.currentUser)
 
 const links = [
   {
@@ -55,13 +58,13 @@ async function logout() {
         <h1 class="navbar-brand">
           <router-link :to="{ name: 'home' }">MP3000 AE</router-link>
         </h1>
-        <ul class="nav">
+        <ul class="nav" v-if="null !== currentUser">
           <li class="nav-item" v-for="link in links" :key="link.label">
             <router-link class="nav-link" :to="link.to">{{ link.label }}</router-link>
           </li>
         </ul>
       </div>
-      <ul class="nav justify-content-end">
+      <ul class="nav justify-content-end" v-if="null !== currentUser">
         <li class="nav-item" v-for="link in adminLinks" :key="link.label">
           <router-link class="nav-link" :to="link.to">{{ link.label }}</router-link>
         </li>

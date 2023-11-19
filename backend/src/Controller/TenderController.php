@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/tenders')]
-class TenderConrtoller extends AbstractController
+class TenderController extends AbstractController
 {
     // todo add doc in api platform
     #[Route('/{id}', 'tenders.delete', methods: ['DELETE'], requirements: ['id' => '\d+'])]

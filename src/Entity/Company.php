@@ -159,7 +159,7 @@ class Company implements AuditrailableInterface
         return $this->contacts;
     }
 
-    public function addContact(Contact $contact): self
+    public function add(Contact $contact): self
     {
         if (!$this->contacts->contains($contact)) {
             $this->contacts[] = $contact;

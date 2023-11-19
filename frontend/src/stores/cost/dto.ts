@@ -1,4 +1,4 @@
-import type { Cost, CostDtoIn, CostDtoOut } from '@/stores/cost/types'
+import type {Cost, CostDtoIn, CostDtoOut, NewCost, NewCostDtoOut} from '@/stores/cost/types'
 
 import dayjs from '@/misc/dayjs'
 
@@ -8,7 +8,7 @@ export function convertCostIn(rawCost: CostDtoIn): Cost {
     date: dayjs(rawCost.date),
   }
 }
-export function convertCostOut(cost: Cost): CostDtoOut {
+export function convertCostOut(cost: Cost|NewCost): CostDtoOut|NewCostDtoOut {
   return {
     ...cost,
     date: cost.date.format('YYYY-MM-DD'),

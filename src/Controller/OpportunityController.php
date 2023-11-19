@@ -119,7 +119,7 @@ namespace App\Controller;
             if (null != $request->get('contact_id')) {
                 $contact = $this->getDoctrine()->getRepository(Contact::class)->find($request->get('contact_id'));
                 if (null != $contact) {
-                    $opportunity->addContact($contact);
+                    $opportunity->add($contact);
                 }
             }
 

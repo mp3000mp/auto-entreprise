@@ -1,20 +1,17 @@
-import type {BaseCompany} from "@/stores/company/types";
+import type {ListCompany} from "@/stores/company/types";
 
-export type BaseContact = {
-    id: number;
-    firstName: string;
-    lastName: string;
+export interface Contact {
+    id: number
+    firstName: string
+    lastName: string
+    company: ListCompany;
+    email: string
+    phone: string
+    comments: string
 }
-
-export type ContactDtoOut = BaseContact & {
-    company: string;
+export type NewContact = Omit<Contact, 'id'>
+export type ListContact = Omit<Contact, 'comments'>
+export type ContactDtoOut = Omit<Contact, 'company'> & {
+    company: string
 }
-export type ContactList = BaseContact & {
-    company: BaseCompany;
-}
-export type Contact = ContactList & {
-    email: string;
-    phone: string;
-    comments: string;
-    // opportunities
-}
+export type NewContactDtoOut = Omit<ContactDtoOut, 'id'>

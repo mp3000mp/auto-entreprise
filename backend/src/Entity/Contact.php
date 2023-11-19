@@ -43,12 +43,12 @@ class Contact
     private string $firstName;
 
     #[ORM\Column(length: 55, unique: true)]
-    #[Groups(['contact_show', 'contact_write'])]
+    #[Groups(['contact_list', 'contact_show', 'company_show', 'contact_write'])]
     #[Assert\Email]
     private string $email;
 
     #[ORM\Column(length: 15, nullable: true)]
-    #[Groups(['contact_show', 'contact_write'])]
+    #[Groups(['contact_list', 'contact_show', 'company_show', 'contact_write'])]
     private ?string $phone = null;
 
     // todo company history
