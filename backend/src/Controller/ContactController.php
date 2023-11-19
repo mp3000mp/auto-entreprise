@@ -24,4 +24,11 @@ class ContactController extends AbstractController
 
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }
+
+    // todo add doc in api platform
+    #[Route('/deletable', 'contacts.deletable', methods: ['GET'])]
+    public function deletable(): Response
+    {
+        return $this->json($this->em->getRepository(Contact::class)->findDeletableIds());
+    }
 }

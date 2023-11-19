@@ -6,25 +6,30 @@ import { useContactStore } from '@/stores/contact'
 import ContactForm from '@/views/contacts/ContactForm.vue'
 import type { ListContact} from '@/stores/contact/types'
 import Mp3000Icon from "@/components/Mp3000Icon.vue";
+import ContactRow from "@/views/contacts/ContactRow.vue";
+import Mp3000Table from "@/components/Mp3000Table.vue";
+import CostRow from "@/views/costs/CostRow.vue";
 
 const contactStore = useContactStore()
 
 const isLoading = ref(false)
 const isFormShowing = ref(false)
-const isRemoving = ref(false)
 const currentContactId = ref(null) as Ref<number | null>
 
 const contacts = computed(() => contactStore.contacts)
 const deletableIds = computed(() => contactStore.deletableIds)
 
+const filerSearch = ref('')
+const filteredContacts = computed(() => contacts.value.filter(contact => {
+  if (filerSearch.value.length < 3) {
+    return true
+  }
+  return (contact.firstName+contact.lastName+contact.email).toLowerCase().includes(filerSearch.value.toLowerCase())
+}))
+
 function showForm(contact: ListContact | null) {
   isFormShowing.value = true
   currentContactId.value = contact?.id ?? null
-}
-async function remove(contact: ListContact) {
-  isRemoving.value = false
-  await contactStore.delete(contact.id)
-  isRemoving.value = true
 }
 function hideForm() {
   isFormShowing.value = false
@@ -41,39 +46,31 @@ onMounted(async () => {
 
 <template>
   <div>
-    <div class="text-center my-5" v-if="isLoading">
-      <div class="spinner-border">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-    <div class="table-responsive" v-else>
-      <table class="table table-hover">
-        <thead>
+    <mp3000-table :is-loading="isLoading">
+      <template v-slot:filters>
+        <div class="col-auto">
+          <div class="form-group">
+            <label>Recherche</label>
+            <input
+                type="text"
+                class="form-control"
+                v-model="filerSearch"
+            />
+          </div>
+        </div>
+      </template>
+      <template v-slot:header>
         <tr>
           <th>Nom</th>
           <th>Client</th>
           <th>Email</th>
           <th>Téléphone</th>
         </tr>
-        </thead>
-        <tbody>
-        <tr v-for="contact in contacts" :key="contact.id">
-          <td>
-            <a href="#" @click.prevent="showForm(contact)" title="Editer">
-              <font-awesome-icon :icon="['fa', 'pen-to-square']" />
-            </a>
-            <mp3000-icon v-if="deletableIds.includes(contact.id)" @click.prevent="remove(contact)" icon="trash" title="Supprimer" :is-loading="isRemoving" />
-            <router-link :to="{name: 'contact', params: {id: contact.id}}">{{ contact.firstName }} {{ contact.lastName }}</router-link>
-          </td>
-          <td>
-            <router-link :to="{name: 'company', params: {id: contact.company.id}}">{{ contact.company.name }}</router-link>
-          </td>
-          <td>{{ contact.email }}</td>
-          <td>{{ contact.phone }}</td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+      </template>
+      <template v-slot:body>
+        <contact-row v-for="contact in filteredContacts" :key="contact.id" :is-deletable="deletableIds.includes(contact.id)" :contact="contact" @show-form="showForm(contact)" />
+      </template>
+    </mp3000-table>
     <button @click.prevent="showForm(null)" class="btn btn-primary">Nouveau</button>
     <contact-form :contact-id="currentContactId" :is-showing="isFormShowing" @stop-showing="hideForm" />
   </div>

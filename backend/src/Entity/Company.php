@@ -7,19 +7,20 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
+#[ORM\Entity(CompanyRepository::class)]
 #[ApiResource(
     operations: [
         new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'company_list']),
-        new Get(normalizationContext: ['groups' => 'company_show']),
+        new Get(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'company_show']),
         new Post(normalizationContext: ['groups' => 'company_show'], denormalizationContext: ['groups' => 'company_write']),
-        new Put(normalizationContext: ['groups' => 'company_show'], denormalizationContext: ['groups' => 'company_write']),
+        new Put(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'company_show'], denormalizationContext: ['groups' => 'company_write']),
     ],
 )]
 class Company

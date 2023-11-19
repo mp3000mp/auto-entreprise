@@ -83,4 +83,15 @@ class ContactControllerTest extends AbstractController
         $this->client->request('DELETE', sprintf('/api/contacts/%d', $emptyContact->getId()));
         $this->assertResponseCode(204);
     }
+
+    public function testDeletableContacts(): void
+    {
+        $this->loginUser();
+
+        $this->client->request('GET', sprintf('/api/contacts/deletable'));
+        $this->assertResponseCode(200);
+        $jsonResponse = $this->getResponseJson($this->client->getResponse());
+
+        self::assertCount(4, $jsonResponse);
+    }
 }

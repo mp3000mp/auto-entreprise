@@ -6,7 +6,8 @@ import { useCostStore } from '@/stores/cost'
 import CostForm from '@/views/costs/CostForm.vue'
 import type { Cost } from '@/stores/cost/types'
 import Mp3000Icon from "@/components/Mp3000Icon.vue";
-import {ListContact} from "@/stores/contact/types";
+import Mp3000Table from "@/components/Mp3000Table.vue";
+import CostRow from "@/views/costs/CostRow.vue";
 
 const costStore = useCostStore()
 
@@ -15,7 +16,16 @@ const isFormShowing = ref(false)
 const isRemoving = ref(false)
 const currentCost = ref(null) as Ref<Cost | null>
 
+const costTypes = computed(() => costStore.costTypes)
 const costs = computed(() => costStore.costs)
+
+const filterTypeId = ref(null) as Ref<number|null>
+const filteredCosts = computed(() => costs.value.filter(cost => {
+  if (null === filterTypeId.value) {
+    return true
+  }
+  return cost.type.id === filterTypeId.value
+}))
 
 function showForm(cost: Cost | null) {
   isFormShowing.value = true
@@ -41,37 +51,31 @@ onMounted(async () => {
 
 <template>
   <div>
-    <div class="text-center my-5" v-if="isLoading">
-      <div class="spinner-border">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-    <div class="table-responsive" v-else>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Date</th>
-            <th>Montant</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="cost in costs" :key="cost.id">
-            <td>
-              <a href="#" @click.prevent="showForm(cost)" title="Editer">
-                <font-awesome-icon :icon="['fa', 'pen-to-square']" />
-              </a>
-              <mp3000-icon @click.prevent="remove(cost)" icon="trash" title="Supprimer" :is-loading="isRemoving" />
-              {{ cost.type.label }}
-            </td>
-            <td>{{ cost.date.format('YYYY-MM-DD') }}</td>
-            <td>{{ cost.amount.toFixed(2) }}</td>
-            <td>{{ cost.description }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <mp3000-table :is-loading="isLoading">
+      <template v-slot:filters>
+        <div class="col-auto">
+          <div class="form-group">
+            <label>Type</label>
+            <select class="form-select" v-model="filterTypeId">
+              <option v-for="costType in costTypes" :key="costType.id" :value="costType.id">
+                {{ costType.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </template>
+      <template v-slot:header>
+        <tr>
+          <th>Type</th>
+          <th>Date</th>
+          <th>Montant</th>
+          <th>Description</th>
+        </tr>
+      </template>
+      <template v-slot:body>
+        <cost-row v-for="cost in filteredCosts" :key="cost.id" :cost="cost" @show-form="showForm(cost)" />
+      </template>
+    </mp3000-table>
     <button @click.prevent="showForm(null)" class="btn btn-primary">Nouveau</button>
     <cost-form :cost="currentCost" :is-showing="isFormShowing" @stop-showing="hideForm" />
   </div>

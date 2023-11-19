@@ -44,10 +44,8 @@ function validate(cost: Cost|NewCost): string {
 }
 
 async function submit() {
-  console.log(currentCost.value)
   errorMessage.value = validate(currentCost.value)
   if (errorMessage.value !== '') {
-    console.log('popo')
     return
   }
   await (

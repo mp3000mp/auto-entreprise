@@ -84,4 +84,15 @@ class CompanyControllerTest extends AbstractController
         $this->client->request('DELETE', sprintf('/api/companies/%d', $emptyCompany->getId()));
         $this->assertResponseCode(204);
     }
+
+    public function testDeletableCompanies(): void
+    {
+        $this->loginUser();
+
+        $this->client->request('GET', sprintf('/api/companies/deletable'));
+        $this->assertResponseCode(200);
+        $jsonResponse = $this->getResponseJson($this->client->getResponse());
+
+        self::assertCount(1, $jsonResponse);
+    }
 }

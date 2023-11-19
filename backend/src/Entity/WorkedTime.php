@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new Post(normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'worked_time_add']),
-        new Put(normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'worked_time_edit']),
+        new Put(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'worked_time_edit']),
         new Delete(),
     ]
 )]

@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'cost_list']),
         new Post(normalizationContext: ['groups' => 'cost_list'], denormalizationContext: ['groups' => 'cost_write']),
-        new Put(normalizationContext: ['groups' => 'cost_list'], denormalizationContext: ['groups' => 'cost_write']),
+        new Put(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'cost_list'], denormalizationContext: ['groups' => 'cost_write']),
         new Delete(),
     ]
 )]

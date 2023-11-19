@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Repository\ContactRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,14 +15,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
+#[ORM\Entity(ContactRepository::class)]
 #[UniqueEntity(fields: 'email')]
 #[ApiResource(
     operations: [
         new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'contact_list']),
-        new Get(paginationEnabled: false, normalizationContext: ['groups' => 'contact_show']),
+        new Get(requirements: ['id' => '\d+'], paginationEnabled: false, normalizationContext: ['groups' => 'contact_show']),
         new Post(normalizationContext: ['groups' => 'contact_show'], denormalizationContext: ['groups' => 'contact_write']),
-        new Put(normalizationContext: ['groups' => 'contact_show'], denormalizationContext: ['groups' => 'contact_write']),
+        new Put(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'contact_show'], denormalizationContext: ['groups' => 'contact_write']),
     ]
 )]
 class Contact

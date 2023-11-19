@@ -18,9 +18,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
     operations: [
         new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'opportunity_list']),
-        new Get(normalizationContext: ['groups' => 'opportunity_show']),
+        new Get(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'opportunity_show']),
         new Post(normalizationContext: ['groups' => 'opportunity_show'], denormalizationContext: ['groups' => 'opportunity_add']),
-        new Put(normalizationContext: ['groups' => 'opportunity_show'], denormalizationContext: ['groups' => 'opportunity_edit']),
+        new Put(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'opportunity_show'], denormalizationContext: ['groups' => 'opportunity_edit']),
     ]
 )]
 class Opportunity

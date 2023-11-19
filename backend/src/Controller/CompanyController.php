@@ -27,4 +27,11 @@ class CompanyController extends AbstractController
 
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }
+
+    // todo add doc in api platform
+    #[Route('/deletable', 'companies.deletable', methods: ['GET'])]
+    public function deletable(): Response
+    {
+        return $this->json($this->em->getRepository(Company::class)->findDeletableIds());
+    }
 }

@@ -16,9 +16,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\UniqueConstraint(columns: ['version', 'opportunity_id'])]
 #[ApiResource(
     operations: [
-        new Get(normalizationContext: ['groups' => 'tender_show']),
+        new Get(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'tender_show']),
         new Post(normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'tender_add']),
-        new Put(normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'tender_edit']),
+        new Put(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'tender_edit']),
     ]
 )]
 class Tender
