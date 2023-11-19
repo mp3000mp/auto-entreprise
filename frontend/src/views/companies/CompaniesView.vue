@@ -11,6 +11,9 @@ import Mp3000Icon from "@/components/Mp3000Icon.vue";
 import Mp3000Table from "@/components/Mp3000Table.vue";
 import ContactRow from "@/views/contacts/ContactRow.vue";
 import CompanyRow from "@/views/companies/CompanyRow.vue";
+import {SortConfigTypeEnum, Sorter} from "@/misc/sorter";
+import {Contact} from "@/stores/contact/types";
+import Mp3000TableHeader from "@/components/Mp3000TableHeader.vue";
 
 const companyStore = useCompanyStore()
 
@@ -28,6 +31,9 @@ const filteredCompanies = computed(() => companies.value.filter(company => {
   }
   return company.name.toLowerCase().includes(filerSearch.value.toLowerCase())
 }))
+const sorter = new Sorter([
+  {property: 'name', type: SortConfigTypeEnum.STRING},
+], filteredCompanies)
 
 function showForm(company: ListCompany | null) {
   isFormShowing.value = true
@@ -63,11 +69,11 @@ onMounted(async () => {
       </template>
       <template v-slot:header>
         <tr>
-          <th>Nom</th>
+          <mp3000-table-header property="name" :sorter="sorter" label="Nom" />
         </tr>
       </template>
       <template v-slot:body>
-        <company-row v-for="company in filteredCompanies" :key="company.id" :is-deletable="deletableIds.includes(company.id)" :company="company" @show-form="showForm(company)" />
+        <company-row v-for="company in sorter.sortedList.value" :key="company.id" :is-deletable="deletableIds.includes(company.id)" :company="company" @show-form="showForm(company)" />
       </template>
     </mp3000-table>
     <div class="text-center my-5" v-if="isLoading">

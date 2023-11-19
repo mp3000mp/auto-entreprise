@@ -4,11 +4,11 @@ import type { Ref } from 'vue'
 import { useContactStore } from '@/stores/contact'
 
 import ContactForm from '@/views/contacts/ContactForm.vue'
-import type { ListContact} from '@/stores/contact/types'
-import Mp3000Icon from "@/components/Mp3000Icon.vue";
+import type {Contact, ListContact} from '@/stores/contact/types'
 import ContactRow from "@/views/contacts/ContactRow.vue";
 import Mp3000Table from "@/components/Mp3000Table.vue";
-import CostRow from "@/views/costs/CostRow.vue";
+import {SortConfigTypeEnum, Sorter} from "@/misc/sorter";
+import Mp3000TableHeader from "@/components/Mp3000TableHeader.vue";
 
 const contactStore = useContactStore()
 
@@ -26,6 +26,12 @@ const filteredContacts = computed(() => contacts.value.filter(contact => {
   }
   return (contact.firstName+contact.lastName+contact.email).toLowerCase().includes(filerSearch.value.toLowerCase())
 }))
+const sorter = new Sorter([
+  {property: 'name', type: SortConfigTypeEnum.CUSTOM, customCompare: (a: Contact, b: Contact) => (a.firstName+a.lastName).localeCompare(b.firstName+b.lastName)},
+  {property: 'company', type: SortConfigTypeEnum.CUSTOM, customCompare: (a: Contact, b: Contact) => a.company.name.localeCompare(b.company.name)},
+  {property: 'email', type: SortConfigTypeEnum.STRING},
+  {property: 'phone', type: SortConfigTypeEnum.STRING},
+], filteredContacts)
 
 function showForm(contact: ListContact | null) {
   isFormShowing.value = true
@@ -61,14 +67,14 @@ onMounted(async () => {
       </template>
       <template v-slot:header>
         <tr>
-          <th>Nom</th>
-          <th>Client</th>
-          <th>Email</th>
-          <th>Téléphone</th>
+          <mp3000-table-header property="name" :sorter="sorter" label="Nom" />
+          <mp3000-table-header property="company" :sorter="sorter" label="Client" />
+          <mp3000-table-header property="email" :sorter="sorter" label="Email" />
+          <mp3000-table-header property="phone" :sorter="sorter" label="Téléphone" />
         </tr>
       </template>
       <template v-slot:body>
-        <contact-row v-for="contact in filteredContacts" :key="contact.id" :is-deletable="deletableIds.includes(contact.id)" :contact="contact" @show-form="showForm(contact)" />
+        <contact-row v-for="contact in sorter.sortedList.value" :key="contact.id" :is-deletable="deletableIds.includes(contact.id)" :contact="contact" @show-form="showForm(contact)" />
       </template>
     </mp3000-table>
     <button @click.prevent="showForm(null)" class="btn btn-primary">Nouveau</button>

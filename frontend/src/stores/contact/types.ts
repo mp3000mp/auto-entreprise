@@ -6,8 +6,8 @@ export interface Contact {
     lastName: string
     company: ListCompany;
     email: string
-    phone: string
-    comments: string
+    phone: string|null
+    comments: string|null
 }
 export type NewContact = Omit<Contact, 'id'>
 export type ListContact = Omit<Contact, 'comments'>
