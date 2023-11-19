@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import Mp3000Icon from "@/components/Mp3000Icon.vue";
 import {useCompanyStore} from "@/stores/company";
 import type {ListCompany} from "@/stores/company/types";
@@ -12,6 +12,7 @@ const props = defineProps<{
 }>()
 
 const isRemoving = ref(false)
+const confirmMessage = computed(() => 'Confirmer la suppression de '+props.company.name)
 
 async function remove() {
   isRemoving.value = true
@@ -26,7 +27,7 @@ async function remove() {
       <a href="#" @click.prevent="$emit('show-form')" title="Editer">
         <font-awesome-icon :icon="['fa', 'pen-to-square']" />
       </a>
-      <mp3000-icon v-if="isDeletable" @click.prevent="remove()" icon="trash" title="Supprimer" :is-loading="isRemoving" />
+      <mp3000-icon class="me-1" v-if="isDeletable" :confirm-message="confirmMessage" @click="remove()" icon="trash" title="Supprimer" :is-loading="isRemoving" />
       <router-link :to="{name: 'company', params: {id: company.id}}">{{ company.name }}</router-link>
     </td>
   </tr>

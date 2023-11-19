@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useCostStore } from '@/stores/cost'
 
 import type { Cost } from '@/stores/cost/types'
@@ -12,6 +12,7 @@ const props = defineProps<{
 }>()
 
 const isRemoving = ref(false)
+const confirmMessage = computed(() => 'Confirmer la suppression de '+props.cost.amount+'€ le '+props.cost.date.format('YYYY-MM-DD')+ ' ('+props.cost.description+')')
 
 async function remove() {
   isRemoving.value = true
@@ -26,7 +27,7 @@ async function remove() {
       <a href="#" @click.prevent="$emit('show-form')" title="Editer">
         <font-awesome-icon :icon="['fa', 'pen-to-square']" />
       </a>
-      <mp3000-icon @click.prevent="remove()" icon="trash" title="Supprimer" :is-loading="isRemoving" />
+      <mp3000-icon class="me-1" :confirm-message="confirmMessage" @click="remove()" icon="trash" title="Supprimer" :is-loading="isRemoving" />
       {{ cost.type.label }}
     </td>
     <td>{{ cost.date.format('YYYY-MM-DD') }}</td>
