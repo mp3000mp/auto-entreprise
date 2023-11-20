@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import {computed, onMounted, ref, watch} from 'vue'
-import type {Ref} from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
+import type { Ref } from 'vue'
 import { useContactStore } from '@/stores/contact'
 import { useCompanyStore } from '@/stores/company'
 
 import BootstrapModal from '@/components/BootstrapModal.vue'
-import type {Contact, NewContact} from '@/stores/contact/types'
+import type { Contact, NewContact } from '@/stores/contact/types'
 
 import Mp3000Button from '@/components/Mp3000Button.vue'
 
@@ -18,7 +18,7 @@ const props = defineProps<{
 }>()
 
 const isLoading = ref(false)
-const currentContact = ref(getEmptyContact()) as Ref<Contact|NewContact>
+const currentContact = ref(getEmptyContact()) as Ref<Contact | NewContact>
 const errorMessage = ref('')
 
 const contact = computed(() => contactStore.currentContact)
@@ -28,14 +28,14 @@ function getEmptyContact(): NewContact {
   return {
     firstName: '',
     lastName: '',
-    company: {id: 0, name: ''},
+    company: { id: 0, name: '' },
     email: '',
     phone: '',
-    comments: '',
+    comments: ''
   }
 }
 
-function validate(contact: Contact|NewContact): string {
+function validate(contact: Contact | NewContact): string {
   if (contact.firstName === '') {
     return 'Prénom non valide'
   }
@@ -53,15 +53,13 @@ async function submit() {
   if (errorMessage.value !== '') {
     return
   }
-  await (
-      'id' in currentContact.value
-      ? contactStore.edit(currentContact.value)
-      : contactStore.add(currentContact.value)
-  )
+  await ('id' in currentContact.value
+    ? contactStore.edit(currentContact.value)
+    : contactStore.add(currentContact.value))
   emit('stop-showing')
 }
 
-async function refresh () {
+async function refresh() {
   if (props.contactId) {
     isLoading.value = true
     await contactStore.fetchOne(props.contactId)
@@ -73,8 +71,8 @@ async function refresh () {
 }
 
 watch(
-    () => props.contactId,
-    async () => refresh()
+  () => props.contactId,
+  async () => refresh()
 )
 
 onMounted(async () => {
@@ -93,19 +91,19 @@ onMounted(async () => {
       <div class="form-group">
         <label>Nom</label>
         <input
-            type="text"
-            class="form-control"
-            v-model="currentContact.lastName"
-            :disabled="isLoading"
+          type="text"
+          class="form-control"
+          v-model="currentContact.lastName"
+          :disabled="isLoading"
         />
       </div>
       <div class="form-group">
         <label>Prénom</label>
         <input
-            type="text"
-            class="form-control"
-            v-model="currentContact.firstName"
-            :disabled="isLoading"
+          type="text"
+          class="form-control"
+          v-model="currentContact.firstName"
+          :disabled="isLoading"
         />
       </div>
       <div class="form-group">
@@ -119,37 +117,33 @@ onMounted(async () => {
       <div class="form-group">
         <label>Email</label>
         <input
-            type="text"
-            class="form-control"
-            v-model="currentContact.email"
-            :disabled="isLoading"
+          type="text"
+          class="form-control"
+          v-model="currentContact.email"
+          :disabled="isLoading"
         />
       </div>
       <div class="form-group">
         <label>Téléphone</label>
         <input
-            type="text"
-            class="form-control"
-            v-model="currentContact.phone"
-            :disabled="isLoading"
+          type="text"
+          class="form-control"
+          v-model="currentContact.phone"
+          :disabled="isLoading"
         />
       </div>
       <div class="form-group">
         <label>Commentaires</label>
-        <textarea
-          class="form-control"
-          v-model="currentContact.comments"
-          :disabled="isLoading"
-        />
+        <textarea class="form-control" v-model="currentContact.comments" :disabled="isLoading" />
       </div>
     </template>
     <template v-slot:footer>
       <span class="text-danger">{{ errorMessage }}</span>
       <mp3000-button
-          @click.prevent="emit('stop-showing')"
-          :disabled="isLoading"
-          :outline="true"
-          label="Annuler"
+        @click.prevent="emit('stop-showing')"
+        :disabled="isLoading"
+        :outline="true"
+        label="Annuler"
       />
       <mp3000-button @click.prevent="submit" :is-loading="isLoading" label="Valider" />
     </template>

@@ -5,8 +5,8 @@ import { createPinia } from 'pinia'
 
 import FontAwesomeIcon from '@/misc/font-awesome'
 
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 
 import App from './App.vue'
 import router from './router'

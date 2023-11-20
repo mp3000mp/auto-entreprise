@@ -16,7 +16,7 @@ export type NewCost = Omit<Cost, 'id'>
 export type CostDtoIn = Omit<Cost, 'date'> & {
   date: string
 }
-export type CostDtoOut = Omit<Cost, 'date'|'type'> & {
+export type CostDtoOut = Omit<Cost, 'date' | 'type'> & {
   type: string
   date: string
 }

@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
-import {notifyError} from "@/stores/notification/utils";
-import type {User} from "@/stores/user/types";
+import { notifyError } from '@/stores/notification/utils'
+import type { User } from '@/stores/user/types'
 
 export const useSecurityStore = defineStore('security', {
   state: () => ({
-    currentUser: null as User|null,
-    loggedInChecked: false,
+    currentUser: null as User | null,
+    loggedInChecked: false
   }),
   actions: {
     async login(username: string, password: string) {

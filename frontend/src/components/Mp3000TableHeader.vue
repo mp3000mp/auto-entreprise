@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type {Sorter} from "@/misc/sorter";
+import type { Sorter } from '@/misc/sorter'
 
 const props = defineProps<{
   label: string
@@ -20,8 +20,13 @@ function sort() {
   <th @click.prevent="sort()" class="sort-header cp">
     <span>{{ label }}</span>
     <template v-if="sorter.getPriority(property) > 0">
-      <font-awesome-icon class="ms-1" :icon="['fa', sorter.isAsc(property) ? 'sort-down' : 'sort-up']" />
-      <span class="sort-priority" :class="[sorter.isAsc(property) ? 'sort-down' : 'sort-up']">{{ sorter.getPriority(property) }}</span>
+      <font-awesome-icon
+        class="ms-1"
+        :icon="['fa', sorter.isAsc(property) ? 'sort-down' : 'sort-up']"
+      />
+      <span class="sort-priority" :class="[sorter.isAsc(property) ? 'sort-down' : 'sort-up']">{{
+        sorter.getPriority(property)
+      }}</span>
     </template>
   </th>
 </template>

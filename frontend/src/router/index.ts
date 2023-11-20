@@ -47,7 +47,7 @@ const router = createRouter({
       path: '/contacts/:id',
       name: 'contact',
       component: ContactView,
-      props: route => ({ contactId: Number(route.params.id) })
+      props: (route) => ({ contactId: Number(route.params.id) })
     },
     {
       path: '/companies',
@@ -58,7 +58,7 @@ const router = createRouter({
       path: '/companies/:id',
       name: 'company',
       component: CompanyView,
-      props: route => ({ companyId: Number(route.params.id) })
+      props: (route) => ({ companyId: Number(route.params.id) })
     },
     {
       path: '/costs',

@@ -46,7 +46,8 @@ export class ApiClient {
     }
     try {
       const response = await fetch(this.baseUrl + url, fetchOptions)
-      const jsonResponse = (options.ignoreResponse || response.status === 204) ? null : await response.json()
+      const jsonResponse =
+        options.ignoreResponse || response.status === 204 ? null : await response.json()
       if (response.ok) {
         return await jsonResponse
       }

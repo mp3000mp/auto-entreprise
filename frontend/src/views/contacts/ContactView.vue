@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import {useContactStore} from "@/stores/contact";
-import type {Contact} from "@/stores/contact/types";
-import {computed, onMounted} from "vue";
+import { useContactStore } from '@/stores/contact'
+import { computed, onMounted } from 'vue'
 
 const contactStore = useContactStore()
 const props = defineProps<{
@@ -25,7 +24,9 @@ onMounted(() => {
     <h2>{{ contact.firstName }} {{ contact.lastName }}</h2>
     <h3>Contact</h3>
     <p>
-      <router-link :to="{name: 'company', params: {id: contact.company.id}}">{{ contact.company.name }}</router-link>
+      <router-link :to="{ name: 'company', params: { id: contact.company.id } }">{{
+        contact.company.name
+      }}</router-link>
       <br />
       <font-awesome-icon :icon="['fa', 'envelope']" />
       {{ contact.email }}

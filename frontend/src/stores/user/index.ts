@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import type { User } from '@/stores/user/types'
-import ApiClient, { ApiError, HttpMethodEnum } from '@/misc/api-client'
-import {notifyError} from "@/stores/notification/utils";
+import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
+import { notifyError } from '@/stores/notification/utils'
 
 const urlPrefix = '/api/users'
 export const useUserStore = defineStore('user', {
@@ -13,7 +13,7 @@ export const useUserStore = defineStore('user', {
       try {
         this.users = await ApiClient.query(HttpMethodEnum.GET, urlPrefix)
       } catch (err: unknown) {
-          notifyError('Error while loading users: ', err)
+        notifyError('Error while loading users: ', err)
       }
     }
   }

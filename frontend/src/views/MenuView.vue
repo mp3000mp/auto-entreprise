@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useSecurityStore } from '@/stores/security'
 import { useRouter } from 'vue-router'
-import {computed} from "vue";
+import { computed } from 'vue'
 
 const securityStore = useSecurityStore()
 const router = useRouter()

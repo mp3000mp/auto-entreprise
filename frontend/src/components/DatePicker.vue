@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import VueDatePicker from "@vuepic/vue-datepicker";
-import type {Dayjs} from "dayjs";
-import {computed} from "vue";
-import dayjs from "@/misc/dayjs";
+import VueDatePicker from '@vuepic/vue-datepicker'
+import type { Dayjs } from 'dayjs'
+import { computed } from 'vue'
+import dayjs from '@/misc/dayjs'
 
 const emit = defineEmits(['update:modelValue'])
-const props = withDefaults(defineProps<{
-  disabled?: boolean,
-  modelValue: Dayjs,
-}>(), {
-  disabled: false,
-})
+const props = withDefaults(
+  defineProps<{
+    disabled?: boolean
+    modelValue: Dayjs
+  }>(),
+  {
+    disabled: false
+  }
+)
 
 const value = computed({
   get() {
@@ -23,11 +26,11 @@ const value = computed({
 </script>
 
 <template>
-    <vue-date-picker
-        v-model="value"
-        :disabled="disabled"
-        :enable-time-picker="false"
-        format="dd/MM/yyyy"
-        locale="fr"
-    />
+  <vue-date-picker
+    v-model="value"
+    :disabled="disabled"
+    :enable-time-picker="false"
+    format="dd/MM/yyyy"
+    locale="fr"
+  />
 </template>

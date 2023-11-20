@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import {useCompanyStore} from "@/stores/company";
-import type {Company} from "@/stores/company/types";
-import {computed, onMounted} from "vue";
+import { useCompanyStore } from '@/stores/company'
+import { computed, onMounted } from 'vue'
 
 const companyStore = useCompanyStore()
 const props = defineProps<{
@@ -38,18 +37,22 @@ onMounted(() => {
     <div class="table-responsive">
       <table class="table table-hover">
         <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Email</th>
-          <th>Téléphone</th>
-        </tr>
+          <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+          </tr>
         </thead>
         <tbody>
-        <tr v-for="contact in company.contacts" :key="contact.id">
-          <td><router-link :to="{name: 'contact', params: {id: contact.id}}">{{ contact.firstName }} {{ contact.lastName }}</router-link></td>
-          <td>{{ contact.email }}</td>
-          <td>{{ contact.phone }}</td>
-        </tr>
+          <tr v-for="contact in company.contacts" :key="contact.id">
+            <td>
+              <router-link :to="{ name: 'contact', params: { id: contact.id } }"
+                >{{ contact.firstName }} {{ contact.lastName }}</router-link
+              >
+            </td>
+            <td>{{ contact.email }}</td>
+            <td>{{ contact.phone }}</td>
+          </tr>
         </tbody>
       </table>
     </div>

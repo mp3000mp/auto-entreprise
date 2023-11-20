@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
-import type {Cost, CostDtoIn, CostType, NewCost} from '@/stores/cost/types'
+import type { Cost, CostDtoIn, CostType, NewCost } from '@/stores/cost/types'
 import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
-import {convertCostIn, convertCostOut} from '@/stores/cost/dto'
-import {notifyError} from "@/stores/notification/utils";
+import { convertCostIn, convertCostOut } from '@/stores/cost/dto'
+import { notifyError } from '@/stores/notification/utils'
 
 const urlPrefix = '/api/costs'
 export const useCostStore = defineStore('cost', {
@@ -36,8 +36,12 @@ export const useCostStore = defineStore('cost', {
     },
     async editCost(cost: Cost) {
       try {
-        const rawCost = await ApiClient.query(HttpMethodEnum.PUT, urlPrefix+'/'+cost.id, convertCostOut(cost))
-        const costIdx = this.costs.findIndex(c => c.id === cost.id)
+        const rawCost = await ApiClient.query(
+          HttpMethodEnum.PUT,
+          urlPrefix + '/' + cost.id,
+          convertCostOut(cost)
+        )
+        const costIdx = this.costs.findIndex((c) => c.id === cost.id)
         this.costs.splice(costIdx, 1, convertCostIn(rawCost))
       } catch (err: unknown) {
         notifyError('Error while editing cost: ', err)
@@ -45,12 +49,12 @@ export const useCostStore = defineStore('cost', {
     },
     async deleteCost(id: number) {
       try {
-        await ApiClient.query(HttpMethodEnum.DELETE, urlPrefix+'/'+id)
-        const idx = this.costs.findIndex(cost => cost.id === id)
+        await ApiClient.query(HttpMethodEnum.DELETE, urlPrefix + '/' + id)
+        const idx = this.costs.findIndex((cost) => cost.id === id)
         this.costs.splice(idx, 1)
       } catch (err: unknown) {
         notifyError('Error while deleting cost: ', err)
       }
-    },
+    }
   }
 })

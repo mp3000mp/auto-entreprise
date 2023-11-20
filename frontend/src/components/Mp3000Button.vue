@@ -23,6 +23,7 @@ withDefaults(
       'btn-outline-primary': outline,
       'btn-primary': !outline
     }"
+    :disabled="disabled || isLoading"
   >
     <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status"></span>
     <span v-else>{{ label }}</span>

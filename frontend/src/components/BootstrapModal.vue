@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import {onMounted, onUnmounted} from "vue";
+import { onMounted, onUnmounted } from 'vue'
 
 const emit = defineEmits(['stop-showing'])
 defineProps<{
   isShowing: boolean
 }>()
 
-function handleKeypress (e: KeyboardEvent) {
+function handleKeypress(e: KeyboardEvent) {
+  console.log(e.code)
   if (e.code === 'Escape') {
     emit('stop-showing')
   }
@@ -27,7 +28,11 @@ onUnmounted(() => {
         <div class="modal-content">
           <div class="modal-header">
             <slot name="header"></slot>
-            <font-awesome-icon :icon="['fa', 'xmark']" class="cp" @click.prevent="$emit('stop-showing')" />
+            <font-awesome-icon
+              :icon="['fa', 'xmark']"
+              class="cp"
+              @click.prevent="$emit('stop-showing')"
+            />
           </div>
           <div class="modal-body">
             <slot name="body"></slot>
