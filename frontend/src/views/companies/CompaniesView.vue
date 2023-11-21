@@ -51,6 +51,7 @@ function hideForm() {
 }
 
 onMounted(async () => {
+  sorter.addSort('name')
   companyStore.fetchDeletables()
   isLoading.value = true
   await companyStore.fetch()

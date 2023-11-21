@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted } from 'vue'
+import BootstrapLoader from '@/components/BootstrapLoader.vue'
 
 const emit = defineEmits(['stop-showing'])
 withDefaults(
@@ -31,11 +32,7 @@ onUnmounted(() => {
     <div class="modal" :class="{ hidden: !isShowing, show: isShowing }">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="text-center my-5" v-if="isLoading">
-            <div class="spinner-border">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
+          <bootstrap-loader v-if="isLoading" />
           <template v-else>
             <div class="modal-header">
               <slot name="header"></slot>

@@ -5,6 +5,7 @@ import Mp3000Icon from '@/components/Mp3000Icon.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import CompanyForm from '@/views/companies/CompanyForm.vue'
 import { useRouter } from 'vue-router'
+import BootstrapLoader from '@/components/BootstrapLoader.vue'
 
 const companyStore = useCompanyStore()
 const router = useRouter()
@@ -42,11 +43,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="text-center my-5" v-if="null === company">
-    <div class="spinner-border">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
+  <bootstrap-loader v-if="null === company" />
   <div v-else>
     <h2>
       {{ company.name }}

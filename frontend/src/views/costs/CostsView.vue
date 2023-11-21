@@ -28,6 +28,7 @@ const filteredCosts = computed(() =>
     return cost.type.id === filterTypeId.value
   })
 )
+
 const sorter = new Sorter(
   [
     {
@@ -52,6 +53,7 @@ function hideForm() {
 }
 
 onMounted(async () => {
+  sorter.addSort('date', false)
   isLoading.value = true
   await costStore.fetchCostTypes()
   await costStore.fetchCosts()

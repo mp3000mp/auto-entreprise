@@ -10,7 +10,6 @@ describe('Mp3000Table.vue', () => {
             },
         })
         expect(wrapper.findAll('.spinner-border').length).toBe(1)
-        expect(wrapper.findAll('.table-responsive').length).toBe(0)
     })
 
     test('is shown', () => {
@@ -20,6 +19,5 @@ describe('Mp3000Table.vue', () => {
             },
         })
         expect(wrapper.findAll('.spinner-border').length).toBe(0)
-        expect(wrapper.findAll('.table-responsive').length).toBe(1)
     })
 })

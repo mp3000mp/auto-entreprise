@@ -65,6 +65,7 @@ function hideForm() {
 }
 
 onMounted(async () => {
+  sorter.addSort('company')
   contactStore.fetchDeletables()
   isLoading.value = true
   await contactStore.fetch()

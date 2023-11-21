@@ -27,7 +27,7 @@ export class Sorter<T> {
     let fn = (a: number, b: number): number => a - b
     switch (option.type) {
       case SortConfigTypeEnum.STRING:
-        fn = (a: string, b: string): number => a.localeCompare(b)
+        fn = (a: string, b: string): number => String(a).localeCompare(String(b))
         break
       case SortConfigTypeEnum.DATE: // dayjs
         fn = (a: Dayjs, b: Dayjs): number => a.diff(b)

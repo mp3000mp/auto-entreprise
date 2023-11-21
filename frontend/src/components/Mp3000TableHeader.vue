@@ -8,13 +8,9 @@ const props = defineProps<{
 }>()
 
 function sort() {
-  console.log('sort')
-  console.log(props.sorter)
   if (props.sorter.isAsc(props.property) === false) {
-    console.log(props.sorter)
     props.sorter.removeSort(props.property)
   } else {
-    console.log(props.sorter)
     props.sorter.addSort(props.property)
   }
 }

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import BootstrapLoader from '@/components/BootstrapLoader.vue'
+
 withDefaults(
   defineProps<{
     isLoading?: boolean
@@ -10,21 +12,21 @@ withDefaults(
 </script>
 
 <template>
-  <div class="text-center my-5" v-if="isLoading">
-    <div class="spinner-border">
-      <span class="visually-hidden">Loading...</span>
-    </div>
+  <div class="row">
+    <slot name="filters"></slot>
   </div>
-  <div class="table-responsive" v-else>
-    <div class="row">
-      <slot name="filters"></slot>
-    </div>
+  <div class="table-responsive">
     <table class="table table-hover">
       <thead>
         <slot name="header"></slot>
       </thead>
       <tbody>
-        <slot name="body"></slot>
+        <tr v-if="isLoading">
+          <td colspan="100">
+            <bootstrap-loader />
+          </td>
+        </tr>
+        <slot v-else name="body"></slot>
       </tbody>
     </table>
   </div>

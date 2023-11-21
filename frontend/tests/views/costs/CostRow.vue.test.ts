@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import dayjs from "dayjs";
 import {createTestingPinia} from "@pinia/testing";
 import {vi} from "vitest";
-import {useCostStore} from "../../../src/stores/cost";
+import {useCostStore} from "@/stores/cost";
 
 const stubs = ['font-awesome-icon']
 

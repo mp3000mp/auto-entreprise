@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import ContactForm from '@/views/contacts/ContactForm.vue'
 import Mp3000Icon from '@/components/Mp3000Icon.vue'
 import { useRouter } from 'vue-router'
+import BootstrapLoader from '@/components/BootstrapLoader.vue'
 
 const contactStore = useContactStore()
 const router = useRouter()
@@ -42,11 +43,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="text-center my-5" v-if="null === contact">
-    <div class="spinner-border">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-  </div>
+  <bootstrap-loader v-if="null === contact" />
   <div v-else>
     <h2>
       {{ contact.firstName }} {{ contact.lastName }}

@@ -4,19 +4,20 @@ import BootstrapModal from '@/components/BootstrapModal.vue'
 import Mp3000Button from '@/components/Mp3000Button.vue'
 
 const emit = defineEmits(['click'])
+defineOptions({
+  inheritAttrs: false
+})
 const props = withDefaults(
   defineProps<{
     confirmMessage?: string | null
     disabled?: boolean
     isLoading?: boolean
     icon: string
-    title?: string | undefined // todo inherit
   }>(),
   {
     confirmMessage: null,
     disabled: false,
-    isLoading: false,
-    title: undefined // todo inherit
+    isLoading: false
   }
 )
 
@@ -37,7 +38,7 @@ function confirm() {
 </script>
 
 <template>
-  <a href="#" @click="click()" :title="title">
+  <a href="#" @click="click()" :title="$attrs.title" :class="$attrs.class">
     <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status"></span>
     <font-awesome-icon v-else :icon="['fa', icon]" />
   </a>

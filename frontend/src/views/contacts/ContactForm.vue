@@ -8,6 +8,7 @@ import BootstrapModal from '@/components/BootstrapModal.vue'
 import type { Contact, NewContact } from '@/stores/contact/types'
 
 import Mp3000Button from '@/components/Mp3000Button.vue'
+import BootstrapLoader from '@/components/BootstrapLoader.vue'
 
 const contactStore = useContactStore()
 const companyStore = useCompanyStore()
@@ -118,11 +119,7 @@ onMounted(async () => {
       </div>
       <div class="form-group">
         <label>Client</label>
-        <div class="text-center" v-if="isCompaniesLoading">
-          <div class="spinner-border">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
+        <bootstrap-loader v-if="isCompaniesLoading" />
         <select
           v-else
           class="form-select"

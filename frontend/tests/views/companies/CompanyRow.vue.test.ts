@@ -3,7 +3,7 @@ import Component from '@/views/companies/CompanyRow.vue'
 import { mount } from '@vue/test-utils'
 import {createTestingPinia} from "@pinia/testing";
 import {vi} from "vitest";
-import {useCompanyStore} from "../../../src/stores/company";
+import {useCompanyStore} from "@/stores/company";
 
 const stubs = ['font-awesome-icon', 'router-link']
 
