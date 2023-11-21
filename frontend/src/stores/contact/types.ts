@@ -8,10 +8,11 @@ export interface Contact {
   email: string
   phone: string | null
   comments: string | null
+  opportunities: number[] // todo
 }
-export type NewContact = Omit<Contact, 'id'>
-export type ListContact = Omit<Contact, 'comments'>
-export type ContactDtoOut = Omit<Contact, 'company'> & {
+export type NewContact = Omit<Contact, 'id' | 'opportunities'>
+export type ListContact = Omit<Contact, 'comments' | 'opportunities'>
+export type ContactDtoOut = Omit<Contact, 'company' | 'opportunities'> & {
   company: string
 }
-export type NewContactDtoOut = Omit<ContactDtoOut, 'id'>
+export type NewContactDtoOut = Omit<ContactDtoOut, 'id' | 'opportunities'>

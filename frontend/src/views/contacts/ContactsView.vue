@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import type { Ref } from 'vue'
 import { useContactStore } from '@/stores/contact'
 
 import ContactForm from '@/views/contacts/ContactForm.vue'
@@ -13,11 +12,12 @@ import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
 const contactStore = useContactStore()
 
 const isLoading = ref(false)
+const isFormLoading = ref(false)
 const isFormShowing = ref(false)
-const currentContactId = ref(null) as Ref<number | null>
 
 const contacts = computed(() => contactStore.contacts)
 const deletableIds = computed(() => contactStore.deletableIds)
+const currentContact = computed(() => contactStore.currentContact)
 
 const filerSearch = ref('')
 const filteredContacts = computed(() =>
@@ -49,13 +49,19 @@ const sorter = new Sorter(
   filteredContacts
 )
 
-function showForm(contact: ListContact | null) {
+async function showForm(contact: ListContact | null) {
   isFormShowing.value = true
-  currentContactId.value = contact?.id ?? null
+  if (null === contact) {
+    contactStore.resetCurrentContact()
+    return
+  }
+  isFormLoading.value = true
+  await contactStore.fetchOne(contact.id)
+  isFormLoading.value = false
 }
 function hideForm() {
   isFormShowing.value = false
-  currentContactId.value = null
+  contactStore.resetCurrentContact()
 }
 
 onMounted(async () => {
@@ -97,9 +103,10 @@ onMounted(async () => {
     </mp3000-table>
     <button @click.prevent="showForm(null)" class="btn btn-primary">Nouveau</button>
     <contact-form
-      :contact-id="currentContactId"
+      :contact="currentContact"
       :is-showing="isFormShowing"
       @stop-showing="hideForm"
+      :is-loading="isFormLoading"
     />
   </div>
 </template>

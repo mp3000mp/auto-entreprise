@@ -24,7 +24,7 @@ async function remove() {
 <template>
   <tr>
     <td>
-      <a href="#" @click.prevent="$emit('show-form')" title="Editer">
+      <a href="#" class="me-1" @click.prevent="$emit('show-form')" title="Editer">
         <font-awesome-icon :icon="['fa', 'pen-to-square']" />
       </a>
       <mp3000-icon

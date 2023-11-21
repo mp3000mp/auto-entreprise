@@ -26,6 +26,9 @@ export const useCompanyStore = defineStore('company', {
         notifyError('Error while fetching company: ', err)
       }
     },
+    resetCurrentCompany() {
+      this.currentCompany = null
+    },
     async add(company: NewCompany) {
       try {
         const rawCompany = await ApiClient.query(HttpMethodEnum.POST, urlPrefix, company)
@@ -41,6 +44,9 @@ export const useCompanyStore = defineStore('company', {
           urlPrefix + '/' + company.id,
           company
         )
+        if (this.currentCompany?.id === rawCompany.id) {
+          this.currentCompany = rawCompany
+        }
         const companyIdx = this.companies.findIndex((c) => c.id === company.id)
         this.companies.splice(companyIdx, 1, rawCompany)
       } catch (err: unknown) {

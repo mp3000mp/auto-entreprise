@@ -8,7 +8,7 @@ export interface Company {
   postCode: string
   city: string
   contacts: ListContact[]
-  // opportunities
+  opportunities: number[] // todo
 }
 export type NewCompany = Omit<Company, 'id' | 'contacts' | 'opportunities'>
 export type ListCompany = Pick<Company, 'id' | 'name'>

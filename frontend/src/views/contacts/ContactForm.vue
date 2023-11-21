@@ -12,16 +12,22 @@ import Mp3000Button from '@/components/Mp3000Button.vue'
 const contactStore = useContactStore()
 const companyStore = useCompanyStore()
 const emit = defineEmits(['stop-showing'])
-const props = defineProps<{
-  contactId: number | null
-  isShowing: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    contact: Contact | null
+    isShowing: boolean
+    isLoading?: boolean
+  }>(),
+  {
+    isLoading: false
+  }
+)
 
-const isLoading = ref(false)
+const isSubmitting = ref(false)
+const isCompaniesLoading = ref(false)
 const currentContact = ref(getEmptyContact()) as Ref<Contact | NewContact>
 const errorMessage = ref('')
 
-const contact = computed(() => contactStore.currentContact)
 const companies = computed(() => companyStore.companies)
 
 function getEmptyContact(): NewContact {
@@ -53,37 +59,41 @@ async function submit() {
   if (errorMessage.value !== '') {
     return
   }
+  isSubmitting.value = true
   await ('id' in currentContact.value
     ? contactStore.edit(currentContact.value)
     : contactStore.add(currentContact.value))
   emit('stop-showing')
+  isSubmitting.value = false
 }
 
-async function refresh() {
-  if (props.contactId) {
-    isLoading.value = true
-    await contactStore.fetchOne(props.contactId)
-    isLoading.value = false
-    currentContact.value = { ...contact.value }
+function refresh() {
+  if (props.contact) {
+    currentContact.value = { ...props.contact }
   } else {
     currentContact.value = getEmptyContact()
   }
 }
 
 watch(
-  () => props.contactId,
-  async () => refresh()
+  () => props.contact,
+  () => refresh()
 )
 
 onMounted(async () => {
-  isLoading.value = true
+  refresh()
+  isCompaniesLoading.value = true
   await companyStore.fetch()
-  isLoading.value = false
+  isCompaniesLoading.value = false
 })
 </script>
 
 <template>
-  <bootstrap-modal :is-showing="isShowing" @stop-showing="emit('stop-showing')">
+  <bootstrap-modal
+    :is-showing="isShowing"
+    :is-loading="isLoading"
+    @stop-showing="emit('stop-showing')"
+  >
     <template v-slot:header>
       <h5>{{ contact ? 'Edition' : 'Nouveau' }} client</h5>
     </template>
@@ -94,7 +104,7 @@ onMounted(async () => {
           type="text"
           class="form-control"
           v-model="currentContact.lastName"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
         />
       </div>
       <div class="form-group">
@@ -103,12 +113,22 @@ onMounted(async () => {
           type="text"
           class="form-control"
           v-model="currentContact.firstName"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
         />
       </div>
       <div class="form-group">
         <label>Client</label>
-        <select class="form-select" v-model="currentContact.company.id" :disabled="isLoading">
+        <div class="text-center" v-if="isCompaniesLoading">
+          <div class="spinner-border">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <select
+          v-else
+          class="form-select"
+          v-model="currentContact.company.id"
+          :disabled="isSubmitting"
+        >
           <option v-for="company in companies" :key="company.id" :value="company.id">
             {{ company.name }}
           </option>
@@ -120,7 +140,7 @@ onMounted(async () => {
           type="text"
           class="form-control"
           v-model="currentContact.email"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
         />
       </div>
       <div class="form-group">
@@ -129,23 +149,23 @@ onMounted(async () => {
           type="text"
           class="form-control"
           v-model="currentContact.phone"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
         />
       </div>
       <div class="form-group">
         <label>Commentaires</label>
-        <textarea class="form-control" v-model="currentContact.comments" :disabled="isLoading" />
+        <textarea class="form-control" v-model="currentContact.comments" :disabled="isSubmitting" />
       </div>
     </template>
     <template v-slot:footer>
       <span class="text-danger">{{ errorMessage }}</span>
       <mp3000-button
         @click.prevent="emit('stop-showing')"
-        :disabled="isLoading"
+        :disabled="isSubmitting"
         :outline="true"
         label="Annuler"
       />
-      <mp3000-button @click.prevent="submit" :is-loading="isLoading" label="Valider" />
+      <mp3000-button @click.prevent="submit" :is-loading="isSubmitting" label="Valider" />
     </template>
   </bootstrap-modal>
 </template>

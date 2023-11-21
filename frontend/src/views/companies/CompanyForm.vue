@@ -1,25 +1,27 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import type { Ref } from 'vue'
 import { useCompanyStore } from '@/stores/company'
-
+import Mp3000Button from '@/components/Mp3000Button.vue'
 import BootstrapModal from '@/components/BootstrapModal.vue'
 import type { Company, NewCompany } from '@/stores/company/types'
 
-import Mp3000Button from '@/components/Mp3000Button.vue'
-
 const companyStore = useCompanyStore()
 const emit = defineEmits(['stop-showing'])
-const props = defineProps<{
-  companyId: number | null
-  isShowing: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    company: Company | null
+    isShowing: boolean
+    isLoading?: boolean
+  }>(),
+  {
+    isLoading: false
+  }
+)
 
-const isLoading = ref(false)
+const isSubmitting = ref(false)
 const currentCompany = ref(getEmptyCompany()) as Ref<Company | NewCompany>
 const errorMessage = ref('')
-
-const company = computed(() => companyStore.currentCompany)
 
 function getEmptyCompany(): NewCompany {
   return {
@@ -43,32 +45,38 @@ async function submit() {
   if (errorMessage.value !== '') {
     return
   }
-  isLoading.value = true
+  isSubmitting.value = true
   await ('id' in currentCompany.value
     ? companyStore.edit(currentCompany.value)
     : companyStore.add(currentCompany.value))
   emit('stop-showing')
+  isSubmitting.value = false
 }
 
-async function refresh() {
-  if (props.companyId) {
-    isLoading.value = true
-    await companyStore.fetchOne(props.companyId)
-    isLoading.value = false
-    currentCompany.value = { ...company.value }
+function refresh() {
+  if (props.company) {
+    currentCompany.value = { ...props.company }
   } else {
     currentCompany.value = getEmptyCompany()
   }
 }
 
 watch(
-  () => props.companyId,
-  async () => refresh()
+  () => props.company,
+  () => refresh()
 )
+
+onMounted(() => {
+  refresh()
+})
 </script>
 
 <template>
-  <bootstrap-modal :is-showing="isShowing" @stop-showing="emit('stop-showing')">
+  <bootstrap-modal
+    :is-showing="isShowing"
+    :is-loading="isLoading"
+    @stop-showing="emit('stop-showing')"
+  >
     <template v-slot:header>
       <h5>{{ company ? 'Edition' : 'Nouveau' }} client</h5>
     </template>
@@ -79,7 +87,7 @@ watch(
           type="text"
           class="form-control"
           v-model="currentCompany.name"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
         />
       </div>
       <div class="form-group">
@@ -88,7 +96,7 @@ watch(
           type="text"
           class="form-control"
           v-model="currentCompany.street1"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
         />
       </div>
       <div class="form-group">
@@ -97,7 +105,7 @@ watch(
           type="text"
           class="form-control"
           v-model="currentCompany.street2"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
         />
       </div>
       <div class="form-group">
@@ -106,7 +114,7 @@ watch(
           type="text"
           class="form-control"
           v-model="currentCompany.city"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
         />
       </div>
       <div class="form-group">
@@ -115,7 +123,7 @@ watch(
           type="text"
           class="form-control"
           v-model="currentCompany.postCode"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
         />
       </div>
     </template>
@@ -123,11 +131,11 @@ watch(
       <span class="text-danger">{{ errorMessage }}</span>
       <mp3000-button
         @click.prevent="emit('stop-showing')"
-        :disabled="isLoading"
+        :disabled="isSubmitting"
         :outline="true"
         label="Annuler"
       />
-      <mp3000-button @click.prevent="submit" :is-loading="isLoading" label="Valider" />
+      <mp3000-button @click.prevent="submit" :is-loading="isSubmitting" label="Valider" />
     </template>
   </bootstrap-modal>
 </template>

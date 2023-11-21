@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import type { Ref } from 'vue'
 import { useCostStore } from '@/stores/cost'
 
@@ -16,7 +16,7 @@ const props = defineProps<{
   isShowing: boolean
 }>()
 
-const isLoading = ref(false)
+const isSubmitting = ref(false)
 const currentCost = ref(getEmptyCost()) as Ref<Cost | NewCost>
 const errorMessage = ref('')
 
@@ -46,18 +46,26 @@ async function submit() {
   if (errorMessage.value !== '') {
     return
   }
+  isSubmitting.value = true
   await ('id' in currentCost.value
     ? costStore.editCost(currentCost.value)
     : costStore.addCost(currentCost.value))
   emit('stop-showing')
+  isSubmitting.value = false
+}
+
+function refresh() {
+  currentCost.value = props.cost ? { ...props.cost } : getEmptyCost()
 }
 
 watch(
   () => props.cost,
-  () => {
-    currentCost.value = props.cost ? { ...props.cost } : getEmptyCost()
-  }
+  () => refresh()
 )
+
+onMounted(() => {
+  refresh()
+})
 </script>
 
 <template>
@@ -68,7 +76,7 @@ watch(
     <template v-slot:body>
       <div class="form-group">
         <label>Type</label>
-        <select class="form-select" v-model="currentCost.type.id" :disabled="isLoading">
+        <select class="form-select" v-model="currentCost.type.id" :disabled="isSubmitting">
           <option v-for="costType in costTypes" :key="costType.id" :value="costType.id">
             {{ costType.label }}
           </option>
@@ -76,7 +84,7 @@ watch(
       </div>
       <div class="form-group">
         <label>Date</label>
-        <date-picker v-model="currentCost.date" :disabled="isLoading" />
+        <date-picker v-model="currentCost.date" :disabled="isSubmitting" />
       </div>
       <div class="form-group">
         <label>Montant</label>
@@ -85,7 +93,7 @@ watch(
           min="0"
           class="form-control"
           v-model="currentCost.amount"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
         />
       </div>
       <div class="form-group">
@@ -94,7 +102,7 @@ watch(
           type="text"
           class="form-control"
           v-model="currentCost.description"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
         />
       </div>
     </template>
@@ -102,11 +110,11 @@ watch(
       <span class="text-danger">{{ errorMessage }}</span>
       <mp3000-button
         @click.prevent="emit('stop-showing')"
-        :disabled="isLoading"
+        :disabled="isSubmitting"
         :outline="true"
         label="Annuler"
       />
-      <mp3000-button @click.prevent="submit" :is-loading="isLoading" label="Valider" />
+      <mp3000-button @click.prevent="submit" :is-loading="isSubmitting" label="Valider" />
     </template>
   </bootstrap-modal>
 </template>

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import type { Ref } from 'vue'
 import { useCompanyStore } from '@/stores/company'
 
 import CompanyForm from '@/views/companies/CompanyForm.vue'
@@ -15,11 +14,12 @@ import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
 const companyStore = useCompanyStore()
 
 const isLoading = ref(false)
+const isFormLoading = ref(false)
 const isFormShowing = ref(false)
-const currentCompanyId = ref(null) as Ref<number | null>
 
 const companies = computed(() => companyStore.companies)
 const deletableIds = computed(() => companyStore.deletableIds)
+const currentCompany = computed(() => companyStore.currentCompany)
 
 const filerSearch = ref('')
 const filteredCompanies = computed(() =>
@@ -35,13 +35,19 @@ const sorter = new Sorter(
   filteredCompanies
 )
 
-function showForm(company: ListCompany | null) {
+async function showForm(company: ListCompany | null) {
   isFormShowing.value = true
-  currentCompanyId.value = company?.id ?? null
+  if (null === company) {
+    companyStore.resetCurrentCompany()
+    return
+  }
+  isFormLoading.value = true
+  await companyStore.fetchOne(company.id)
+  isFormLoading.value = false
 }
 function hideForm() {
   isFormShowing.value = false
-  currentCompanyId.value = null
+  companyStore.resetCurrentCompany()
 }
 
 onMounted(async () => {
@@ -78,16 +84,12 @@ onMounted(async () => {
         />
       </template>
     </mp3000-table>
-    <div class="text-center my-5" v-if="isLoading">
-      <div class="spinner-border">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
     <button @click.prevent="showForm(null)" class="btn btn-primary">Nouveau</button>
     <company-form
-      :company-id="currentCompanyId"
+      :company="currentCompany"
       :is-showing="isFormShowing"
       @stop-showing="hideForm"
+      :is-loading="isFormLoading"
     />
   </div>
 </template>

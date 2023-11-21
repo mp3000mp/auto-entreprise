@@ -26,6 +26,9 @@ export const useContactStore = defineStore('contact', {
         notifyError('Error while fetching contact: ', err)
       }
     },
+    resetCurrentContact() {
+      this.currentContact = null
+    },
     async add(contact: NewContact) {
       try {
         const rawContact = await ApiClient.query(
@@ -45,6 +48,9 @@ export const useContactStore = defineStore('contact', {
           urlPrefix + '/' + contact.id,
           convertContactOut(contact)
         )
+        if (this.currentContact?.id === rawContact.id) {
+          this.currentContact = rawContact
+        }
         const contactIdx = this.contacts.findIndex((c) => c.id === contact.id)
         this.contacts.splice(contactIdx, 1, rawContact)
       } catch (err: unknown) {

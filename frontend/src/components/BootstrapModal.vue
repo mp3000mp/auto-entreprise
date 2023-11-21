@@ -2,12 +2,17 @@
 import { onMounted, onUnmounted } from 'vue'
 
 const emit = defineEmits(['stop-showing'])
-defineProps<{
-  isShowing: boolean
-}>()
+withDefaults(
+  defineProps<{
+    isShowing: boolean
+    isLoading?: boolean
+  }>(),
+  {
+    isLoading: false
+  }
+)
 
 function handleKeypress(e: KeyboardEvent) {
-  console.log(e.code)
   if (e.code === 'Escape') {
     emit('stop-showing')
   }
@@ -26,20 +31,27 @@ onUnmounted(() => {
     <div class="modal" :class="{ hidden: !isShowing, show: isShowing }">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header">
-            <slot name="header"></slot>
-            <font-awesome-icon
-              :icon="['fa', 'xmark']"
-              class="cp"
-              @click.prevent="$emit('stop-showing')"
-            />
+          <div class="text-center my-5" v-if="isLoading">
+            <div class="spinner-border">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </div>
-          <div class="modal-body">
-            <slot name="body"></slot>
-          </div>
-          <div class="modal-footer">
-            <slot name="footer"></slot>
-          </div>
+          <template v-else>
+            <div class="modal-header">
+              <slot name="header"></slot>
+              <font-awesome-icon
+                :icon="['fa', 'xmark']"
+                class="cp"
+                @click.prevent="$emit('stop-showing')"
+              />
+            </div>
+            <div class="modal-body">
+              <slot name="body"></slot>
+            </div>
+            <div class="modal-footer">
+              <slot name="footer"></slot>
+            </div>
+          </template>
         </div>
       </div>
     </div>
