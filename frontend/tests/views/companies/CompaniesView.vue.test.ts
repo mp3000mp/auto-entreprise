@@ -3,19 +3,11 @@ import Component from '@/views/companies/CompaniesView.vue'
 import { mount } from '@vue/test-utils'
 import {createTestingPinia} from "@pinia/testing";
 import {vi} from "vitest";
-import {ListCompany} from "@/stores/company/types";
 import {getRowIds, testSorter} from "../../utils/mp3000Table";
 import CompanyRow from "@/views/companies/CompanyRow.vue";
+import {initCompanies} from "../../data/company";
 
 const stubs = ['font-awesome-icon', 'router-link']
-
-function initCompanies(): ListCompany[] {
-    return [
-        {id: 1, name: 'first'},
-        {id: 2, name: 'second'},
-        {id: 3, name: 'third'},
-    ]
-}
 
 describe('CompaniesView.vue', () => {
     test('sorts companies', async () => {

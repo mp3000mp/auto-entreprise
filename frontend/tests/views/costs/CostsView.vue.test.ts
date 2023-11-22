@@ -3,27 +3,11 @@ import Component from '@/views/costs/CostsView.vue'
 import { mount } from '@vue/test-utils'
 import {createTestingPinia} from "@pinia/testing";
 import {vi} from "vitest";
-import dayjs from "@/misc/dayjs";
-import {Cost, CostType} from "@/stores/cost/types";
 import {getRowIds, testSorter} from "../../utils/mp3000Table";
 import CostRow from "@/views/costs/CostRow.vue";
+import {initCosts, initCostTypes} from "../../data/cost";
 
 const stubs = ['font-awesome-icon']
-
-function initCosts(): Cost[] {
-    return [
-        {id: 1, type: {id: 1, label: 'type1'}, amount: 200, date: dayjs('2023-11-01'), description: 'first'},
-        {id: 2, type: {id: 2, label: 'type2'}, amount: 100, date: dayjs('2023-11-02'), description: 'second'},
-        {id: 3, type: {id: 3, label: 'type3'}, amount: 300, date: dayjs('2023-11-03'), description: 'third'},
-    ]
-}
-function initCostTypes(): CostType[] {
-    return [
-        {id: 1, label: 'type1'},
-        {id: 2, label: 'type2'},
-        {id: 3, label: 'type3'},
-    ]
-}
 
 describe('CostsView.vue', () => {
     test('sorts costs', async () => {

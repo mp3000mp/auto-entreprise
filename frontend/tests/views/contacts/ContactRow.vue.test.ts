@@ -4,6 +4,7 @@ import { mount } from '@vue/test-utils'
 import {createTestingPinia} from "@pinia/testing";
 import {vi} from "vitest";
 import {useContactStore} from "@/stores/contact";
+import {initContact, initContacts} from "../../data/contact";
 
 const stubs = ['font-awesome-icon', 'router-link']
 
@@ -11,7 +12,7 @@ describe('ContactRow.vue', () => {
     test('triggers events', async () => {
         const wrapper = mount(Component, {
             props: {
-                contact: {id: 1, company: {id: 10, name: 'comp'}, firstName: 'Jean', lastName: 'Bon', email: 'user@mp3000.fr', phone: null},
+                contact: initContacts()[0],
                 isDeletable: false,
             },
             global: {
@@ -23,18 +24,16 @@ describe('ContactRow.vue', () => {
                 stubs,
             }
         })
-        const icons = wrapper.findAll('font-awesome-icon-stub')
-        expect(icons.length).toBe(1)
+        expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(1)
 
-        // edit
-        await icons[0].trigger('click')
+        await wrapper.find('font-awesome-icon-stub[icon="fa,pen-to-square"]').trigger('click')
         expect(wrapper.emitted()['show-form'].length).toBe(1)
     })
 
     test('triggers remove events', async () => {
         const wrapper = mount(Component, {
             props: {
-                contact: {id: 1, company: {id: 10, name: 'comp'}, firstName: 'Jean', lastName: 'Bon', email: 'user@mp3000.fr', phone: null},
+                contact: initContacts()[0],
                 isDeletable: true,
             },
             global: {
@@ -46,11 +45,9 @@ describe('ContactRow.vue', () => {
                 stubs,
             }
         })
-        const icons = wrapper.findAll('font-awesome-icon-stub')
-        expect(icons.length).toBe(3)
+        expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(3)
 
-        // remove
-        await icons[1].trigger('click')
+        await wrapper.find('font-awesome-icon-stub[icon="fa,trash"]').trigger('click')
         const modal = wrapper.find('.modal.show')
         expect(modal.exists()).toBeTruthy()
 

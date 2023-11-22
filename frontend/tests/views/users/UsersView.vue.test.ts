@@ -3,19 +3,11 @@ import Component from '@/views/users/UsersView.vue'
 import { mount } from '@vue/test-utils'
 import {createTestingPinia} from "@pinia/testing";
 import {vi} from "vitest";
-import {User} from "@/stores/user/types";
 import {getRowIds, testSorter} from "../../utils/mp3000Table";
 import UserRow from "@/views/users/UserRow.vue";
+import {initUsers} from "../../data/user";
 
 const stubs = ['font-awesome-icon', 'router-link']
-
-function initUsers(): User[] {
-    return [
-        {id: 1, email: 'aaa', username: 'duck3000', roles: ['role1']},
-        {id: 2, email: 'ccc', username: 'bat4000', roles: ['role3']},
-        {id: 3, email: 'bbb', username: 'dindon37', roles: ['role2']},
-    ]
-}
 
 describe('UsersView.vue', () => {
     test('sorts users', async () => {

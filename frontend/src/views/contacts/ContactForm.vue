@@ -52,6 +52,9 @@ function validate(contact: Contact | NewContact): string {
   if (contact.company.id === 0) {
     return 'Client non valide'
   }
+  if (contact.email === '') {
+    return 'Email non valide'
+  }
   return ''
 }
 
@@ -100,20 +103,20 @@ onMounted(async () => {
     </template>
     <template v-slot:body>
       <div class="form-group">
+        <label>Prénom</label>
+        <input
+            type="text"
+            class="form-control"
+            v-model="currentContact.firstName"
+            :disabled="isSubmitting"
+        />
+      </div>
+      <div class="form-group">
         <label>Nom</label>
         <input
           type="text"
           class="form-control"
           v-model="currentContact.lastName"
-          :disabled="isSubmitting"
-        />
-      </div>
-      <div class="form-group">
-        <label>Prénom</label>
-        <input
-          type="text"
-          class="form-control"
-          v-model="currentContact.firstName"
           :disabled="isSubmitting"
         />
       </div>

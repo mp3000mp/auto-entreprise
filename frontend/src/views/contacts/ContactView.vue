@@ -37,8 +37,8 @@ async function remove() {
   router.push({ name: 'contacts' })
 }
 
-onMounted(() => {
-  contactStore.fetchOne(props.contactId)
+onMounted(async () => {
+  await contactStore.fetchOne(props.contactId)
 })
 </script>
 
@@ -47,11 +47,10 @@ onMounted(() => {
   <div v-else>
     <h2>
       {{ contact.firstName }} {{ contact.lastName }}
-      <a href="#" @click.prevent="showForm()" title="Editer">
+      <a href="#" @click.prevent="showForm()" title="Editer" class="me-1">
         <font-awesome-icon :icon="['fa', 'pen-to-square']" />
       </a>
       <mp3000-icon
-        class="me-1"
         v-if="isDeletable"
         :confirm-message="confirmMessage"
         @click="remove()"

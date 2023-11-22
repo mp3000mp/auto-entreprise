@@ -3,19 +3,11 @@ import Component from '@/views/contacts/ContactsView.vue'
 import { mount } from '@vue/test-utils'
 import {createTestingPinia} from "@pinia/testing";
 import {vi} from "vitest";
-import {ListContact} from "@/stores/contact/types";
 import {getRowIds, testSorter} from "../../utils/mp3000Table";
 import ContactRow from "@/views/contacts/ContactRow.vue";
+import {initContacts} from "../../data/contact";
 
 const stubs = ['font-awesome-icon', 'router-link']
-
-function initContacts(): ListContact[] {
-    return [
-        {id: 1, firstName: 'Albert', lastName: 'De Bert', email: 'ccc', phone: null, company: {id: 1, name: 'First'}},
-        {id: 2, firstName: 'Sophie', lastName: 'Da Silva', email: 'aaa', phone: '999', company: {id: 2, name: 'Second'}},
-        {id: 3, firstName: 'Martine', lastName: 'Zèbre', email: 'bbb', phone: '111', company: {id: 3, name: 'Third'}},
-    ]
-}
 
 describe('ContactsView.vue', () => {
     test('sorts contacts', async () => {
