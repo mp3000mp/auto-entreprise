@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Repository\CompanyRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -32,6 +33,9 @@ class CompanyController extends AbstractController
     #[Route('/deletable', 'companies.deletable', methods: ['GET'])]
     public function deletable(): Response
     {
-        return $this->json($this->em->getRepository(Company::class)->findDeletableIds());
+        /** @var CompanyRepository $repo */
+        $repo = $this->em->getRepository(Company::class);
+
+        return $this->json($repo->findDeletableIds());
     }
 }

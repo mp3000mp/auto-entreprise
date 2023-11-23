@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Opportunity;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,6 +15,25 @@ class OpportunityRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Opportunity::class);
+    }
+
+    /**
+     * @return int[]
+     */
+    public function findDeletableIds(): array
+    {
+        $rsm = (new ResultSetMapping())
+            ->addScalarResult('id', 'id');
+        $sql = '
+SELECT opportunity.id 
+FROM opportunity
+WHERE opportunity.id NOT IN (
+    SELECT opportunity_id FROM tender
+)
+        ';
+        $q = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+
+        return $q->getSingleColumnResult();
     }
 
     /**

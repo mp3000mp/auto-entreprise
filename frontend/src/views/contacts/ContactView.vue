@@ -34,6 +34,7 @@ function hideForm() {
 async function remove() {
   isRemoving.value = true
   await contactStore.delete(props.contactId)
+  contactStore.resetCurrentContact()
   router.push({ name: 'contacts' })
 }
 

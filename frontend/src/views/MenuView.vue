@@ -15,7 +15,7 @@ const links = [
   },
   {
     label: 'Devis',
-    to: { name: 'opportunities' }
+    to: { name: 'tenders' }
   },
   {
     label: 'Contacts',

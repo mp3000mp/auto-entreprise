@@ -34,6 +34,7 @@ function hideForm() {
 async function remove() {
   isRemoving.value = true
   await companyStore.delete(props.companyId)
+  companyStore.resetCurrentCompany()
   router.push({ name: 'companies' })
 }
 

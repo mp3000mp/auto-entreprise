@@ -6,7 +6,6 @@ import {vi} from "vitest";
 import {initContact, initEmptyContact} from "../../data/contact";
 import {useContactStore} from "../../../src/stores/contact";
 import { useRouter } from 'vue-router'
-import {initCompanies} from "../../data/company";
 
 vi.mock('vue-router')
 const stubs = ['font-awesome-icon', 'router-link']

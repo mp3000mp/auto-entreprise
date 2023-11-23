@@ -105,10 +105,10 @@ onMounted(async () => {
       <div class="form-group">
         <label>Prénom</label>
         <input
-            type="text"
-            class="form-control"
-            v-model="currentContact.firstName"
-            :disabled="isSubmitting"
+          type="text"
+          class="form-control"
+          v-model="currentContact.firstName"
+          :disabled="isSubmitting"
         />
       </div>
       <div class="form-group">

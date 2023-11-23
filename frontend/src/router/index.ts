@@ -13,6 +13,8 @@ import ContactView from '@/views/contacts/ContactView.vue'
 import ReportingView from '@/views/reporting/ReportingView.vue'
 import AccountView from '@/views/security/AccountView.vue'
 import CostsView from '@/views/costs/CostsView.vue'
+import OpportunityView from '@/views/opportunities/OpportunityView.vue'
+import TenderView from '@/views/tenders/TenderView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,9 +36,21 @@ const router = createRouter({
       component: OpportunitiesView
     },
     {
+      path: '/opportunities/:id',
+      name: 'opportunity',
+      component: OpportunityView,
+      props: (route) => ({ opportunityId: Number(route.params.id) })
+    },
+    {
       path: '/tenders',
       name: 'tenders',
       component: TendersView
+    },
+    {
+      path: '/tenders/:id',
+      name: 'tender',
+      component: TenderView,
+      props: (route) => ({ tenderId: Number(route.params.id) })
     },
     {
       path: '/contacts',

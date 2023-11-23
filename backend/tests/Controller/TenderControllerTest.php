@@ -13,6 +13,17 @@ use App\Enum\TenderStatusEnum;
 
 class TenderControllerTest extends AbstractController
 {
+    public function testTenderIndex(): void
+    {
+        $this->loginUser($this->client);
+
+        $this->client->request('GET', '/api/tenders');
+        $this->assertResponseCode(200);
+        $jsonResponse = $this->getResponseJson($this->client->getResponse());
+
+        self::assertCount(5, $jsonResponse);
+    }
+
     public function testTenderShow(): void
     {
         $this->loginUser($this->client);
@@ -83,5 +94,16 @@ class TenderControllerTest extends AbstractController
         $this->assertResponseCode(400);
         $this->client->request('DELETE', sprintf('/api/tenders/%d', $emptyTender->getId()));
         $this->assertResponseCode(204);
+    }
+
+    public function testDeletableTenders(): void
+    {
+        $this->loginUser();
+
+        $this->client->request('GET', sprintf('/api/tenders/deletable'));
+        $this->assertResponseCode(200);
+        $jsonResponse = $this->getResponseJson($this->client->getResponse());
+
+        self::assertCount(1, $jsonResponse);
     }
 }

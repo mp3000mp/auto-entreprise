@@ -63,9 +63,9 @@ entity:
             customer_ref1: Ref client
             customer_ref2: Ref client 2
             forecasted_delivery: Deadline
-            mean_of_payment: Moyen de payement
+            mean_of_payment: Moyen de paiement
             payed_at: Payé le
-            payment_ref: Ref payement
+            payment_ref: Ref paiement
             purchased_at: Commandé le
             ref: Référence
             tracked_at: Pisté le

@@ -28,25 +28,26 @@ class Opportunity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'tender_show', 'tender_list', 'company_show', 'contact_show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show', 'opportunity_add', 'opportunity_edit'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'tender_show', 'tender_list', 'company_show', 'contact_show', 'opportunity_add', 'opportunity_edit'])]
     #[Assert\NotBlank]
     private string $ref;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show', 'opportunity_add', 'opportunity_edit'])]
+    #[Groups(['opportunity_show', 'company_show', 'contact_show', 'opportunity_add', 'opportunity_edit'])]
     #[Assert\NotBlank]
     private string $description;
 
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'opportunities')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['opportunity_list', 'opportunity_show', 'opportunity_add'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'tender_show', 'tender_list', 'opportunity_add'])]
     private Company $company;
 
     #[ORM\Column]
+    #[Groups(['opportunity_list', 'opportunity_show'])]
     private \DateTime $createdAt;
 
     #[ORM\Column(nullable: true)]
@@ -392,7 +393,7 @@ class Opportunity
         return $this;
     }
 
-    #[Groups(['opportunity_list', 'company_show', 'contact_show'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     public function getLastTender(): ?Tender
     {
         $lastTender = null;

@@ -4,18 +4,21 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Repository\TenderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
+#[ORM\Entity(TenderRepository::class)]
 #[ORM\UniqueConstraint(columns: ['version', 'opportunity_id'])]
 #[ApiResource(
     operations: [
+        new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'tender_list']),
         new Get(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'tender_show']),
         new Post(normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'tender_add']),
         new Put(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'tender_edit']),
@@ -26,29 +29,30 @@ class Tender
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['tender_show', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
+    #[Groups(['tender_show', 'tender_list', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: TenderStatus::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['tender_show', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show', 'tender_edit'])]
+    #[Groups(['tender_show', 'tender_list', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show', 'tender_edit'])]
     private ?TenderStatus $status = null;
 
     #[ORM\ManyToOne(targetEntity: Opportunity::class, inversedBy: 'tenders')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['tender_show', 'tender_add'])]
+    #[Groups(['tender_show', 'tender_list', 'tender_add'])]
     private Opportunity $opportunity;
 
     #[ORM\Column]
-    #[Groups(['tender_show', 'opportunity_show', 'tender_add', 'tender_edit'])]
+    #[Groups(['tender_show', 'tender_list', 'opportunity_show', 'tender_add', 'tender_edit'])]
     #[Assert\NotBlank]
     private int $version;
 
     #[ORM\Column]
-    #[Groups(['tender_show', 'tender_add', 'tender_edit'])]
+    #[Groups(['tender_show', 'tender_list', 'tender_add', 'tender_edit'])]
     private int $averageDailyRate;
 
     #[ORM\Column]
+    #[Groups(['tender_show', 'tender_list'])]
     private \DateTime $createdAt;
 
     #[ORM\Column(nullable: true)]
@@ -245,6 +249,7 @@ class Tender
         return $this;
     }
 
+    #[Groups(['tender_show', 'tender_list', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     public function getSoldDays(): int
     {
         $soldDays = 0;
@@ -255,15 +260,9 @@ class Tender
         return $soldDays;
     }
 
-    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
-    public function getAmount(): int
+    public function getAmount(): float
     {
-        $amount = 0;
-        foreach ($this->tenderRows as $tenderRow) {
-            $amount += ($tenderRow->getSoldDays() * $this->averageDailyRate);
-        }
-
-        return $amount;
+        return $this->getSoldDays() * $this->averageDailyRate;
     }
 
     public function getNextPosition(): int
@@ -305,14 +304,15 @@ class Tender
         return $this;
     }
 
-    public function getTotalWorkedDays(): int
+    #[Groups(['tender_show', 'tender_list', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
+    public function getWorkedDays(): float
     {
-        $n = 0;
-        foreach ($this->workedTimes as $worked_time) {
-            $n += $worked_time->getWorkedDays();
+        $total = 0;
+        foreach ($this->workedTimes as $workedTime) {
+            $total += $workedTime->getWorkedDays();
         }
 
-        return $n;
+        return $total;
     }
 
     /**

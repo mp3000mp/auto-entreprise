@@ -8,6 +8,7 @@ export function convertCostIn(rawCost: CostDtoIn): Cost {
     date: dayjs(rawCost.date)
   }
 }
+
 export function convertCostOut(cost: Cost | NewCost): CostDtoOut | NewCostDtoOut {
   return {
     ...cost,

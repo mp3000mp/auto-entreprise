@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
+import type { Ref } from 'vue'
 import { useContactStore } from '@/stores/contact'
+import { useCompanyStore } from '@/stores/company'
 
 import ContactForm from '@/views/contacts/ContactForm.vue'
 import type { Contact, ListContact } from '@/stores/contact/types'
@@ -10,24 +12,30 @@ import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
 
 const contactStore = useContactStore()
+const companyStore = useCompanyStore()
 
 const isLoading = ref(false)
 const isFormLoading = ref(false)
 const isFormShowing = ref(false)
 
+const companies = computed(() => companyStore.companies)
 const contacts = computed(() => contactStore.contacts)
 const deletableIds = computed(() => contactStore.deletableIds)
 const currentContact = computed(() => contactStore.currentContact)
 
-const filerSearch = ref('')
+const filterSearch = ref('')
+const filterCompanyId = ref(null) as Ref<number | null>
 const filteredContacts = computed(() =>
   contacts.value.filter((contact) => {
-    if (filerSearch.value.length < 3) {
+    if (null !== filterCompanyId.value && contact.company.id !== filterCompanyId.value) {
+      return false
+    }
+    if (filterSearch.value.length < 3) {
       return true
     }
     return (contact.firstName + contact.lastName + contact.email)
       .toLowerCase()
-      .includes(filerSearch.value.toLowerCase())
+      .includes(filterSearch.value.toLowerCase())
   })
 )
 const sorter = new Sorter(
@@ -66,9 +74,12 @@ function hideForm() {
 
 onMounted(async () => {
   sorter.addSort('company')
-  contactStore.fetchDeletables()
   isLoading.value = true
-  await contactStore.fetch()
+  await Promise.all([
+    contactStore.fetch(),
+    contactStore.fetchDeletables(),
+    companies.value.length ? null : companyStore.fetch()
+  ])
   isLoading.value = false
 })
 </script>
@@ -80,7 +91,18 @@ onMounted(async () => {
         <div class="col-auto">
           <div class="form-group">
             <label>Recherche</label>
-            <input type="text" class="form-control" v-model="filerSearch" />
+            <input type="text" class="form-control" v-model="filterSearch" />
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="form-group">
+            <label>Client</label>
+            <select class="form-select" v-model="filterCompanyId">
+              <option :value="null">-</option>
+              <option v-for="company in companies" :key="company.id" :value="company.id">
+                {{ company.name }}
+              </option>
+            </select>
           </div>
         </div>
       </template>

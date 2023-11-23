@@ -12,13 +12,13 @@ const isLoading = ref(false)
 
 const users = computed(() => userStore.users)
 
-const filerSearch = ref('')
+const filterSearch = ref('')
 const filteredContacts = computed(() =>
   users.value.filter((user) => {
-    if (filerSearch.value.length < 3) {
+    if (filterSearch.value.length < 3) {
       return true
     }
-    return (user.email + user.username).toLowerCase().includes(filerSearch.value.toLowerCase())
+    return (user.email + user.username).toLowerCase().includes(filterSearch.value.toLowerCase())
   })
 )
 const sorter = new Sorter(
@@ -45,7 +45,7 @@ onMounted(async () => {
         <div class="col-auto">
           <div class="form-group">
             <label>Recherche</label>
-            <input type="text" class="form-control" v-model="filerSearch" />
+            <input type="text" class="form-control" v-model="filterSearch" />
           </div>
         </div>
       </template>

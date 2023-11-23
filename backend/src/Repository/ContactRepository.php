@@ -24,13 +24,13 @@ class ContactRepository extends ServiceEntityRepository
     {
         $rsm = (new ResultSetMapping())
             ->addScalarResult('id', 'id');
-        $sql = "
+        $sql = '
 SELECT contact.id 
 FROM contact
 WHERE contact.id NOT IN (
     SELECT contact_id FROM opportunity_contact
 )
-        ";
+        ';
         $q = $this->getEntityManager()->createNativeQuery($sql, $rsm);
 
         return $q->getSingleColumnResult();

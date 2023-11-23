@@ -8,7 +8,7 @@ const emit = defineEmits(['update:modelValue'])
 const props = withDefaults(
   defineProps<{
     disabled?: boolean
-    modelValue: Dayjs
+    modelValue: Dayjs | null
   }>(),
   {
     disabled: false
@@ -17,7 +17,7 @@ const props = withDefaults(
 
 const value = computed({
   get() {
-    return new Date(props.modelValue.format('YYYY-MM-DD'))
+    return props.modelValue ? new Date(props.modelValue.format('YYYY-MM-DD')) : null
   },
   set(value) {
     emit('update:modelValue', dayjs(value))

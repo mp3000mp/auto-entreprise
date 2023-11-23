@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import {createTestingPinia} from "@pinia/testing";
 import {vi} from "vitest";
 import {useContactStore} from "@/stores/contact";
-import {initContact, initContacts} from "../../data/contact";
+import {initContacts} from "../../data/contact";
 
 const stubs = ['font-awesome-icon', 'router-link']
 

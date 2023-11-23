@@ -113,4 +113,15 @@ class OpportunityControllerTest extends AbstractController
         $this->client->request('DELETE', sprintf('/api/opportunities/%d', $emptyOpportunity->getId()));
         $this->assertResponseCode(204);
     }
+
+    public function testDeletableOpportunities(): void
+    {
+        $this->loginUser();
+
+        $this->client->request('GET', sprintf('/api/opportunities/deletable'));
+        $this->assertResponseCode(200);
+        $jsonResponse = $this->getResponseJson($this->client->getResponse());
+
+        self::assertCount(2, $jsonResponse);
+    }
 }

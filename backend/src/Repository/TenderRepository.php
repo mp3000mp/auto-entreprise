@@ -2,19 +2,19 @@
 
 namespace App\Repository;
 
-use App\Entity\Company;
+use App\Entity\Tender;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Company>
+ * @extends ServiceEntityRepository<Tender>
  */
-class CompanyRepository extends ServiceEntityRepository
+class TenderRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Company::class);
+        parent::__construct($registry, Tender::class);
     }
 
     /**
@@ -25,13 +25,10 @@ class CompanyRepository extends ServiceEntityRepository
         $rsm = (new ResultSetMapping())
             ->addScalarResult('id', 'id');
         $sql = '
-SELECT company.id 
-FROM company
-WHERE company.id NOT IN (
-    SELECT company_id FROM contact
-)
-AND company.id NOT IN (
-    SELECT company_id FROM opportunity
+SELECT tender.id 
+FROM tender
+WHERE tender.id NOT IN (
+    SELECT tender_id FROM worked_time
 )
         ';
         $q = $this->getEntityManager()->createNativeQuery($sql, $rsm);

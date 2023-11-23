@@ -19,13 +19,17 @@ const currentCost = ref(null) as Ref<Cost | null>
 const costTypes = computed(() => costStore.costTypes)
 const costs = computed(() => costStore.costs)
 
+const filterSearch = ref('')
 const filterTypeId = ref(null) as Ref<number | null>
 const filteredCosts = computed(() =>
   costs.value.filter((cost) => {
-    if (null === filterTypeId.value) {
+    if (null !== filterTypeId.value && cost.type.id !== filterTypeId.value) {
+      return false
+    }
+    if (filterSearch.value.length < 3) {
       return true
     }
-    return cost.type.id === filterTypeId.value
+    return cost.description.toLowerCase().includes(filterSearch.value.toLowerCase())
   })
 )
 
@@ -55,8 +59,7 @@ function hideForm() {
 onMounted(async () => {
   sorter.addSort('date', false)
   isLoading.value = true
-  await costStore.fetchCostTypes()
-  await costStore.fetchCosts()
+  await Promise.all([costStore.fetchCostTypes(), costStore.fetchCosts()])
   isLoading.value = false
 })
 </script>
@@ -65,6 +68,12 @@ onMounted(async () => {
   <div>
     <mp3000-table :is-loading="isLoading">
       <template v-slot:filters>
+        <div class="col-auto">
+          <div class="form-group">
+            <label>Recherche</label>
+            <input type="text" class="form-control" v-model="filterSearch" />
+          </div>
+        </div>
         <div class="col-auto">
           <div class="form-group">
             <label>Type</label>

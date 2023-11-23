@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import Component from '@/views/costs/CostRow.vue'
 import { mount } from '@vue/test-utils'
-import dayjs from "dayjs";
 import {createTestingPinia} from "@pinia/testing";
 import {vi} from "vitest";
 import {useCostStore} from "@/stores/cost";

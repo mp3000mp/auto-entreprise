@@ -21,13 +21,13 @@ const companies = computed(() => companyStore.companies)
 const deletableIds = computed(() => companyStore.deletableIds)
 const currentCompany = computed(() => companyStore.currentCompany)
 
-const filerSearch = ref('')
+const filterSearch = ref('')
 const filteredCompanies = computed(() =>
   companies.value.filter((company) => {
-    if (filerSearch.value.length < 3) {
+    if (filterSearch.value.length < 3) {
       return true
     }
-    return company.name.toLowerCase().includes(filerSearch.value.toLowerCase())
+    return company.name.toLowerCase().includes(filterSearch.value.toLowerCase())
   })
 )
 const sorter = new Sorter(
@@ -52,9 +52,8 @@ function hideForm() {
 
 onMounted(async () => {
   sorter.addSort('name')
-  companyStore.fetchDeletables()
   isLoading.value = true
-  await companyStore.fetch()
+  await Promise.all([companyStore.fetch(), companyStore.fetchDeletables()])
   isLoading.value = false
 })
 </script>
@@ -66,7 +65,7 @@ onMounted(async () => {
         <div class="col-auto">
           <div class="form-group">
             <label>Recherche</label>
-            <input type="text" class="form-control" v-model="filerSearch" />
+            <input type="text" class="form-control" v-model="filterSearch" />
           </div>
         </div>
       </template>
