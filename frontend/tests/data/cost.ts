@@ -1,5 +1,5 @@
-import {Cost, CostType} from "../../src/stores/cost/types";
-import dayjs from "../../src/misc/dayjs";
+import type {Cost, CostType} from "@/stores/cost/types";
+import dayjs from "@/misc/dayjs";
 
 export function initCosts(): Cost[] {
     return [

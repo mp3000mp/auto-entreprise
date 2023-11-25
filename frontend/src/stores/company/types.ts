@@ -1,4 +1,5 @@
 import type { ListContact } from '@/stores/contact/types'
+import type { ListOpportunity } from '@/stores/opportunity/types'
 
 export interface Company {
   id: number
@@ -8,7 +9,7 @@ export interface Company {
   postCode: string
   city: string
   contacts: ListContact[]
-  opportunities: number[] // todo
+  opportunities: ListOpportunity[]
 }
 export type NewCompany = Omit<Company, 'id' | 'contacts' | 'opportunities'>
 export type ListCompany = Pick<Company, 'id' | 'name'>

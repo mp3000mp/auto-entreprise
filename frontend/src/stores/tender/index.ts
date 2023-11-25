@@ -3,6 +3,7 @@ import type {
   Tender,
   ListTender,
   NewTender,
+  TenderRow,
   TenderStatus,
   ListTenderDtoIn
 } from '@/stores/tender/types'
@@ -11,6 +12,7 @@ import { convertListTenderIn, convertTenderIn, convertTenderOut } from '@/stores
 import { notifyError } from '@/stores/notification/utils'
 
 const urlPrefix = '/api/tenders'
+const rowUrlPrefix = '/api/tender_rows'
 export const useTenderStore = defineStore('tender', {
   state: () => ({
     tenders: [] as ListTender[],
@@ -98,6 +100,46 @@ export const useTenderStore = defineStore('tender', {
         this.tenders.splice(idx, 1)
       } catch (err: unknown) {
         notifyError('Error while deleting tender: ', err)
+      }
+    },
+    async addTenderRow(tenderRow: TenderRow) {
+      try {
+        const rawTenderRow = await ApiClient.query(HttpMethodEnum.POST, rowUrlPrefix, tenderRow)
+        if (null === this.currentTender) {
+          return
+        }
+        this.currentTender.tenderRows.push(rawTenderRow)
+      } catch (err: unknown) {
+        notifyError('Error while adding worked time: ', err)
+      }
+    },
+    async editTenderRow(tenderRow: TenderRow) {
+      try {
+        const rawTenderRow = await ApiClient.query(
+          HttpMethodEnum.PUT,
+          rowUrlPrefix + '/' + tenderRow.id,
+          tenderRow
+        )
+        if (null === this.currentTender) {
+          return
+        }
+        const editedTenderRow = rawTenderRow
+        const tenderRowIdx = this.currentTender.tenderRows.findIndex((c) => c.id === tenderRow.id)
+        this.currentTender.tenderRows.splice(tenderRowIdx, 1, editedTenderRow)
+      } catch (err: unknown) {
+        notifyError('Error while editing worked time: ', err)
+      }
+    },
+    async deleteTenderRow(id: number) {
+      try {
+        await ApiClient.query(HttpMethodEnum.DELETE, rowUrlPrefix + '/' + id)
+        if (null === this.currentTender) {
+          return
+        }
+        const idx = this.currentTender.tenderRows.findIndex((tenderRow) => tenderRow.id === id)
+        this.currentTender.tenderRows.splice(idx, 1)
+      } catch (err: unknown) {
+        notifyError('Error while deleting worked time: ', err)
       }
     }
   }

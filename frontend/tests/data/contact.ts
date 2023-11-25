@@ -1,5 +1,6 @@
-import {Contact, ListContact} from "../../src/stores/contact/types";
+import type {Contact, ListContact} from "@/stores/contact/types";
 import {initCompanies} from "./company";
+import {initOpportunities} from "./opportunity";
 
 export function initContacts(): ListContact[] {
     const companies = initCompanies()
@@ -26,6 +27,6 @@ export function initEmptyContact(): Contact {
 export function initContact(): Contact {
     return {
         ...initEmptyContact(),
-        opportunities: [1], // todo
+        opportunities: initOpportunities(),
     }
 }

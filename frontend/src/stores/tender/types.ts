@@ -1,8 +1,10 @@
 import type { Dayjs } from 'dayjs'
 import type { TenderOpportunity } from '@/stores/opportunity/types'
+import type { WorkedTime } from '@/stores/workedTime/types'
 
 export type TenderStatus = {
   id: number
+  position: number
   label: string
 }
 
@@ -39,7 +41,7 @@ export type Tender = {
   soldDays: number
   workedDays: number
   statusLogs: TenderStatusLog[]
-  workedTimes: number[] // todo
+  workedTimes: WorkedTime[]
   tenderFileDocx: string | null
   tenderFilePdf: string | null
 }

@@ -1,4 +1,4 @@
-import {User} from "../../src/stores/user/types";
+import type {User} from "@/stores/user/types";
 
 export function initUsers(): User[] {
     return [
