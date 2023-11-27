@@ -48,7 +48,7 @@ class Tender
     private int $version;
 
     #[ORM\Column]
-    #[Groups(['tender_show', 'tender_list', 'tender_add', 'tender_edit'])]
+    #[Groups(['tender_show', 'tender_list', 'opportunity_show', 'tender_add', 'tender_edit'])]
     private int $averageDailyRate;
 
     #[ORM\Column]

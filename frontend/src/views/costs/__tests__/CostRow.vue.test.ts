@@ -25,7 +25,7 @@ describe('CostRow.vue', () => {
         stubs
       }
     })
-    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(3)
+    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(2)
 
     await wrapper.find('font-awesome-icon-stub[icon="fa,pen-to-square"]').trigger('click')
     expect(wrapper.emitted()['show-form'].length).toBe(1)
@@ -47,7 +47,7 @@ describe('CostRow.vue', () => {
         stubs
       }
     })
-    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(3)
+    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(2)
 
     await wrapper.find('font-awesome-icon-stub[icon="fa,trash"]').trigger('click')
     const modal = wrapper.find('.modal.show')

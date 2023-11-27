@@ -1,5 +1,5 @@
 import type { ListContact } from '@/stores/contact/types'
-import type { ListOpportunity } from '@/stores/opportunity/types'
+import type { ListOpportunity, ListOpportunityDtoIn } from '@/stores/opportunity/types'
 
 export interface Company {
   id: number
@@ -13,3 +13,6 @@ export interface Company {
 }
 export type NewCompany = Omit<Company, 'id' | 'contacts' | 'opportunities'>
 export type ListCompany = Pick<Company, 'id' | 'name'>
+export type CompanyDtoIn = Omit<Company, 'opportunities'> & {
+  opportunities: ListOpportunityDtoIn[]
+}

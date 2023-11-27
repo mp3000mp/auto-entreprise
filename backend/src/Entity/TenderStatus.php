@@ -19,7 +19,7 @@ class TenderStatus
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['tender_status_list', 'tender_show', 'tender_list', 'opportunity_list', 'company_show', 'contact_show'])]
+    #[Groups(['tender_status_list', 'tender_show', 'tender_list', 'opportunity_show', 'opportunity_list', 'company_show', 'contact_show'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -28,7 +28,7 @@ class TenderStatus
     private int $position;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['tender_status_list', 'tender_show', 'tender_list', 'opportunity_list', 'company_show', 'contact_show'])]
+    #[Groups(['tender_status_list', 'tender_show', 'tender_list', 'opportunity_show', 'opportunity_list', 'company_show', 'contact_show'])]
     #[Assert\NotBlank]
     private string $label;
 

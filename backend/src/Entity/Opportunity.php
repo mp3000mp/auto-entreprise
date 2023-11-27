@@ -47,7 +47,7 @@ class Opportunity
     private Company $company;
 
     #[ORM\Column]
-    #[Groups(['opportunity_list', 'opportunity_show'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
     private \DateTime $createdAt;
 
     #[ORM\Column(nullable: true)]

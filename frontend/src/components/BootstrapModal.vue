@@ -29,7 +29,7 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <div class="modal" :class="{ hidden: !isShowing, show: isShowing }">
+    <div class="modal" :class="{ hidden: !isShowing, show: isShowing }" v-if="isShowing">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <bootstrap-loader v-if="isLoading" />

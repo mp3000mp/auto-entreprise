@@ -9,6 +9,7 @@ defineEmits(['show-form'])
 const props = defineProps<{
   contact: ListContact
   isDeletable: boolean
+  withDetails: boolean
 }>()
 
 const isRemoving = ref(false)
@@ -42,7 +43,7 @@ async function remove() {
         >{{ contact.firstName }} {{ contact.lastName }}</router-link
       >
     </td>
-    <td>
+    <td v-if="withDetails">
       <router-link :to="{ name: 'company', params: { id: contact.company.id } }">{{
         contact.company.name
       }}</router-link>

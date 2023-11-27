@@ -7,7 +7,11 @@ import type {
   TenderStatusLogDtoIn,
   TenderStatusLog,
   ListTenderDtoIn,
-  ListTender
+  ListTender,
+  TenderRow,
+  TenderRowDtoOut,
+  NewTenderRowDtoOut,
+  NewTenderRow
 } from '@/stores/tender/types'
 import dayjs from '@/misc/dayjs'
 
@@ -22,10 +26,10 @@ export function convertTenderIn(rawTender: TenderDtoIn): Tender {
   return {
     ...rawTender,
     createdAt: dayjs(rawTender.createdAt),
-    sentAt: dayjs(rawTender.sentAt),
-    acceptedAt: dayjs(rawTender.acceptedAt),
-    refusedAt: dayjs(rawTender.refusedAt),
-    canceledAt: dayjs(rawTender.canceledAt),
+    sentAt: rawTender.sentAt ? dayjs(rawTender.sentAt) : null,
+    acceptedAt: rawTender.acceptedAt ? dayjs(rawTender.acceptedAt) : null,
+    refusedAt: rawTender.refusedAt ? dayjs(rawTender.refusedAt) : null,
+    canceledAt: rawTender.canceledAt ? dayjs(rawTender.canceledAt) : null,
     statusLogs: rawTender.statusLogs.map((status) => convertTenderStatusIn(status)),
     ...('createdAt' in rawTender ? { createdAt: dayjs(rawTender.createdAt) } : {})
   }
@@ -46,5 +50,13 @@ export function convertTenderOut(tender: Tender | NewTender): TenderDtoOut | New
     acceptedAt: tender.acceptedAt?.format('YYYY-MM-DD') ?? null,
     refusedAt: tender.refusedAt?.format('YYYY-MM-DD') ?? null,
     canceledAt: tender.canceledAt?.format('YYYY-MM-DD') ?? null
+  }
+}
+export function convertTenderRowOut(
+  tenderRow: TenderRow | NewTenderRow
+): TenderRowDtoOut | NewTenderRowDtoOut {
+  return {
+    ...tenderRow,
+    tender: '/api/tenders/' + tenderRow.tender.id
   }
 }

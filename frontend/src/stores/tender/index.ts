@@ -5,11 +5,18 @@ import type {
   NewTender,
   TenderRow,
   TenderStatus,
-  ListTenderDtoIn
+  ListTenderDtoIn,
+  NewTenderRow
 } from '@/stores/tender/types'
 import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
-import { convertListTenderIn, convertTenderIn, convertTenderOut } from '@/stores/tender/dto'
+import {
+  convertListTenderIn,
+  convertTenderIn,
+  convertTenderOut,
+  convertTenderRowOut
+} from '@/stores/tender/dto'
 import { notifyError } from '@/stores/notification/utils'
+import { useOpportunityStore } from '@/stores/opportunity'
 
 const urlPrefix = '/api/tenders'
 const rowUrlPrefix = '/api/tender_rows'
@@ -54,19 +61,27 @@ export const useTenderStore = defineStore('tender', {
     resetCurrentTender() {
       this.currentTender = null
     },
-    async add(tender: NewTender) {
+    async add(tender: NewTender): Promise<Tender> {
       try {
         const rawTender = await ApiClient.query(
           HttpMethodEnum.POST,
           urlPrefix,
           convertTenderOut(tender)
         )
-        this.tenders.push(convertTenderIn(rawTender))
+        const newTender = convertTenderIn(rawTender)
+        this.tenders.push(newTender)
+
+        const opportunityStore = useOpportunityStore()
+        if (opportunityStore.currentOpportunity) {
+          opportunityStore.currentOpportunity.tenders.push(newTender)
+        }
+
+        return newTender
       } catch (err: unknown) {
         notifyError('Error while adding tender: ', err)
       }
     },
-    async edit(tender: Tender) {
+    async edit(tender: Tender): Promise<Tender> {
       try {
         const rawTender = await ApiClient.query(
           HttpMethodEnum.PUT,
@@ -77,8 +92,19 @@ export const useTenderStore = defineStore('tender', {
         if (this.currentTender?.id === editedTender.id) {
           this.currentTender = editedTender
         }
-        const tenderIdx = this.tenders.findIndex((c) => c.id === tender.id)
+
+        let tenderIdx = this.tenders.findIndex((c) => c.id === tender.id)
         this.tenders.splice(tenderIdx, 1, editedTender)
+
+        const opportunityStore = useOpportunityStore()
+        if (opportunityStore.currentOpportunity) {
+          tenderIdx = opportunityStore.currentOpportunity.tenders.findIndex(
+            (tender) => tender.id === tender.id
+          )
+          opportunityStore.currentOpportunity.tenders.splice(tenderIdx, 1, editedTender)
+        }
+
+        return editedTender
       } catch (err: unknown) {
         notifyError('Error while editing tender: ', err)
       }
@@ -96,15 +122,27 @@ export const useTenderStore = defineStore('tender', {
     async delete(id: number) {
       try {
         await ApiClient.query(HttpMethodEnum.DELETE, urlPrefix + '/' + id)
-        const idx = this.tenders.findIndex((tender) => tender.id === id)
-        this.tenders.splice(idx, 1)
+        let tenderIdx = this.tenders.findIndex((tender) => tender.id === id)
+        this.tenders.splice(tenderIdx, 1)
+        const opportunityStore = useOpportunityStore()
+
+        if (opportunityStore.currentOpportunity) {
+          tenderIdx = opportunityStore.currentOpportunity.tenders.findIndex(
+            (tender) => tender.id === id
+          )
+          opportunityStore.currentOpportunity.tenders.splice(tenderIdx, 1)
+        }
       } catch (err: unknown) {
         notifyError('Error while deleting tender: ', err)
       }
     },
-    async addTenderRow(tenderRow: TenderRow) {
+    async addTenderRow(tenderRow: NewTenderRow) {
       try {
-        const rawTenderRow = await ApiClient.query(HttpMethodEnum.POST, rowUrlPrefix, tenderRow)
+        const rawTenderRow = await ApiClient.query(
+          HttpMethodEnum.POST,
+          rowUrlPrefix,
+          convertTenderRowOut(tenderRow)
+        )
         if (null === this.currentTender) {
           return
         }
@@ -118,7 +156,7 @@ export const useTenderStore = defineStore('tender', {
         const rawTenderRow = await ApiClient.query(
           HttpMethodEnum.PUT,
           rowUrlPrefix + '/' + tenderRow.id,
-          tenderRow
+          convertTenderRowOut(tenderRow)
         )
         if (null === this.currentTender) {
           return

@@ -13,7 +13,8 @@ describe('ContactRow.vue', () => {
     const wrapper = mount(Component, {
       props: {
         contact: initContacts()[0],
-        isDeletable: false
+        isDeletable: false,
+        withDetails: true
       },
       global: {
         plugins: [
@@ -36,7 +37,8 @@ describe('ContactRow.vue', () => {
     const wrapper = mount(Component, {
       props: {
         contact: initContacts()[0],
-        isDeletable: true
+        isDeletable: true,
+        withDetails: true
       },
       global: {
         plugins: [
@@ -49,7 +51,7 @@ describe('ContactRow.vue', () => {
         stubs
       }
     })
-    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(3)
+    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(2)
 
     await wrapper.find('font-awesome-icon-stub[icon="fa,trash"]').trigger('click')
     const modal = wrapper.find('.modal.show')

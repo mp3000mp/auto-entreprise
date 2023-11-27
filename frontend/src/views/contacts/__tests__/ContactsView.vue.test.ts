@@ -6,6 +6,7 @@ import { vi } from 'vitest'
 import { getRowIds, testSorter } from '@tests/utils/mp3000Table'
 import ContactRow from '@/views/contacts/ContactRow.vue'
 import { initContacts } from '@tests/data/contact'
+import { initCompanies } from '@tests/data/company'
 
 const stubs = ['font-awesome-icon', 'router-link']
 
@@ -54,6 +55,9 @@ describe('ContactsView.vue', () => {
             createSpy: vi.fn,
             stubActions: true,
             initialState: {
+              company: {
+                companies: initCompanies()
+              },
               contact: {
                 contacts: initContacts()
               }
@@ -65,9 +69,19 @@ describe('ContactsView.vue', () => {
     })
     expect(getRowIds(wrapper, ContactRow, 'contact').length).toBe(3)
 
+    // text
     await wrapper.find('input').setValue('Silva')
     await wrapper.vm.$nextTick()
+    expect(getRowIds(wrapper, ContactRow, 'contact')).toEqual([2])
 
+    // reset
+    await wrapper.find('input').setValue('')
+    await wrapper.vm.$nextTick()
+    expect(getRowIds(wrapper, ContactRow, 'contact')).toEqual([1, 2, 3])
+
+    // company
+    await wrapper.find('.form-select').setValue('2')
+    await wrapper.vm.$nextTick()
     expect(getRowIds(wrapper, ContactRow, 'contact')).toEqual([2])
   })
 })

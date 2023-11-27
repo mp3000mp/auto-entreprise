@@ -1,15 +1,18 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import Component from '@/components/Mp3000TableHeader.vue'
 import { mount } from '@vue/test-utils'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import { SortConfigTypeEnum, Sorter } from '../../src/misc/sorter'
-import { ref } from 'vue'
 
 const stubs = ['font-awesome-icon']
 
 describe('Mp3000TableHeader.vue', () => {
   test('toggles icons', async () => {
-    const sorter = new Sorter([{ property: 'property', type: SortConfigTypeEnum.NUMBER }], ref([]))
+    const sorter = {
+      getPriority: vi.fn(),
+      isAsc: vi.fn().mockReturnValueOnce(null).mockReturnValueOnce(true).mockReturnValueOnce(false),
+      addSort: vi.fn(),
+      removeSort: vi.fn()
+    }
     const wrapper = mount(Component, {
       props: {
         label: 'label',
@@ -20,32 +23,24 @@ describe('Mp3000TableHeader.vue', () => {
         stubs
       }
     })
-    let icon = wrapper.findComponent(FontAwesomeIcon)
+    const icon = wrapper.findComponent(FontAwesomeIcon)
     expect(icon.exists()).toBeFalsy()
-    let priority = wrapper.find('.sort-priority')
+    const priority = wrapper.find('.sort-priority')
     expect(priority.exists()).toBeFalsy()
 
     await wrapper.find('th').trigger('click')
-    icon = wrapper.findComponent(FontAwesomeIcon)
-    // todo why sorter.options loose reactivity ?
-    expect(icon.exists()).toBeTruthy()
-    // todo check icon
-    priority = wrapper.find('.sort-priority')
-    expect(priority.exists()).toBeTruthy()
-    // todo check classes
+    expect(sorter.addSort.mock.calls.length).toBe(1)
+    expect(sorter.removeSort.mock.calls.length).toBe(0)
+    expect(sorter.addSort.mock.calls[0]).toEqual(['property'])
 
     await wrapper.find('th').trigger('click')
-    icon = wrapper.findComponent(FontAwesomeIcon)
-    expect(icon.exists()).toBeTruthy()
-    // todo check icon
-    priority = wrapper.find('.sort-priority')
-    expect(priority.exists()).toBeTruthy()
-    // todo check classes
+    expect(sorter.addSort.mock.calls.length).toBe(2)
+    expect(sorter.removeSort.mock.calls.length).toBe(0)
+    expect(sorter.addSort.mock.calls[0]).toEqual(['property'])
 
     await wrapper.find('th').trigger('click')
-    icon = wrapper.findComponent(FontAwesomeIcon)
-    expect(icon.exists()).toBeFalsy()
-    priority = wrapper.find('.sort-priority')
-    expect(priority.exists()).toBeFalsy()
+    expect(sorter.addSort.mock.calls.length).toBe(2)
+    expect(sorter.removeSort.mock.calls.length).toBe(1)
+    expect(sorter.removeSort.mock.calls[0]).toEqual(['property'])
   })
 })

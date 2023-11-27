@@ -9,7 +9,7 @@ export enum SortConfigTypeEnum {
   CUSTOM = 'custom'
 }
 
-interface SortConfig {
+type SortConfig = {
   property: string
   type: SortConfigTypeEnum
   priority: number
@@ -23,7 +23,7 @@ export class Sorter<T> {
   private list: Ref<T[]>
   private maxPriority = 0
 
-  private propCompare = (option: SortConfig) => {
+  private propCompare(option: SortConfig) {
     let fn = (a: number, b: number): number => a - b
     switch (option.type) {
       case SortConfigTypeEnum.STRING:
@@ -113,12 +113,12 @@ export class Sorter<T> {
     return this.list.value
   })
 
-  public getPriority = (property: string): number => {
+  public getPriority(property: string): number {
     const option = this.options.value.find((opt) => opt.property === property)
     return option?.priority ?? 0
   }
 
-  public isAsc = (property: string): boolean | null => {
+  public isAsc(property: string): boolean | null {
     const option = this.options.value.find((opt) => opt.property === property)
     return !option || option.priority === 0 ? null : option.asc
   }

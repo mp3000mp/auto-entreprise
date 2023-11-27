@@ -4,7 +4,7 @@ import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import { NotificationTypeEnum } from '@/stores/notification/types'
 import { vi } from 'vitest'
-import { useNotificationStore } from '../../src/stores/notification'
+import { useNotificationStore } from '@/stores/notification'
 
 describe('ErrorToast.vue', () => {
   test('shows errors', async () => {

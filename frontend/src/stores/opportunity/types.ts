@@ -5,6 +5,7 @@ import type { ListTender, OpportunityTender } from '@/stores/tender/types'
 
 export type MeanOfPayment = {
   id: number
+  position: number
   label: string
 }
 

@@ -55,13 +55,13 @@ const sorter = new Sorter(
       type: SortConfigTypeEnum.CUSTOM,
       customCompare: (a: Tender, b: Tender) => a.status.label.localeCompare(b.status.label)
     },
+    { property: 'soldDays', type: SortConfigTypeEnum.NUMBER },
     {
       property: 'amount',
       type: SortConfigTypeEnum.CUSTOM,
       customCompare: (a: Tender, b: Tender) =>
         a.soldDays * a.averageDailyRate - b.soldDays * b.averageDailyRate
     },
-    { property: 'soldDays', type: SortConfigTypeEnum.NUMBER },
     { property: 'workedDays', type: SortConfigTypeEnum.NUMBER },
     { property: 'createdAt', type: SortConfigTypeEnum.DATE }
   ],
@@ -80,7 +80,7 @@ function hideForm() {
 }
 
 onMounted(async () => {
-  sorter.addSort('company')
+  sorter.addSort('createdAt', false)
   isLoading.value = true
   await Promise.all([
     tenderStore.fetch(),
@@ -93,6 +93,7 @@ onMounted(async () => {
 
 <template>
   <div>
+    <h2>Devis</h2>
     <mp3000-table :is-loading="isLoading">
       <template v-slot:filters>
         <div class="col-auto">
@@ -119,24 +120,32 @@ onMounted(async () => {
           <mp3000-table-header property="opportunity" :sorter="sorter" label="Opportunité" />
           <mp3000-table-header property="company" :sorter="sorter" label="Client" />
           <mp3000-table-header property="status" :sorter="sorter" label="Statut" />
-          <mp3000-table-header property="amount" :sorter="sorter" label="Montant" />
           <mp3000-table-header property="soldDays" :sorter="sorter" label="Jours vendus" />
+          <mp3000-table-header property="amount" :sorter="sorter" label="Montant" />
           <mp3000-table-header property="workedDays" :sorter="sorter" label="Jours travaillés" />
           <mp3000-table-header property="createdAt" :sorter="sorter" label="Création" />
         </tr>
       </template>
       <template v-slot:body>
+        <tr v-if="sorter.sortedList.value.length === 0">
+          <td colspan="100">Aucun devis</td>
+        </tr>
         <tender-row
+          v-else
           v-for="tender in sorter.sortedList.value"
           :key="tender.id"
           :is-deletable="deletableIds.includes(tender.id)"
           :tender="tender"
+          :opportunity="tender.opportunity"
+          :with-details="true"
           @show-form="showForm(tender)"
         />
       </template>
     </mp3000-table>
     <tender-form
+      v-if="currentTender?.opportunity"
       :tender="currentTender"
+      :opportunity="currentTender.opportunity"
       :is-showing="isFormShowing"
       @stop-showing="hideForm"
       :is-loading="isFormLoading"

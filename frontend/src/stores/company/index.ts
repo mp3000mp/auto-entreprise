@@ -3,6 +3,7 @@ import type { ListCompany, NewCompany } from '@/stores/company/types'
 import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
 import type { Company } from '@/stores/company/types'
 import { notifyError } from '@/stores/notification/utils'
+import { convertCompanyIn } from '@/stores/company/dto'
 
 const urlPrefix = '/api/companies'
 export const useCompanyStore = defineStore('company', {
@@ -21,7 +22,9 @@ export const useCompanyStore = defineStore('company', {
     },
     async fetchOne(id: number) {
       try {
-        this.currentCompany = await ApiClient.query(HttpMethodEnum.GET, urlPrefix + '/' + id)
+        this.currentCompany = convertCompanyIn(
+          await ApiClient.query(HttpMethodEnum.GET, urlPrefix + '/' + id)
+        )
       } catch (err: unknown) {
         notifyError('Error while fetching company: ', err)
       }
@@ -32,7 +35,8 @@ export const useCompanyStore = defineStore('company', {
     async add(company: NewCompany) {
       try {
         const rawCompany = await ApiClient.query(HttpMethodEnum.POST, urlPrefix, company)
-        this.companies.push(rawCompany)
+        const newCompany = convertCompanyIn(rawCompany)
+        this.companies.push(newCompany)
       } catch (err: unknown) {
         notifyError('Error while adding company: ', err)
       }
@@ -44,11 +48,12 @@ export const useCompanyStore = defineStore('company', {
           urlPrefix + '/' + company.id,
           company
         )
-        if (this.currentCompany?.id === rawCompany.id) {
-          this.currentCompany = rawCompany
+        const editedCompany = convertCompanyIn(rawCompany)
+        if (this.currentCompany?.id === editedCompany.id) {
+          this.currentCompany = editedCompany
         }
         const companyIdx = this.companies.findIndex((c) => c.id === company.id)
-        this.companies.splice(companyIdx, 1, rawCompany)
+        this.companies.splice(companyIdx, 1, editedCompany)
       } catch (err: unknown) {
         notifyError('Error while editing company: ', err)
       }

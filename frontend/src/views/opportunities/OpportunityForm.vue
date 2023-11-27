@@ -11,6 +11,7 @@ import Mp3000Button from '@/components/Mp3000Button.vue'
 import BootstrapLoader from '@/components/BootstrapLoader.vue'
 import dayjs from '@/misc/dayjs'
 import DatePicker from '@/components/DatePicker.vue'
+import type { Company } from '@/stores/company/types'
 
 const opportunityStore = useOpportunityStore()
 const companyStore = useCompanyStore()
@@ -18,10 +19,12 @@ const emit = defineEmits(['stop-showing'])
 const props = withDefaults(
   defineProps<{
     opportunity: Opportunity | null
+    company?: Company | null
     isShowing: boolean
     isLoading?: boolean
   }>(),
   {
+    company: null,
     isLoading: false
   }
 )
@@ -40,8 +43,8 @@ function getEmptyOpportunity(): NewOpportunity {
     ref: '',
     description: '',
     status: { id: 0, label: '' },
-    company: { id: 0, name: '' },
-    meanOfPayment: { id: 0, label: '' },
+    company: props.company ? props.company : { id: 0, name: '' },
+    meanOfPayment: null,
     trackedAt: dayjs(),
     purchasedAt: null,
     forecastedDelivery: null,
@@ -88,8 +91,12 @@ async function submit() {
 function refresh() {
   if (props.opportunity) {
     currentOpportunity.value = { ...props.opportunity }
+    if (props.company) {
+      currentOpportunity.value.company = props.company
+    }
   } else {
     currentOpportunity.value = getEmptyOpportunity()
+    currentOpportunity.value.status = statuses.value[0]
   }
 }
 
@@ -99,13 +106,13 @@ watch(
 )
 
 onMounted(async () => {
-  refresh()
   areRelationshipsLoading.value = true
   await Promise.all([
     companyStore.fetch(),
     statuses.value.length ? null : opportunityStore.fetchStatuses(),
     meanOfPayments.value.length ? null : opportunityStore.fetchMeanOfPayments()
   ])
+  refresh()
   areRelationshipsLoading.value = false
 })
 </script>
@@ -138,7 +145,7 @@ onMounted(async () => {
           :disabled="isSubmitting"
         />
       </div>
-      <div class="form-group">
+      <div class="form-group" v-if="null === company">
         <label>Client</label>
         <bootstrap-loader v-if="areRelationshipsLoading" />
         <select

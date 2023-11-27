@@ -3,21 +3,20 @@ import { computed, ref } from 'vue'
 import Mp3000Icon from '@/components/Mp3000Icon.vue'
 import type { ListTender } from '@/stores/tender/types'
 import { useTenderStore } from '@/stores/tender'
+import type { Opportunity } from '@/stores/opportunity/types'
 
 const tenderStore = useTenderStore()
 defineEmits(['show-form'])
 const props = defineProps<{
   tender: ListTender
+  opportunity: Opportunity
   isDeletable: boolean
+  withDetails: boolean
 }>()
 
 const isRemoving = ref(false)
 const confirmMessage = computed(
-  () =>
-    'Confirmer la suppression de ' +
-    props.tender.opportunity.ref +
-    ' version ' +
-    props.tender.version
+  () => 'Confirmer la suppression de ' + props.opportunity.ref + ' version ' + props.tender.version
 )
 
 async function remove() {
@@ -46,20 +45,20 @@ async function remove() {
         tender.version
       }}</router-link>
     </td>
-    <td>
-      <router-link :to="{ name: 'opportunity', params: { id: tender.opportunity.id } }">{{
-        tender.opportunity.ref
+    <td v-if="withDetails">
+      <router-link :to="{ name: 'opportunity', params: { id: opportunity.id } }">{{
+        opportunity.ref
       }}</router-link>
     </td>
-    <td>
-      <router-link :to="{ name: 'company', params: { id: tender.opportunity.company.id } }">{{
-        tender.opportunity.company.name
+    <td v-if="withDetails">
+      <router-link :to="{ name: 'company', params: { id: opportunity.company.id } }">{{
+        opportunity.company.name
       }}</router-link>
     </td>
     <td>{{ tender.status.label }}</td>
-    <td>{{ tender.soldDays * tender.averageDailyRate }}€</td>
     <td>{{ tender.soldDays }}</td>
+    <td>{{ tender.soldDays * tender.averageDailyRate }}€</td>
     <td>{{ tender.workedDays }}</td>
-    <td>{{ tender.createdAt.format('YYYY-MM-DD') }}</td>
+    <td v-if="withDetails">{{ tender.createdAt.format('YYYY-MM-DD') }}</td>
   </tr>
 </template>

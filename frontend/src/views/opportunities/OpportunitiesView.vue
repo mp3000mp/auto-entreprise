@@ -94,7 +94,7 @@ function hideForm() {
 onMounted(async () => {
   sorter.addSort('createdAt', false)
   isLoading.value = true
-  Promise.all([
+  await Promise.all([
     opportunityStore.fetch(),
     opportunityStore.fetchDeletables(),
     companies.value.length ? null : companyStore.fetch()
@@ -105,8 +105,12 @@ onMounted(async () => {
 
 <template>
   <div>
+    <h2>Opportunités</h2>
     <mp3000-table :is-loading="isLoading">
       <template v-slot:filters>
+        <div class="col-auto">
+          <button @click.prevent="showForm(null)" class="btn btn-primary mt-4">Nouveau</button>
+        </div>
         <div class="col-auto">
           <div class="form-group">
             <label>Recherche</label>
@@ -137,16 +141,20 @@ onMounted(async () => {
         </tr>
       </template>
       <template v-slot:body>
+        <tr v-if="sorter.sortedList.value.length === 0">
+          <td colspan="100">Aucune opportunité</td>
+        </tr>
         <opportunity-row
+          v-else
           v-for="opportunity in sorter.sortedList.value"
           :key="opportunity.id"
           :is-deletable="deletableIds.includes(opportunity.id)"
           :opportunity="opportunity"
+          :with-details="true"
           @show-form="showForm(opportunity)"
         />
       </template>
     </mp3000-table>
-    <button @click.prevent="showForm(null)" class="btn btn-primary">Nouveau</button>
     <opportunity-form
       :opportunity="currentOpportunity"
       :is-showing="isFormShowing"

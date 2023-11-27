@@ -38,4 +38,11 @@ class CompanyController extends AbstractController
 
         return $this->json($repo->findDeletableIds());
     }
+
+    // todo add doc in api platform
+    #[Route('/{id}/contacts', 'companies.contacts', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function contacts(Company $company): Response
+    {
+        return $this->responseHelper->createResponse($company->getContacts(), ['contact_list']);
+    }
 }

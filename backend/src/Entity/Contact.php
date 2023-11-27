@@ -30,26 +30,26 @@ class Contact
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['contact_list', 'contact_show', 'company_show'])]
+    #[Groups(['contact_list', 'contact_show', 'company_show', 'opportunity_show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['contact_list', 'contact_show', 'company_show', 'contact_write'])]
+    #[Groups(['contact_list', 'contact_show', 'company_show', 'opportunity_show', 'contact_write'])]
     #[Assert\NotBlank]
     private string $lastName;
 
     #[ORM\Column(length: 55)]
-    #[Groups(['contact_list', 'contact_show', 'company_show', 'contact_write'])]
+    #[Groups(['contact_list', 'contact_show', 'company_show', 'opportunity_show', 'contact_write'])]
     #[Assert\NotBlank]
     private string $firstName;
 
     #[ORM\Column(length: 55, unique: true)]
-    #[Groups(['contact_list', 'contact_show', 'company_show', 'contact_write'])]
+    #[Groups(['contact_list', 'contact_show', 'company_show', 'opportunity_show', 'contact_write'])]
     #[Assert\Email]
     private string $email;
 
     #[ORM\Column(length: 15, nullable: true)]
-    #[Groups(['contact_list', 'contact_show', 'company_show', 'contact_write'])]
+    #[Groups(['contact_list', 'contact_show', 'company_show', 'opportunity_show', 'contact_write'])]
     private ?string $phone = null;
 
     // todo company history

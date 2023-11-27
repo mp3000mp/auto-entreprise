@@ -9,6 +9,7 @@ import type { Contact, NewContact } from '@/stores/contact/types'
 
 import Mp3000Button from '@/components/Mp3000Button.vue'
 import BootstrapLoader from '@/components/BootstrapLoader.vue'
+import type { Company } from '@/stores/company/types'
 
 const contactStore = useContactStore()
 const companyStore = useCompanyStore()
@@ -16,10 +17,12 @@ const emit = defineEmits(['stop-showing'])
 const props = withDefaults(
   defineProps<{
     contact: Contact | null
+    company?: Company | null
     isShowing: boolean
     isLoading?: boolean
   }>(),
   {
+    company: null,
     isLoading: false
   }
 )
@@ -35,7 +38,7 @@ function getEmptyContact(): NewContact {
   return {
     firstName: '',
     lastName: '',
-    company: { id: 0, name: '' },
+    company: props.company ? props.company : { id: 0, name: '' },
     email: '',
     phone: '',
     comments: ''
@@ -74,6 +77,9 @@ async function submit() {
 function refresh() {
   if (props.contact) {
     currentContact.value = { ...props.contact }
+    if (props.company) {
+      currentContact.value.company = props.company
+    }
   } else {
     currentContact.value = getEmptyContact()
   }
@@ -120,7 +126,7 @@ onMounted(async () => {
           :disabled="isSubmitting"
         />
       </div>
-      <div class="form-group">
+      <div class="form-group" v-if="null === company">
         <label>Client</label>
         <bootstrap-loader v-if="isCompaniesLoading" />
         <select

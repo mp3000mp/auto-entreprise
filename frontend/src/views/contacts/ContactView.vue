@@ -1,13 +1,22 @@
 <script lang="ts" setup>
 import { useContactStore } from '@/stores/contact'
+import { useOpportunityStore } from '@/stores/opportunity'
 import { computed, onMounted, ref } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import ContactForm from '@/views/contacts/ContactForm.vue'
 import Mp3000Icon from '@/components/Mp3000Icon.vue'
 import { useRouter } from 'vue-router'
+import type { Ref } from 'vue'
 import BootstrapLoader from '@/components/BootstrapLoader.vue'
+import type { Opportunity } from '@/stores/opportunity/types'
+import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
+import OpportunityForm from '@/views/opportunities/OpportunityForm.vue'
+import Mp3000Table from '@/components/Mp3000Table.vue'
+import OpportunityRow from '@/views/opportunities/OpportunityRow.vue'
+import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
 
 const contactStore = useContactStore()
+const opportunityStore = useOpportunityStore()
 const router = useRouter()
 const props = defineProps<{
   contactId: number
@@ -31,6 +40,60 @@ function hideForm() {
   isFormShowing.value = false
 }
 
+const isOpportunityFormShowing = ref(false)
+const currentOpportunity = ref(null) as Ref<Opportunity | null>
+const deletableOpportuntyIds = opportunityStore.deletableIds
+const opportunityFilterSearch = ref('')
+const filteredOpportunities = computed(() => {
+  return (contact.value?.opportunities ?? []).filter((opportunity) => {
+    if (opportunityFilterSearch.value.length < 3) {
+      return true
+    }
+    return opportunity.ref.toLowerCase().includes(opportunityFilterSearch.value.toLowerCase())
+  })
+})
+const opportunitiesSorter = new Sorter(
+  [
+    { property: 'ref', type: SortConfigTypeEnum.STRING },
+    {
+      property: 'status',
+      type: SortConfigTypeEnum.CUSTOM,
+      customCompare: (a: Opportunity, b: Opportunity) =>
+        a.status.label.localeCompare(b.status.label)
+    },
+    {
+      property: 'amount',
+      type: SortConfigTypeEnum.CUSTOM,
+      customCompare: (a: Opportunity, b: Opportunity) =>
+        (a.lastTender?.soldDays ?? 0) * (a.lastTender.averageDailyRate ?? 0) -
+        (b.lastTender?.soldDays ?? 0) * (b.lastTender.averageDailyRate ?? 0)
+    },
+    {
+      property: 'soldDays',
+      type: SortConfigTypeEnum.CUSTOM,
+      customCompare: (a: Opportunity, b: Opportunity) =>
+        (a.lastTender?.soldDays ?? 0) - (b.lastTender?.soldDays ?? 0)
+    },
+    {
+      property: 'workedDays',
+      type: SortConfigTypeEnum.CUSTOM,
+      customCompare: (a: Opportunity, b: Opportunity) =>
+        (a.lastTender?.workedDays ?? 0) - (b.lastTender?.workedDays ?? 0)
+    },
+    { property: 'createdAt', type: SortConfigTypeEnum.DATE }
+  ],
+  filteredOpportunities
+)
+
+function showOpportunityForm(opportunity: Opportunity | null) {
+  currentOpportunity.value = opportunity
+  isOpportunityFormShowing.value = true
+}
+function hideOpportunityForm() {
+  isOpportunityFormShowing.value = false
+  currentOpportunity.value = null
+}
+
 async function remove() {
   isRemoving.value = true
   await contactStore.delete(props.contactId)
@@ -39,7 +102,8 @@ async function remove() {
 }
 
 onMounted(async () => {
-  await contactStore.fetchOne(props.contactId)
+  opportunitiesSorter.addSort('createdAt', false)
+  await Promise.all([contactStore.fetchOne(props.contactId), opportunityStore.fetchDeletables()])
 })
 </script>
 
@@ -72,8 +136,60 @@ onMounted(async () => {
       <font-awesome-icon :icon="['fa', 'phone']" />
       {{ contact.phone }}
     </p>
+
     <h3>Opportunités</h3>
-    <div>todo</div>
+    <mp3000-table>
+      <template #filters>
+        <div class="col-auto">
+          <button @click.prevent="showOpportunityForm(null)" class="btn btn-primary mt-4">
+            Nouvelle opportunité
+          </button>
+        </div>
+        <div class="col-auto">
+          <div class="form-group">
+            <label>Recherche</label>
+            <input type="text" class="form-control" v-model="opportunityFilterSearch" />
+          </div>
+        </div>
+      </template>
+      <template #header>
+        <mp3000-table-header property="ref" :sorter="opportunitiesSorter" label="Ref" />
+        <mp3000-table-header property="status" :sorter="opportunitiesSorter" label="Statut" />
+        <mp3000-table-header property="amount" :sorter="opportunitiesSorter" label="Montant" />
+        <mp3000-table-header
+          property="soldDays"
+          :sorter="opportunitiesSorter"
+          label="Jours vendus"
+        />
+        <mp3000-table-header
+          property="workedDays"
+          :sorter="opportunitiesSorter"
+          label="Jours travaillés"
+        />
+        <mp3000-table-header property="createdAt" :sorter="opportunitiesSorter" label="Création" />
+      </template>
+      <template #body>
+        <tr v-if="opportunitiesSorter.sortedList.value.length === 0">
+          <td colspan="100">Aucune opportunité</td>
+        </tr>
+        <opportunity-row
+          v-else
+          v-for="opportunity in opportunitiesSorter.sortedList.value"
+          :key="opportunity.id"
+          :is-deletable="deletableOpportuntyIds.includes(opportunity.id)"
+          :with-details="false"
+          :opportunity="opportunity"
+          @show-form="showOpportunityForm(opportunity)"
+        />
+      </template>
+    </mp3000-table>
+    <opportunity-form
+      :is-showing="isOpportunityFormShowing"
+      :opportunity="currentOpportunity"
+      :company="contact.company"
+      @stop-showing="hideOpportunityForm"
+    />
+
     <contact-form :contact="contact" :is-showing="isFormShowing" @stop-showing="hideForm" />
   </div>
 </template>

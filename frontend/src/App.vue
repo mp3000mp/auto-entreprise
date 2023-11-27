@@ -6,7 +6,7 @@ import ErrorToast from './components/ErrorToast.vue'
 
 <template>
   <MenuView />
-  <RouterView />
+  <RouterView class="container-fluid" />
   <FooterView />
   <ErrorToast />
 </template>

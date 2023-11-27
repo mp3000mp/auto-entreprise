@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Contact;
 use App\Entity\Opportunity;
 use App\Repository\OpportunityRepository;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -37,5 +39,25 @@ class OpportunityController extends AbstractController
         $repo = $this->em->getRepository(Opportunity::class);
 
         return $this->json($repo->findDeletableIds());
+    }
+
+    // todo add doc in api platform
+    #[Route('/{id}/contacts/{contactId}', 'opportunities.contacts.add', methods: ['POST'], requirements: ['id' => '\d+', 'contactId' => '\d+'])]
+    public function linkContact(Opportunity $opportunity, #[MapEntity(id: 'contactId')] Contact $contact): Response
+    {
+        $opportunity->addContact($contact);
+        $this->em->flush();
+
+        return $this->responseHelper->createResponse($opportunity, ['opportunity_show']);
+    }
+
+    // todo add doc in api platform
+    #[Route('/{id}/contacts/{contactId}', 'opportunities.contacts.delete', methods: ['DELETE'], requirements: ['id' => '\d+', 'contactId' => '\d+'])]
+    public function unlinkContact(Opportunity $opportunity, #[MapEntity(id: 'contactId')] Contact $contact): Response
+    {
+        $opportunity->removeContact($contact);
+        $this->em->flush();
+
+        return $this->responseHelper->createResponse($opportunity, ['opportunity_show']);
     }
 }

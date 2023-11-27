@@ -34,7 +34,7 @@ class TenderRow
 
     #[ORM\Column]
     #[Groups(['tender_show', 'tender_row_add', 'tender_row_edit'])]
-    #[Assert\GreaterThan(0)]
+    #[Assert\GreaterThanOrEqual(0)]
     private float $soldDays;
 
     #[ORM\Column(length: 255)]

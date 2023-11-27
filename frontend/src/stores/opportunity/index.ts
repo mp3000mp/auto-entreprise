@@ -15,6 +15,8 @@ import {
   convertOpportunityOut
 } from '@/stores/opportunity/dto'
 import { notifyError } from '@/stores/notification/utils'
+import { useCompanyStore } from '@/stores/company'
+import { useContactStore } from '@/stores/contact'
 
 const urlPrefix = '/api/opportunities'
 export const useOpportunityStore = defineStore('opportunity', {
@@ -78,7 +80,18 @@ export const useOpportunityStore = defineStore('opportunity', {
           urlPrefix,
           convertOpportunityOut(opportunity)
         )) as OpportunityDtoIn
-        this.opportunities.push(convertOpportunityIn(rawOpportunity))
+        const newOpportunity = convertOpportunityIn(rawOpportunity)
+        this.opportunities.push(newOpportunity)
+
+        const companyStore = useCompanyStore()
+        if (companyStore.currentCompany) {
+          companyStore.currentCompany.opportunities.push(newOpportunity)
+        }
+
+        const contactStore = useContactStore()
+        if (contactStore.currentContact) {
+          contactStore.currentContact.opportunities.push(newOpportunity)
+        }
       } catch (err: unknown) {
         notifyError('Error while adding opportunity: ', err)
       }
@@ -94,8 +107,24 @@ export const useOpportunityStore = defineStore('opportunity', {
         if (this.currentOpportunity?.id === editedOpportunity.id) {
           this.currentOpportunity = editedOpportunity
         }
-        const opportunityIdx = this.opportunities.findIndex((c) => c.id === opportunity.id)
+        let opportunityIdx = this.opportunities.findIndex((c) => c.id === opportunity.id)
         this.opportunities.splice(opportunityIdx, 1, editedOpportunity)
+
+        const companyStore = useCompanyStore()
+        if (companyStore.currentCompany) {
+          opportunityIdx = companyStore.currentCompany.opportunities.findIndex(
+            (c) => c.id === opportunity.id
+          )
+          companyStore.currentCompany.opportunities.splice(opportunityIdx, 1, editedOpportunity)
+        }
+
+        const contactStore = useContactStore()
+        if (contactStore.currentContact) {
+          opportunityIdx = contactStore.currentContact.opportunities.findIndex(
+            (c) => c.id === opportunity.id
+          )
+          contactStore.currentContact.opportunities.splice(opportunityIdx, 1, editedOpportunity)
+        }
       } catch (err: unknown) {
         notifyError('Error while editing opportunity: ', err)
       }
@@ -113,10 +142,54 @@ export const useOpportunityStore = defineStore('opportunity', {
     async delete(id: number) {
       try {
         await ApiClient.query(HttpMethodEnum.DELETE, urlPrefix + '/' + id)
-        const idx = this.opportunities.findIndex((opportunity) => opportunity.id === id)
-        this.opportunities.splice(idx, 1)
+        let opportunityIdx = this.opportunities.findIndex((opportunity) => opportunity.id === id)
+        this.opportunities.splice(opportunityIdx, 1)
+
+        const companyStore = useCompanyStore()
+        if (companyStore.currentCompany) {
+          opportunityIdx = companyStore.currentCompany.opportunities.findIndex((c) => c.id === id)
+          companyStore.currentCompany.opportunities.splice(opportunityIdx, 1)
+        }
+
+        const contactStore = useContactStore()
+        if (contactStore.currentContact) {
+          opportunityIdx = contactStore.currentContact.opportunities.findIndex((c) => c.id === id)
+          contactStore.currentContact.opportunities.splice(opportunityIdx, 1)
+        }
       } catch (err: unknown) {
         notifyError('Error while deleting opportunity: ', err)
+      }
+    },
+    async linkContact(opportunityId: number, contactId: number) {
+      try {
+        const rawOpportunity = await ApiClient.query(
+          HttpMethodEnum.POST,
+          urlPrefix + '/' + opportunityId + '/contacts/' + contactId
+        )
+        const editedOpportunity = convertOpportunityIn(rawOpportunity)
+        if (this.currentOpportunity?.id === editedOpportunity.id) {
+          this.currentOpportunity = editedOpportunity
+        }
+        const opportunityIdx = this.opportunities.findIndex((c) => c.id === opportunityId)
+        this.opportunities.splice(opportunityIdx, 1, editedOpportunity)
+      } catch (err: unknown) {
+        notifyError('Error while linking contact to opportunity: ', err)
+      }
+    },
+    async unlinkContact(opportunityId: number, contactId: number) {
+      try {
+        const rawOpportunity = await ApiClient.query(
+          HttpMethodEnum.DELETE,
+          urlPrefix + '/' + opportunityId + '/contacts/' + contactId
+        )
+        const editedOpportunity = convertOpportunityIn(rawOpportunity)
+        if (this.currentOpportunity?.id === editedOpportunity.id) {
+          this.currentOpportunity = editedOpportunity
+        }
+        const opportunityIdx = this.opportunities.findIndex((c) => c.id === opportunityId)
+        this.opportunities.splice(opportunityIdx, 1, editedOpportunity)
+      } catch (err: unknown) {
+        notifyError('Error while unlinking contact to opportunity: ', err)
       }
     }
   }

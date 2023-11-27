@@ -5,6 +5,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { vi } from 'vitest'
 import { useTenderStore } from '@/stores/tender'
 import { initTenders } from '@tests/data/tender'
+import { initOpportunity } from '../../../../tests/data/opportunity'
 
 const stubs = ['font-awesome-icon', 'router-link']
 
@@ -12,8 +13,10 @@ describe('TenderRow.vue', () => {
   test('triggers events', async () => {
     const wrapper = mount(Component, {
       props: {
-        tender: initTenders()[0],
-        isDeletable: false
+        tender: initTenders(false)[0],
+        opportunity: initOpportunity(),
+        isDeletable: false,
+        withDetails: true
       },
       global: {
         plugins: [
@@ -35,8 +38,10 @@ describe('TenderRow.vue', () => {
   test('triggers remove events', async () => {
     const wrapper = mount(Component, {
       props: {
-        tender: initTenders()[0],
-        isDeletable: true
+        tender: initTenders(false)[0],
+        opportunity: initOpportunity(),
+        isDeletable: true,
+        withDetails: true
       },
       global: {
         plugins: [
@@ -49,7 +54,7 @@ describe('TenderRow.vue', () => {
         stubs
       }
     })
-    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(3)
+    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(2)
 
     await wrapper.find('font-awesome-icon-stub[icon="fa,trash"]').trigger('click')
     const modal = wrapper.find('.modal.show')

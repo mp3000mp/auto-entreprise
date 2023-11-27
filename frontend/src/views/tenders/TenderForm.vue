@@ -4,23 +4,23 @@ import type { Ref } from 'vue'
 import { useTenderStore } from '@/stores/tender'
 
 import BootstrapModal from '@/components/BootstrapModal.vue'
-import type { Tender, NewTender, ListTender } from '@/stores/tender/types'
+import type { Tender, NewTender } from '@/stores/tender/types'
 
 import Mp3000Button from '@/components/Mp3000Button.vue'
 import BootstrapLoader from '@/components/BootstrapLoader.vue'
 import DatePicker from '@/components/DatePicker.vue'
+import type { ListOpportunity } from '@/stores/opportunity/types'
 
 const tenderStore = useTenderStore()
 const emit = defineEmits(['stop-showing'])
 const props = withDefaults(
   defineProps<{
     tender: Tender | null
-    opportunity?: ListTender
+    opportunity: ListOpportunity
     isShowing: boolean
     isLoading?: boolean
   }>(),
   {
-    opportunity: { id: 0, ref: '' },
     isLoading: false
   }
 )
@@ -34,9 +34,9 @@ const statuses = computed(() => tenderStore.statuses)
 
 function getEmptyTender(): NewTender {
   return {
-    version: 0,
+    version: (props.opportunity.lastTender?.version ?? 0) + 1,
     averageDailyRate: 0,
-    status: { id: 0, label: '' },
+    status: { id: 0, position: 0, label: '' },
     opportunity: props.opportunity,
     sentAt: null,
     acceptedAt: null,
@@ -47,9 +47,6 @@ function getEmptyTender(): NewTender {
 }
 
 function validate(tender: Tender | NewTender): string {
-  if (tender.version === 0) {
-    return 'Version non valide'
-  }
   if (tender.averageDailyRate === 0) {
     return 'TJM non valide'
   }
@@ -80,6 +77,7 @@ function refresh() {
     currentTender.value = { ...props.tender }
   } else {
     currentTender.value = getEmptyTender()
+    currentTender.value.status = statuses.value[0]
   }
 }
 
@@ -89,9 +87,9 @@ watch(
 )
 
 onMounted(async () => {
-  refresh()
   areRelationshipsLoading.value = true
   await (statuses.value.length ? null : tenderStore.fetchStatuses())
+  refresh()
   areRelationshipsLoading.value = false
 })
 </script>
@@ -103,18 +101,9 @@ onMounted(async () => {
     @stop-showing="emit('stop-showing')"
   >
     <template v-slot:header>
-      <h5>{{ tender ? 'Edition' : 'Nouveau' }} client</h5>
+      <h5>{{ tender ? 'Edition' : 'Nouveau' }} devis (version {{ currentTender.version }})</h5>
     </template>
     <template v-slot:body>
-      <div class="form-group">
-        <label>Version</label>
-        <input
-          type="number"
-          class="form-control"
-          v-model="currentTender.version"
-          :disabled="isSubmitting"
-        />
-      </div>
       <div class="form-group">
         <label>TJM</label>
         <input
@@ -139,12 +128,12 @@ onMounted(async () => {
         </select>
       </div>
       <div class="form-group">
-        <label>Date envoi</label>
-        <date-picker v-model="currentTender.sentAt" :disabled="isSubmitting" />
-      </div>
-      <div class="form-group">
         <label>Date commande</label>
         <date-picker v-model="currentTender.acceptedAt" :disabled="isSubmitting" />
+      </div>
+      <div class="form-group">
+        <label>Date envoi</label>
+        <date-picker v-model="currentTender.sentAt" :disabled="isSubmitting" />
       </div>
       <div class="form-group">
         <label>Date refus</label>

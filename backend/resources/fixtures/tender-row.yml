@@ -2,8 +2,8 @@ App\Entity\TenderRow:
   tenderRow_base (template):
     position: '<(10*$current)>'
     soldDays: '<numberBetween(1, 5)>'
-    title: '<name()>'
-    description: 'sentence(8)'
+    title: '<sentence(2)>'
+    description: '<sentence(8)>'
 
   tenderRow_90_1_{1..3} (extends tenderRow_base):
     tender: '@tender_90_1'

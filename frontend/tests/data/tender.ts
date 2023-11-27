@@ -21,7 +21,7 @@ export function initTenderStatusLog(status: TenderStatus, date: string): TenderS
     }
 }
 
-function initTenderRows(): TenderRow[] {
+export function initTenderRows(): TenderRow[] {
     const rows = []
     for (let i = 1; i <= 3; i++) {
         rows.push({
@@ -35,38 +35,41 @@ function initTenderRows(): TenderRow[] {
     return rows
 }
 
-export function initTenders(): ListTender[] {
-    const opportunities = initOpportunities()
+export function initTenders(noOpportunity: boolean = true): ListTender[] {
+    const opportunities = noOpportunity ? [] : initOpportunities()
     return [
         {
             id: 1,
             version: 1,
-            opportunity: opportunities[0],
+            opportunity: noOpportunity ? null : opportunities[0],
             status: initTenderStatuses()[0],
             createdAt: dayjs('2023-11-01'),
             averageDailyRate: 100,
             workedDays: 1.5,
             soldDays: 2,
+            tenderRows: [],
         },
         {
             id: 2,
             version: 2,
-            opportunity: opportunities[1],
+            opportunity: noOpportunity ? null : opportunities[1],
             status: initTenderStatuses()[0],
-            createdAt: dayjs('2023-11-01'),
+            createdAt: dayjs('2023-11-02'),
             averageDailyRate: 100,
             workedDays: 2,
             soldDays: 1.5,
+            tenderRows: [],
         },
         {
             id: 3,
             version: 3,
-            opportunity: opportunities[2],
+            opportunity: noOpportunity ? null : opportunities[2],
             status: initTenderStatuses()[0],
-            createdAt: dayjs('2023-11-01'),
+            createdAt: dayjs('2023-11-03'),
             averageDailyRate: 100,
             workedDays: 0,
             soldDays: 3,
+            tenderRows: [],
         }
     ]
 }

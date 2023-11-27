@@ -1,5 +1,5 @@
 import {
-    ListOpportunity,
+    ListOpportunity, MeanOfPayment,
     Opportunity,
     OpportunityStatus,
     OpportunityStatusLog
@@ -7,6 +7,14 @@ import {
 import {initCompanies} from "./company";
 import dayjs from "@/misc/dayjs";
 import {initTenders} from "./tender";
+
+export function initMeanOfPayments(): MeanOfPayment[] {
+    return [
+        {id: 1, position: 10, label: 'mop1'},
+        {id: 2, position: 10, label: 'mop2'},
+        {id: 3, position: 10, label: 'mop3'},
+    ]
+}
 
 export function initOpportunityStatuses(): OpportunityStatus[] {
     return [
@@ -31,9 +39,9 @@ export function initOpportunityStatusLog(status: OpportunityStatus, date: string
     }
 }
 
-export function initOpportunities(): ListOpportunity[] {
+export function initOpportunities(noTender: boolean = true): ListOpportunity[] {
     const companies = initCompanies()
-    const tenders = initTenders()
+    const tenders = noTender ? [] : initTenders()
     return [
         {
             id: 1,
@@ -42,25 +50,25 @@ export function initOpportunities(): ListOpportunity[] {
             status: initOpportunityStatuses()[0],
             createdAt: dayjs('2023-11-01'),
             forecastedDelivery: null,
-            lastTender: tenders[0],
+            lastTender: noTender ? null : tenders[0],
         },
         {
             id: 2,
             ref: 'opp2',
             company: companies[1],
             status: initOpportunityStatuses()[0],
-            createdAt: dayjs('2023-11-01'),
+            createdAt: dayjs('2023-11-02'),
             forecastedDelivery: null,
-            lastTender: tenders[1],
+            lastTender: noTender ? null : tenders[1],
         },
         {
             id: 3,
             ref: 'opp3',
             company: companies[2],
             status: initOpportunityStatuses()[0],
-            createdAt: dayjs('2023-11-01'),
+            createdAt: dayjs('2023-11-03'),
             forecastedDelivery: null,
-            lastTender: tenders[2],
+            lastTender: noTender ? null : tenders[2],
         }
     ]
 }
@@ -100,5 +108,6 @@ export function initOpportunity(): Opportunity {
         trackedAt: dayjs(trackedDate),
         lastTender: initTenders()[0],
         tenders: initTenders(),
+        meanOfPayment: initMeanOfPayments()[0],
     }
 }

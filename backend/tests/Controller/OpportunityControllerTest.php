@@ -124,4 +124,32 @@ class OpportunityControllerTest extends AbstractController
 
         self::assertCount(2, $jsonResponse);
     }
+
+    public function testOpportunityDeleteContact(): void
+    {
+        $this->loginUser($this->client);
+        $opportunities = $this->em->getRepository(Opportunity::class)->findAll();
+        $contacts = $opportunities[0]->getContacts();
+
+        var_dump(count($contacts));
+
+        $this->client->request('DELETE', sprintf('/api/opportunities/%d/contacts/%d', $opportunities[0]->getId(), $contacts[0]->getId()));
+        $this->assertResponseCode(200);
+        $jsonResponse = $this->getResponseJson($this->client->getResponse());
+
+        self::assertCount(0, $jsonResponse['contacts']);
+    }
+
+    public function testOpportunityAddContact(): void
+    {
+        $this->loginUser($this->client);
+        $opportunities = $this->em->getRepository(Opportunity::class)->findAll();
+        $contacts = $this->em->getRepository(Contact::class)->findAll();
+
+        $this->client->request('POST', sprintf('/api/opportunities/%d/contacts/%d', $opportunities[0]->getId(), $contacts[0]->getId()));
+        $this->assertResponseCode(200);
+        $jsonResponse = $this->getResponseJson($this->client->getResponse());
+
+        self::assertCount(2, $jsonResponse['contacts']);
+    }
 }

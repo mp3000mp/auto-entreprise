@@ -24,6 +24,11 @@ export type TenderRow = {
   title: string
   description: string
 }
+export type NewTenderRow = Omit<TenderRow, 'id'>
+export type TenderRowDtoOut = TenderRow & {
+  tender: string
+}
+export type NewTenderRowDtoOut = Omit<TenderRowDtoOut, 'id'>
 
 export type Tender = {
   id: number

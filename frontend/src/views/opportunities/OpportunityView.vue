@@ -1,16 +1,26 @@
 <script lang="ts" setup>
 import { useOpportunityStore } from '@/stores/opportunity'
 import { useTenderStore } from '@/stores/tender'
+import { useCompanyStore } from '@/stores/company'
 import { computed, onMounted, ref } from 'vue'
+import type { Ref } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import OpportunityForm from '@/views/opportunities/OpportunityForm.vue'
 import Mp3000Icon from '@/components/Mp3000Icon.vue'
 import { useRouter } from 'vue-router'
 import BootstrapLoader from '@/components/BootstrapLoader.vue'
 import TenderForm from '@/views/tenders/TenderForm.vue'
+import type { Tender } from '@/stores/tender/types'
+import Mp3000Table from '@/components/Mp3000Table.vue'
+import TenderRow from '@/views/tenders/TenderRow.vue'
+import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
+import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
+import BootstrapModal from '@/components/BootstrapModal.vue'
+import Mp3000Button from '@/components/Mp3000Button.vue'
 
 const opportunityStore = useOpportunityStore()
 const tenderStore = useTenderStore()
+const companyStore = useCompanyStore()
 const router = useRouter()
 const props = defineProps<{
   opportunityId: number
@@ -19,7 +29,14 @@ const props = defineProps<{
 const isFormShowing = ref(false)
 const isRemoving = ref(false)
 const confirmMessage = computed(() => 'Confirmer la suppression de ' + opportunity.value?.ref)
-
+const companyContacts = computed(() => companyStore.currentCompany?.contacts ?? [])
+const opportunityContactIds = computed(() =>
+  opportunity.value.contacts.map((contact) => contact.id)
+)
+const notLinkedContacts = computed(() =>
+  companyContacts.value.filter((contact) => !opportunityContactIds.value.includes(contact.id))
+)
+const isAddContactFormShowing = ref(false)
 const opportunity = computed(() => opportunityStore.currentOpportunity)
 const isDeletable = computed(
   () => null === opportunity.value || opportunity.value.tenders.length === 0
@@ -32,6 +49,48 @@ function hideForm() {
   isFormShowing.value = false
 }
 
+const isTenderFormShowing = ref(false)
+const currentTender = ref(null) as Ref<Tender | null>
+const tenderFilterSearch = ref('')
+const deletableTenderIds = tenderStore.deletableIds
+const filteredTenders = computed(() =>
+  opportunity.value.tenders.filter((tender) => {
+    if (tenderFilterSearch.value.length < 3) {
+      return true
+    }
+    return tender.opportunity.ref.toLowerCase().includes(tenderFilterSearch.value.toLowerCase())
+  })
+)
+const tendersSorter = new Sorter(
+  [
+    { property: 'version', type: SortConfigTypeEnum.NUMBER },
+    {
+      property: 'status',
+      type: SortConfigTypeEnum.CUSTOM,
+      customCompare: (a: Tender, b: Tender) => a.status.label.localeCompare(b.status.label)
+    },
+    { property: 'soldDays', type: SortConfigTypeEnum.NUMBER },
+    {
+      property: 'amount',
+      type: SortConfigTypeEnum.CUSTOM,
+      customCompare: (a: Tender, b: Tender) =>
+        a.soldDays * a.averageDailyRate - b.soldDays * b.averageDailyRate
+    },
+    { property: 'workedDays', type: SortConfigTypeEnum.NUMBER },
+    { property: 'createdAt', type: SortConfigTypeEnum.DATE }
+  ],
+  filteredTenders
+)
+
+function showTenderForm(tender: Tender | null) {
+  currentTender.value = tender
+  isTenderFormShowing.value = true
+}
+function hideTenderForm() {
+  isTenderFormShowing.value = false
+  currentTender.value = null
+}
+
 async function remove() {
   isRemoving.value = true
   await opportunityStore.delete(props.opportunityId)
@@ -39,19 +98,24 @@ async function remove() {
   router.push({ name: 'opportunities' })
 }
 
-const isTenderFormShowing = ref(false)
-
-async function showTenderForm() {
-  isTenderFormShowing.value = true
-  tenderStore.resetCurrentTender()
+async function removeContact(contactId: number) {
+  await opportunityStore.unlinkContact(props.opportunityId, contactId)
 }
-function hideTenderForm() {
-  isTenderFormShowing.value = false
-  tenderStore.resetCurrentTender()
+async function showAddContactForm() {
+  isAddContactFormShowing.value = true
+}
+async function hideAddContactForm() {
+  isAddContactFormShowing.value = false
+}
+async function addContact(contactId: number) {
+  await opportunityStore.linkContact(props.opportunityId, contactId)
+  isAddContactFormShowing.value = false
 }
 
 onMounted(async () => {
-  await opportunityStore.fetchOne(props.opportunityId)
+  tendersSorter.addSort('version', false)
+  await Promise.all([opportunityStore.fetchOne(props.opportunityId), tenderStore.fetchDeletables()])
+  await companyStore.fetchOne(opportunity.value.company.id)
 })
 </script>
 
@@ -80,7 +144,12 @@ onMounted(async () => {
       <br />
       Description: {{ opportunity.description }}<br />
       Contacts:
-      {{ opportunity.contacts.map((contact) => contact.firstName + ' ' + contact.lastName) }}<br />
+      <span class="me-1" v-for="contact in opportunity.contacts" :key="contact.id"
+        >{{ contact.firstName }} {{ contact.lastName }}
+        <mp3000-icon icon="trash" title="Supprimer" @click="removeContact(contact.id)"
+      /></span>
+      <mp3000-icon icon="plus" title="Ajouter" @click="showAddContactForm" />
+      <br />
       Statut: {{ opportunity.status.label }}<br />
       Date de besoin: {{ opportunity.trackedAt.format('YYYY-MM-DD') }}<br />
       Date d'achat: {{ opportunity.purchasedAt?.format('YYYY-MM-DD') ?? '-' }}<br />
@@ -95,19 +164,77 @@ onMounted(async () => {
       Moyen de paiement: {{ opportunity.meanOfPayment?.label ?? '-' }} Ref de paiement:
       {{ opportunity.paymentRef ?? '-' }}<br />
     </p>
+    <bootstrap-modal :is-showing="isAddContactFormShowing" @stop-showing="hideAddContactForm">
+      <template #header>
+        <h5>Ajouter un contact</h5>
+      </template>
+      <template #body>
+        <mp3000-button
+          class="me-1"
+          v-for="contact in notLinkedContacts"
+          :key="contact.id"
+          @click.prevent="addContact(contact.id)"
+          :outline="true"
+          :label="contact.firstName + ' ' + contact.lastName"
+        />
+      </template>
+      <template #footer>
+        <mp3000-button @click.prevent="hideAddContactForm" :outline="true" label="Annuler" />
+      </template>
+    </bootstrap-modal>
 
     <h3>Logs du statut</h3>
     <div>todo</div>
 
     <h3>Devis</h3>
-    <button @click.prevent="showTenderForm()" class="btn btn-primary">Nouveau devis</button>
+    <mp3000-table>
+      <template #filters>
+        <div class="col-auto">
+          <button @click.prevent="showTenderForm(null)" class="btn btn-primary mt-4">
+            Nouveau devis
+          </button>
+        </div>
+        <div class="col-auto">
+          <div class="form-group">
+            <label>Recherche</label>
+            <input type="text" class="form-control" v-model="tenderFilterSearch" />
+          </div>
+        </div>
+      </template>
+      <template #header>
+        <mp3000-table-header property="version" :sorter="tendersSorter" label="Version" />
+        <mp3000-table-header property="status" :sorter="tendersSorter" label="Statut" />
+        <mp3000-table-header property="soldDays" :sorter="tendersSorter" label="Jours vendus" />
+        <mp3000-table-header property="amount" :sorter="tendersSorter" label="Montant" />
+        <mp3000-table-header
+          property="workedDays"
+          :sorter="tendersSorter"
+          label="Jours travaillés"
+        />
+      </template>
+      <template #body>
+        <tr v-if="tendersSorter.sortedList.value.length === 0">
+          <td colspan="100">Aucun devis</td>
+        </tr>
+        <tender-row
+          v-else
+          v-for="tender in tendersSorter.sortedList.value"
+          :key="tender.id"
+          :tender="tender"
+          :opportunity="opportunity"
+          :with-details="false"
+          :is-deletable="deletableTenderIds.includes(tender.id)"
+          @show-form="showTenderForm(tender)"
+        />
+      </template>
+    </mp3000-table>
     <tender-form
-      :tender="null"
+      :tender="currentTender"
       :opportunity="opportunity"
       :is-showing="isTenderFormShowing"
       @stop-showing="hideTenderForm"
     />
-    <div>todo</div>
+
     <opportunity-form
       :opportunity="opportunity"
       :is-showing="isFormShowing"

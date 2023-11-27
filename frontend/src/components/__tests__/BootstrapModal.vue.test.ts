@@ -14,8 +14,7 @@ describe('BootstrapModal.vue', () => {
         stubs
       }
     })
-    expect(wrapper.find('.modal').classes().includes('hidden')).toBeTruthy()
-    expect(wrapper.find('.modal').classes().includes('show')).toBeFalsy()
+    expect(wrapper.find('.modal').exists()).toBeFalsy()
   })
 
   test('is loading', () => {

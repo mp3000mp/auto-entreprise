@@ -1,11 +1,19 @@
 <script lang="ts" setup>
 import { useTenderStore } from '@/stores/tender'
+import type { Ref } from 'vue'
 import { computed, onMounted, ref } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import TenderForm from '@/views/tenders/TenderForm.vue'
 import Mp3000Icon from '@/components/Mp3000Icon.vue'
 import { useRouter } from 'vue-router'
 import BootstrapLoader from '@/components/BootstrapLoader.vue'
+import Mp3000Table from '@/components/Mp3000Table.vue'
+import TenderRowRow from '@/views/tenders/tenderRows/TenderRowRow.vue'
+import TenderRowForm from '@/views/tenders/tenderRows/tenderRowForm.vue'
+import type { TenderRow } from '@/stores/tender/types'
+import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
+import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
+import type { Tender } from '@/stores/tender/types'
 
 const tenderStore = useTenderStore()
 const router = useRouter()
@@ -15,6 +23,11 @@ const props = defineProps<{
 
 const isFormShowing = ref(false)
 const isRemoving = ref(false)
+const newTenderRowPosition = computed(() =>
+  tender.value.tenderRows.length === 0
+    ? 10
+    : (Math.ceil(Math.max(...tender.value.tenderRows.map((row) => row.position)) / 10) + 1) * 10
+)
 const confirmMessage = computed(
   () =>
     'Confirmer la suppression de ' +
@@ -25,12 +38,48 @@ const confirmMessage = computed(
 
 const tender = computed(() => tenderStore.currentTender)
 const isDeletable = computed(() => null === tender.value || tender.value.tenderRows.length === 0)
-
 function showForm() {
   isFormShowing.value = true
 }
 function hideForm() {
   isFormShowing.value = false
+}
+
+const isTenderRowFormShowing = ref(false)
+const currentTenderRow = ref(null) as Ref<TenderRow | null>
+const tenderRowFilterSearch = ref('')
+const filteredTenderRows = computed(() => {
+  return (tender.value?.tenderRows ?? []).filter((tenderRow) => {
+    if (tenderRowFilterSearch.value.length < 3) {
+      return true
+    }
+    return (tenderRow.title + tenderRow.description)
+      .toLowerCase()
+      .includes(tenderRowFilterSearch.value.toLowerCase())
+  })
+})
+const tenderRowsSorter = new Sorter(
+  [
+    { property: 'title', type: SortConfigTypeEnum.STRING },
+    { property: 'description', type: SortConfigTypeEnum.STRING },
+    { property: 'soldDays', type: SortConfigTypeEnum.NUMBER },
+    {
+      property: 'amount',
+      type: SortConfigTypeEnum.CUSTOM,
+      customCompare: (a: Tender, b: Tender) =>
+        a.soldDays * tender.value.averageDailyRate - b.soldDays * tender.value.averageDailyRate
+    }
+  ],
+  filteredTenderRows
+)
+
+function showTenderRowForm(tenderRow: TenderRow | null) {
+  currentTenderRow.value = tenderRow
+  isTenderRowFormShowing.value = true
+}
+function hideTenderRowForm() {
+  isTenderRowFormShowing.value = false
+  currentTenderRow.value = null
 }
 
 async function remove() {
@@ -72,13 +121,65 @@ onMounted(async () => {
       }}</router-link>
       <br />
       Statut: {{ tender.status.label }}<br />
+      TJM: {{ tender.averageDailyRate }}<br />
+      Jours vendus: {{ tender.soldDays }}<br />
       Date d'envoi: {{ tender.sentAt?.format('YYYY-MM-DD') ?? '-' }}<br />
-      Date de commande': {{ tender.acceptedAt?.format('YYYY-MM-DD') ?? '-' }}<br />
+      Date de commande: {{ tender.acceptedAt?.format('YYYY-MM-DD') ?? '-' }}<br />
       Date de refus: {{ tender.refusedAt?.format('YYYY-MM-DD') ?? '-' }}<br />
       Date d'annulation: {{ tender.canceledAt?.format('YYYY-MM-DD') ?? '-' }}<br />
     </p>
+
     <h3>Lignes</h3>
-    <div>todo</div>
-    <tender-form :tender="tender" :is-showing="isFormShowing" @stop-showing="hideForm" />
+    <mp3000-table>
+      <template #filters>
+        <div class="col-auto">
+          <button @click.prevent="showTenderRowForm(null)" class="btn btn-primary mt-4">
+            Nouvelle ligne
+          </button>
+        </div>
+        <div class="col-auto">
+          <div class="form-group">
+            <label>Recherche</label>
+            <input type="text" class="form-control" v-model="tenderRowFilterSearch" />
+          </div>
+        </div>
+      </template>
+      <template v-slot:header>
+        <mp3000-table-header property="titre" :sorter="tenderRowsSorter" label="Titre" />
+        <mp3000-table-header
+          property="description"
+          :sorter="tenderRowsSorter"
+          label="Description"
+        />
+        <mp3000-table-header property="soldDays" :sorter="tenderRowsSorter" label="Jours vendus" />
+        <mp3000-table-header property="amount" :sorter="tenderRowsSorter" label="Montant" />
+      </template>
+      <template v-slot:body>
+        <tr v-if="tenderRowsSorter.sortedList.value.length === 0">
+          <td colspan="100">Aucune ligne</td>
+        </tr>
+        <tender-row-row
+          v-else
+          v-for="tenderRow in tenderRowsSorter.sortedList.value"
+          :key="tenderRow.id"
+          :tender-row="tenderRow"
+          :average-daily-rate="tender.averageDailyRate"
+          @show-form="showTenderRowForm(tenderRow)"
+        />
+      </template>
+    </mp3000-table>
+    <tender-row-form
+      :is-showing="isTenderRowFormShowing"
+      :tender-row="currentTenderRow"
+      :tender="tender"
+      :position="newTenderRowPosition"
+      @stop-showing="hideTenderRowForm"
+    />
+    <tender-form
+      :tender="tender"
+      :opportunity="tender.opportunity"
+      :is-showing="isFormShowing"
+      @stop-showing="hideForm"
+    />
   </div>
 </template>

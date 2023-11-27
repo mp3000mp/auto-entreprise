@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest'
-import Component from '@/views/opportunitys/OpportunityRow.vue'
+import Component from '@/views/opportunities/OpportunityRow.vue'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import { vi } from 'vitest'
 import { useOpportunityStore } from '@/stores/opportunity'
-import { initOpportunitys } from '@tests/data/opportunity'
+import { initOpportunities } from '@tests/data/opportunity'
 
 const stubs = ['font-awesome-icon', 'router-link']
 
@@ -12,8 +12,9 @@ describe('OpportunityRow.vue', () => {
   test('triggers events', async () => {
     const wrapper = mount(Component, {
       props: {
-        opportunity: initOpportunitys()[0],
-        isDeletable: false
+        opportunity: initOpportunities()[0],
+        isDeletable: false,
+        withDetails: true
       },
       global: {
         plugins: [
@@ -35,8 +36,9 @@ describe('OpportunityRow.vue', () => {
   test('triggers remove events', async () => {
     const wrapper = mount(Component, {
       props: {
-        opportunity: initOpportunitys()[0],
-        isDeletable: true
+        opportunity: initOpportunities()[0],
+        isDeletable: true,
+        withDetails: true
       },
       global: {
         plugins: [
@@ -49,7 +51,7 @@ describe('OpportunityRow.vue', () => {
         stubs
       }
     })
-    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(3)
+    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(2)
 
     await wrapper.find('font-awesome-icon-stub[icon="fa,trash"]').trigger('click')
     const modal = wrapper.find('.modal.show')

@@ -60,8 +60,12 @@ onMounted(async () => {
 
 <template>
   <div>
+    <h2>Clients</h2>
     <mp3000-table :is-loading="isLoading">
       <template v-slot:filters>
+        <div class="col-auto">
+          <button @click.prevent="showForm(null)" class="btn btn-primary mt-4">Nouveau</button>
+        </div>
         <div class="col-auto">
           <div class="form-group">
             <label>Recherche</label>
@@ -75,7 +79,11 @@ onMounted(async () => {
         </tr>
       </template>
       <template v-slot:body>
+        <tr v-if="sorter.sortedList.value.length === 0">
+          <td colspan="100">Aucun client</td>
+        </tr>
         <company-row
+          v-else
           v-for="company in sorter.sortedList.value"
           :key="company.id"
           :is-deletable="deletableIds.includes(company.id)"
@@ -84,7 +92,6 @@ onMounted(async () => {
         />
       </template>
     </mp3000-table>
-    <button @click.prevent="showForm(null)" class="btn btn-primary">Nouveau</button>
     <company-form
       :company="currentCompany"
       :is-showing="isFormShowing"

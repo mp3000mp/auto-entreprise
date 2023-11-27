@@ -40,6 +40,7 @@ onMounted(async () => {
 
 <template>
   <div>
+    <h2>Utilisateurs</h2>
     <mp3000-table :is-loading="isLoading">
       <template v-slot:filters>
         <div class="col-auto">

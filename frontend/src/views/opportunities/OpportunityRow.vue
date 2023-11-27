@@ -9,6 +9,7 @@ defineEmits(['show-form'])
 const props = defineProps<{
   opportunity: ListOpportunity
   isDeletable: boolean
+  withDetails: boolean
 }>()
 
 const isRemoving = ref(false)
@@ -40,7 +41,7 @@ async function remove() {
         opportunity.ref
       }}</router-link>
     </td>
-    <td>
+    <td v-if="withDetails">
       <router-link :to="{ name: 'company', params: { id: opportunity.company.id } }">{{
         opportunity.company.name
       }}</router-link>

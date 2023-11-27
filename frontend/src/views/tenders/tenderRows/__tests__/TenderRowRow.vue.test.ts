@@ -1,19 +1,19 @@
 import { describe, expect, test } from 'vitest'
-import Component from '@/views/companies/CompanyRow.vue'
+import Component from '@/views/tenders/tenderRows/TenderRowRow.vue'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import { vi } from 'vitest'
-import { useCompanyStore } from '@/stores/company'
-import { initCompanies } from '@tests/data/company'
+import { useTenderStore } from '@/stores/tender'
+import { initTenderRows } from '@tests/data/tender'
 
 const stubs = ['font-awesome-icon', 'router-link']
 
-describe('CompanyRow.vue', () => {
-  test('triggers edit events', async () => {
+describe('TenderRowRow.vue', () => {
+  test('triggers events', async () => {
     const wrapper = mount(Component, {
       props: {
-        company: initCompanies()[0],
-        isDeletable: false
+        tenderRow: initTenderRows()[0],
+        averageDailyRate: 100
       },
       global: {
         plugins: [
@@ -26,7 +26,7 @@ describe('CompanyRow.vue', () => {
         stubs
       }
     })
-    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(1)
+    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(2)
 
     await wrapper.find('font-awesome-icon-stub[icon="fa,pen-to-square"]').trigger('click')
     expect(wrapper.emitted()['show-form'].length).toBe(1)
@@ -35,8 +35,8 @@ describe('CompanyRow.vue', () => {
   test('triggers remove events', async () => {
     const wrapper = mount(Component, {
       props: {
-        company: initCompanies()[0],
-        isDeletable: true
+        tenderRow: initTenderRows()[0],
+        averageDailyRate: 100
       },
       global: {
         plugins: [
@@ -55,10 +55,10 @@ describe('CompanyRow.vue', () => {
     const modal = wrapper.find('.modal.show')
     expect(modal.exists()).toBeTruthy()
 
-    const store = useCompanyStore()
+    const store = useTenderStore()
     const buttons = modal.findAll('button')
     await buttons[1].trigger('click')
-    expect(store.delete).toHaveBeenCalledTimes(1)
-    expect(store.delete).toHaveBeenLastCalledWith(1)
+    expect(store.deleteTenderRow).toHaveBeenCalledTimes(1)
+    expect(store.deleteTenderRow).toHaveBeenLastCalledWith(1)
   })
 })
