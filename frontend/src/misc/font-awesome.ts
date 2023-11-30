@@ -1,7 +1,17 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
+  faCircleInfo,
   faEnvelope,
+  faFile,
+  faFileAudio,
+  faFileCode,
+  faFileCsv,
+  faFileExcel,
+  faFilePdf,
+  faFileVideo,
+  faFileWord,
+  faFileZipper,
   faPenToSquare,
   faPhone,
   faPlus,
@@ -11,6 +21,25 @@ import {
   faXmark
 } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faEnvelope, faPenToSquare, faPhone, faPlus, faSortDown, faSortUp, faTrash, faXmark)
+library.add(
+  faCircleInfo,
+  faEnvelope,
+  faFile,
+  faFileAudio,
+  faFileCode,
+  faFileCsv,
+  faFileExcel,
+  faFilePdf,
+  faFileVideo,
+  faFileWord,
+  faFileZipper,
+  faPenToSquare,
+  faPhone,
+  faPlus,
+  faSortDown,
+  faSortUp,
+  faTrash,
+  faXmark
+)
 
 export default FontAwesomeIcon

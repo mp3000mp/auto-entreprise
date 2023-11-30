@@ -20,7 +20,7 @@ function convertOpportunityStatusIn(rawStatus: OpportunityStatusLogDtoIn): Oppor
   }
 }
 
-function convertOpportunityFileIn(rawFile: OpportunityFileDtoIn): OpportunityFile {
+export function convertOpportunityFileIn(rawFile: OpportunityFileDtoIn): OpportunityFile {
   return {
     ...rawFile,
     createdAt: dayjs(rawFile.createdAt)

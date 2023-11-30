@@ -2,47 +2,47 @@
 
 namespace App\Entity;
 
-use App\Enum\OpportunityFileTypeEnum;
+use App\Enum\TenderFileTypeEnum;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
-class OpportunityFile implements FileInterface
+class TenderFile implements FileInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['opportunity_show'])]
+    #[Groups(['tender_show'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 12, enumType: OpportunityFileTypeEnum::class)]
-    #[Groups(['opportunity_show'])]
-    private OpportunityFileTypeEnum $type;
+    #[ORM\Column(length: 12, enumType: TenderFileTypeEnum::class)]
+    #[Groups(['tender_show'])]
+    private TenderFileTypeEnum $type;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['opportunity_show'])]
+    #[Groups(['tender_show'])]
     #[Assert\NotBlank]
     private string $name;
 
     #[ORM\Column(length: 500)]
-    #[Groups(['opportunity_show'])]
+    #[Groups(['tender_show'])]
     #[Assert\NotBlank]
     private string $extension;
 
     #[ORM\Column(length: 255)]
     private string $path;
 
-    #[ORM\ManyToOne(targetEntity: Opportunity::class, inversedBy: 'opportunityFiles')]
+    #[ORM\ManyToOne(targetEntity: Tender::class, inversedBy: 'tenderFiles')]
     #[ORM\JoinColumn(nullable: false)]
-    private Opportunity $opportunity;
+    private Tender $tender;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
     private User $createdBy;
 
     #[ORM\Column]
-    #[Groups(['opportunity_show'])]
+    #[Groups(['tender_show'])]
     private \DateTime $createdAt;
 
     public function __construct()
@@ -55,12 +55,12 @@ class OpportunityFile implements FileInterface
         return $this->id;
     }
 
-    public function getType(): OpportunityFileTypeEnum
+    public function getType(): TenderFileTypeEnum
     {
         return $this->type;
     }
 
-    public function setType(OpportunityFileTypeEnum $type): self
+    public function setType(TenderFileTypeEnum $type): self
     {
         $this->type = $type;
 
@@ -103,14 +103,14 @@ class OpportunityFile implements FileInterface
         return $this;
     }
 
-    public function getOpportunity(): Opportunity
+    public function getTender(): Tender
     {
-        return $this->opportunity;
+        return $this->tender;
     }
 
-    public function setOpportunity(Opportunity $opportunity): self
+    public function setTender(Tender $tender): self
     {
-        $this->opportunity = $opportunity;
+        $this->tender = $tender;
 
         return $this;
     }

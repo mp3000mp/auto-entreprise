@@ -17,6 +17,10 @@ import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
 import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import BootstrapModal from '@/components/BootstrapModal.vue'
 import Mp3000Button from '@/components/Mp3000Button.vue'
+import OpportunityFileForm from '@/views/opportunities/OpportunityFileForm.vue'
+import config from '@/misc/config'
+import { opportunityFileTypeLabels } from '@/stores/opportunity/types'
+import { getFileIcon } from '@/misc/utils'
 
 const opportunityStore = useOpportunityStore()
 const tenderStore = useTenderStore()
@@ -112,6 +116,18 @@ async function addContact(contactId: number) {
   isAddContactFormShowing.value = false
 }
 
+const isStatusLogsShowing = ref(false)
+function showStatusLogsPopin() {
+  isStatusLogsShowing.value = true
+}
+function hideStatusLogsPopin() {
+  isStatusLogsShowing.value = false
+}
+
+async function removeFile(fileId: number) {
+  await opportunityStore.removeOpportunityFile(fileId)
+}
+
 onMounted(async () => {
   tendersSorter.addSort('version', false)
   await Promise.all([opportunityStore.fetchOne(props.opportunityId), tenderStore.fetchDeletables()])
@@ -150,7 +166,8 @@ onMounted(async () => {
       /></span>
       <mp3000-icon icon="plus" title="Ajouter" @click="showAddContactForm" />
       <br />
-      Statut: {{ opportunity.status.label }}<br />
+      Statut: {{ opportunity.status.label }}
+      <mp3000-icon icon="circle-info" title="Historique" @click="showStatusLogsPopin" /><br />
       Date de besoin: {{ opportunity.trackedAt.format('YYYY-MM-DD') }}<br />
       Date d'achat: {{ opportunity.purchasedAt?.format('YYYY-MM-DD') ?? '-' }}<br />
       Date de rendu prévisionnelle: {{ opportunity.forecastedDelivery?.format('YYYY-MM-DD') ?? '-'
@@ -164,6 +181,19 @@ onMounted(async () => {
       Moyen de paiement: {{ opportunity.meanOfPayment?.label ?? '-' }} Ref de paiement:
       {{ opportunity.paymentRef ?? '-' }}<br />
     </p>
+    <bootstrap-modal :is-showing="isStatusLogsShowing" @stop-showing="hideStatusLogsPopin">
+      <template #header>
+        <h5>Status logs</h5>
+      </template>
+      <template #body>
+        <div v-for="log in opportunity.statusLogs" :key="log.id">
+          {{ log.createdAt.format('YYYY-MM-DD HH:mm') }} - {{ log.status.label }}
+        </div>
+      </template>
+      <template #footer>
+        <mp3000-button @click.prevent="hideStatusLogsPopin" :outline="true" label="Fermer" />
+      </template>
+    </bootstrap-modal>
     <bootstrap-modal :is-showing="isAddContactFormShowing" @stop-showing="hideAddContactForm">
       <template #header>
         <h5>Ajouter un contact</h5>
@@ -182,9 +212,36 @@ onMounted(async () => {
         <mp3000-button @click.prevent="hideAddContactForm" :outline="true" label="Annuler" />
       </template>
     </bootstrap-modal>
+    <bootstrap-modal :is-showing="isStatusLogsShowing" @stop-showing="hideStatusLogsPopin">
+      <template #header>
+        <h5>Status logs</h5>
+      </template>
+      <template #body>
+        <div v-for="log in opportunity.statusLogs" :key="log.id">
+          {{ log.createdAt.format('YYYY-MM-DD HH:mm') }} - {{ log.status.label }}
+        </div>
+      </template>
+      <template #footer>
+        <mp3000-button @click.prevent="hideStatusLogsPopin" :outline="true" label="Fermer" />
+      </template>
+    </bootstrap-modal>
 
-    <h3>Logs du statut</h3>
-    <div>todo</div>
+    <h3>Fichiers</h3>
+    <div>
+      <a
+        v-for="file in opportunity.opportunityFiles"
+        :key="file.id"
+        :href="config.backendBaseUrl + '/api/opportunity_files/' + file.id"
+        title="Télécharger"
+        target="_blank"
+        class="me-1"
+      >
+        <font-awesome-icon :icon="['fa', getFileIcon(file.extension)]" />
+        [{{ opportunityFileTypeLabels[file.type] }}] {{ file.name }}
+        <mp3000-icon icon="trash" @click="removeFile(file.id)" />
+      </a>
+      <opportunity-file-form :opportunity-id="opportunityId" />
+    </div>
 
     <h3>Devis</h3>
     <mp3000-table>

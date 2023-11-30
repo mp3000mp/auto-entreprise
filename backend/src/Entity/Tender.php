@@ -98,13 +98,12 @@ class Tender
     #[Groups(['tender_show'])]
     private Collection $statusLogs;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['tender_show', 'tender_edit'])]
-    private ?string $tenderFileDocx = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['tender_show', 'tender_edit'])]
-    private ?string $tenderFilePdf = null;
+    /**
+     * @var ArrayCollection<int, TenderFile>
+     */
+    #[ORM\OneToMany(targetEntity: TenderFile::class, mappedBy: 'tender')]
+    #[Groups(['tender_show'])]
+    private Collection $tenderFiles;
 
     public function __construct()
     {
@@ -112,6 +111,7 @@ class Tender
         $this->tenderRows = new ArrayCollection();
         $this->workedTimes = new ArrayCollection();
         $this->statusLogs = new ArrayCollection();
+        $this->tenderFiles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -337,26 +337,24 @@ class Tender
         return $this;
     }
 
-    public function getTenderFileDocx(): ?string
+    /**
+     * @return ArrayCollection<int, TenderFile>
+     */
+    public function getTenderFiles(): Collection
     {
-        return $this->tenderFileDocx;
+        return $this->tenderFiles;
     }
 
-    public function setTenderFileDocx(?string $tenderFileDocx): self
+    public function addTenderFile(TenderFile $tenderFile): self
     {
-        $this->tenderFileDocx = $tenderFileDocx;
+        $this->tenderFiles->add($tenderFile);
 
         return $this;
     }
 
-    public function getTenderFilePdf(): ?string
+    public function removeTenderFile(TenderFile $tenderFile): self
     {
-        return $this->tenderFilePdf;
-    }
-
-    public function setTenderFilePdf(?string $tenderFilePdf): self
-    {
-        $this->tenderFilePdf = $tenderFilePdf;
+        $this->tenderFiles->removeElement($tenderFile);
 
         return $this;
     }

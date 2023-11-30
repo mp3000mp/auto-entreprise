@@ -24,8 +24,20 @@ export type OpportunityStatusLogDtoIn = Omit<OpportunityStatusLog, 'createdAt'> 
   createdAt: string
 }
 
+export enum OpportunityFileTypeEnum {
+  INVOICE = 'invoice',
+  ORDER = 'order',
+  OTHER = 'other'
+}
+export const opportunityFileTypeLabels = {
+  [OpportunityFileTypeEnum.INVOICE]: 'Facture',
+  [OpportunityFileTypeEnum.ORDER]: 'Commande',
+  [OpportunityFileTypeEnum.OTHER]: 'Autre'
+}
+
 export type OpportunityFile = {
   id: number
+  type: OpportunityFileTypeEnum
   title: string
   description: string
   createdAt: Dayjs
@@ -57,13 +69,11 @@ export type Opportunity = {
   lastTender: OpportunityTender
   comments: string | null
   statusLogs: OpportunityStatusLog[]
-  billFileDocx: string | null
-  billFilePdf: string | null
   opportunityFiles: OpportunityFile[]
 }
 export type NewOpportunity = Omit<
   Opportunity,
-  'id' | 'contacts' | 'tenders' | 'statusLogs' | 'opportunityFiles' | 'billFileDocx' | 'billFilePdf'
+  'id' | 'contacts' | 'tenders' | 'statusLogs' | 'opportunityFiles'
 >
 export type ListOpportunity = Pick<
   Opportunity,
@@ -115,8 +125,6 @@ export type OpportunityDtoOut = Omit<
   | 'tenders'
   | 'statusLogs'
   | 'opportunityFiles'
-  | 'billFileDocx'
-  | 'billFilePdf'
 > & {
   company: string
   status: string

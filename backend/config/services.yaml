@@ -5,9 +5,14 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.version: '%env(APP_VERSION)%'
+    app.docs_path: '%kernel.project_dir%/docs'
     app.resources_path: '%kernel.project_dir%/resources'
-    app.schemas_path: '%app.resources_path%/schemas'
     app.fixtures_path: '%app.resources_path%/fixtures'
+    app.schemas_path: '%app.resources_path%/schemas'
+
+when@test:
+    parameters:
+        app.docs_path: '%kernel.project_dir%/docs_test'
 
 services:
     # default configuration for services in *this* file

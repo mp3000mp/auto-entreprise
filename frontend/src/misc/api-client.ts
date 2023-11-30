@@ -14,6 +14,7 @@ export class ApiError {
 
 export type ApiClientOptions = {
   ignoreResponse?: boolean
+  headers: any
 }
 const defaultApiClientOptions = {
   ignoreResponse: false
@@ -26,6 +27,7 @@ export class ApiClient {
     'Content-Type': 'application/json'
   }
 
+  // todo rename json to body as it accepts FormData
   public async query(
     httpMethod: HttpMethodEnum,
     url: string,
@@ -41,7 +43,10 @@ export class ApiClient {
       method: httpMethod,
       headers: this.headers
     }
-    if (json !== null) {
+    if (json instanceof FormData) {
+      fetchOptions.body = json
+      delete fetchOptions.headers['Content-Type'] // mandatory so boundary will be set by browser
+    } else if (json !== null) {
       fetchOptions.body = JSON.stringify(json)
     }
     try {

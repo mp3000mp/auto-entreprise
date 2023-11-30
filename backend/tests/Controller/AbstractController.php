@@ -52,7 +52,9 @@ abstract class AbstractController extends WebTestCase
         $responseContent = $this->client->getResponse()->getContent();
         $responseJson = json_decode($responseContent, true);
         if (null === $responseJson) {
-            echo "Response: $responseContent";
+            if (!$doNotDump) {
+                echo "Response: $responseContent";
+            }
             self::assertEquals($expectedCode, $responseCode);
 
             return;

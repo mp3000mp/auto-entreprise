@@ -14,6 +14,12 @@ import type { TenderRow } from '@/stores/tender/types'
 import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
 import type { Tender } from '@/stores/tender/types'
+import Mp3000Button from '@/components/Mp3000Button.vue'
+import BootstrapModal from '@/components/BootstrapModal.vue'
+import config from '@/misc/config'
+import { getFileIcon } from '@/misc/utils'
+import TenderFileForm from '@/views/tenders/TenderFileForm.vue'
+import { tenderFileTypeLabels } from '@/stores/tender/types'
 
 const tenderStore = useTenderStore()
 const router = useRouter()
@@ -89,6 +95,18 @@ async function remove() {
   router.push({ name: 'tenders' })
 }
 
+const isStatusLogsShowing = ref(false)
+function showStatusLogsPopin() {
+  isStatusLogsShowing.value = true
+}
+function hideStatusLogsPopin() {
+  isStatusLogsShowing.value = false
+}
+
+async function removeFile(fileId: number) {
+  await tenderStore.removeTenderFile(fileId)
+}
+
 onMounted(async () => {
   await tenderStore.fetchOne(props.tenderId)
 })
@@ -120,7 +138,8 @@ onMounted(async () => {
         tender.opportunity.company.name
       }}</router-link>
       <br />
-      Statut: {{ tender.status.label }}<br />
+      Statut: {{ tender.status.label }}
+      <mp3000-icon icon="circle-info" title="Historique" @click="showStatusLogsPopin" /><br />
       TJM: {{ tender.averageDailyRate }}<br />
       Jours vendus: {{ tender.soldDays }}<br />
       Date d'envoi: {{ tender.sentAt?.format('YYYY-MM-DD') ?? '-' }}<br />
@@ -128,6 +147,36 @@ onMounted(async () => {
       Date de refus: {{ tender.refusedAt?.format('YYYY-MM-DD') ?? '-' }}<br />
       Date d'annulation: {{ tender.canceledAt?.format('YYYY-MM-DD') ?? '-' }}<br />
     </p>
+    <bootstrap-modal :is-showing="isStatusLogsShowing" @stop-showing="hideStatusLogsPopin">
+      <template #header>
+        <h5>Status logs</h5>
+      </template>
+      <template #body>
+        <div v-for="log in tender.statusLogs" :key="log.id">
+          {{ log.createdAt.format('YYYY-MM-DD HH:mm') }} - {{ log.status.label }}
+        </div>
+      </template>
+      <template #footer>
+        <mp3000-button @click.prevent="hideStatusLogsPopin" :outline="true" label="Fermer" />
+      </template>
+    </bootstrap-modal>
+
+    <h3>Fichiers</h3>
+    <div>
+      <a
+        v-for="file in tender.tenderFiles"
+        :key="file.id"
+        :href="config.backendBaseUrl + '/api/tender_files/' + file.id"
+        title="Télécharger"
+        target="_blank"
+        class="me-1"
+      >
+        <font-awesome-icon :icon="['fa', getFileIcon(file.extension)]" />
+        [{{ tenderFileTypeLabels[file.type] }}] {{ file.name }}
+        <mp3000-icon icon="trash" @click="removeFile(file.id)" />
+      </a>
+      <tender-file-form :tender-id="tenderId" />
+    </div>
 
     <h3>Lignes</h3>
     <mp3000-table>

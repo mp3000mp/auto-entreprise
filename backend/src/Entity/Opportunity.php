@@ -128,14 +128,6 @@ class Opportunity
     #[Groups(['opportunity_show'])]
     private Collection $statusLogs;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['opportunity_show', 'opportunity_edit'])]
-    private ?string $billFileDocx = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['opportunity_show', 'opportunity_edit'])]
-    private ?string $billFilePdf = null;
-
     /**
      * @var ArrayCollection<int, OpportunityFile>
      */
@@ -441,30 +433,6 @@ class Opportunity
     public function removeStatusLog(OpportunityStatusLog $statusLog): self
     {
         $this->statusLogs->removeElement($statusLog);
-
-        return $this;
-    }
-
-    public function getBillFileDocx(): ?string
-    {
-        return $this->billFileDocx;
-    }
-
-    public function setBillFileDocx(?string $billFileDocx): self
-    {
-        $this->billFileDocx = $billFileDocx;
-
-        return $this;
-    }
-
-    public function getBillFilePdf(): ?string
-    {
-        return $this->billFilePdf;
-    }
-
-    public function setBillFilePdf(?string $billFilePdf): self
-    {
-        $this->billFilePdf = $billFilePdf;
 
         return $this;
     }

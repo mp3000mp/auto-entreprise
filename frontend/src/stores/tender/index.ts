@@ -17,9 +17,12 @@ import {
 } from '@/stores/tender/dto'
 import { notifyError } from '@/stores/notification/utils'
 import { useOpportunityStore } from '@/stores/opportunity'
+import { TenderFileTypeEnum } from '@/stores/tender/types'
+import { convertTenderFileIn } from '@/stores/tender/dto'
 
 const urlPrefix = '/api/tenders'
 const rowUrlPrefix = '/api/tender_rows'
+const fileUrlPrefix = '/api/tender_files'
 export const useTenderStore = defineStore('tender', {
   state: () => ({
     tenders: [] as ListTender[],
@@ -178,6 +181,33 @@ export const useTenderStore = defineStore('tender', {
         this.currentTender.tenderRows.splice(idx, 1)
       } catch (err: unknown) {
         notifyError('Error while deleting worked time: ', err)
+      }
+    },
+    async addTenderFile(formData: FormData, type: TenderFileTypeEnum, tenderId: number) {
+      try {
+        const url = new URLSearchParams({ type, tenderId: String(tenderId) })
+        const rawFile = await ApiClient.query(
+          HttpMethodEnum.POST,
+          fileUrlPrefix + '?' + url.toString(),
+          formData
+        )
+        const newFile = convertTenderFileIn(rawFile)
+        if (this.currentTender) {
+          this.currentTender.tenderFiles.push(newFile)
+        }
+      } catch (err: unknown) {
+        notifyError('Error while uploading tender file: ', err)
+      }
+    },
+    async removeTenderFile(fileId: number) {
+      try {
+        await ApiClient.query(HttpMethodEnum.DELETE, fileUrlPrefix + '/' + fileId)
+        if (this.currentTender) {
+          const idx = this.currentTender.tenderFiles.findIndex((file) => (file.id = fileId))
+          this.currentTender.tenderFiles.splice(idx, 1)
+        }
+      } catch (err: unknown) {
+        notifyError('Error while removing tender file: ', err)
       }
     }
   }

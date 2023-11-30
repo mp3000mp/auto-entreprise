@@ -25,6 +25,9 @@ class AppFixtures extends Fixture
         $objectSet = $this->loadConfig($manager, 'app1.yml');
         // fixtures
         $this->loadConfig($manager, 'app2.yml', $objectSet->getParameters(), $objectSet->getObjects());
+        // files
+        file_put_contents($this->fixturesPath.'/file.txt', 'fake file');
+        // todo link file to tender/opportunity
     }
 
     /**

@@ -11,14 +11,17 @@ import type {
 import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
 import {
   convertListOpportunityIn,
+  convertOpportunityFileIn,
   convertOpportunityIn,
   convertOpportunityOut
 } from '@/stores/opportunity/dto'
 import { notifyError } from '@/stores/notification/utils'
 import { useCompanyStore } from '@/stores/company'
 import { useContactStore } from '@/stores/contact'
+import { OpportunityFileTypeEnum } from '@/stores/opportunity/types'
 
 const urlPrefix = '/api/opportunities'
+const fileUrlPrefix = '/api/opportunity_files'
 export const useOpportunityStore = defineStore('opportunity', {
   state: () => ({
     opportunities: [] as ListOpportunity[],
@@ -190,6 +193,39 @@ export const useOpportunityStore = defineStore('opportunity', {
         this.opportunities.splice(opportunityIdx, 1, editedOpportunity)
       } catch (err: unknown) {
         notifyError('Error while unlinking contact to opportunity: ', err)
+      }
+    },
+    async addOpportunityFile(
+      formData: FormData,
+      type: OpportunityFileTypeEnum,
+      opportunityId: number
+    ) {
+      try {
+        const url = new URLSearchParams({ type, opportunityId: String(opportunityId) })
+        const rawFile = await ApiClient.query(
+          HttpMethodEnum.POST,
+          fileUrlPrefix + '?' + url.toString(),
+          formData
+        )
+        const newFile = convertOpportunityFileIn(rawFile)
+        if (this.currentOpportunity) {
+          this.currentOpportunity.opportunityFiles.push(newFile)
+        }
+      } catch (err: unknown) {
+        notifyError('Error while uploading opportunity file: ', err)
+      }
+    },
+    async removeOpportunityFile(fileId: number) {
+      try {
+        await ApiClient.query(HttpMethodEnum.DELETE, fileUrlPrefix + '/' + fileId)
+        if (this.currentOpportunity) {
+          const idx = this.currentOpportunity.opportunityFiles.findIndex(
+            (file) => (file.id = fileId)
+          )
+          this.currentOpportunity.opportunityFiles.splice(idx, 1)
+        }
+      } catch (err: unknown) {
+        notifyError('Error while removing opportunity file: ', err)
       }
     }
   }

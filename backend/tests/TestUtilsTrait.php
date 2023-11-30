@@ -28,11 +28,33 @@ trait TestUtilsTrait
         $loader->addFixture(new AppFixtures($paramBag));
         $executor = new ORMExecutor($this->em, $purger);
         $executor->execute($loader->getFixtures());
+
+        // remove uploaded files
+        $this->removeDir($paramBag->get('app.docs_path'));
     }
 
     protected function terminateTest(): void
     {
         $this->em->close();
         unset($this->em);
+    }
+
+    private function removeDir(string $path): void
+    {
+        if (!is_dir($path)) {
+            return;
+        }
+        if (!str_ends_with($path, '/')) {
+            $path .= '/';
+        }
+        $files = glob($path.'*', GLOB_MARK);
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                $this->removeDir($file);
+            } else {
+                unlink($file);
+            }
+        }
+        rmdir($path);
     }
 }

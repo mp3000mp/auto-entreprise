@@ -1,4 +1,7 @@
 
+/docs
+/docs_test
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

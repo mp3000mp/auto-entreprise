@@ -11,7 +11,9 @@ import type {
   TenderRow,
   TenderRowDtoOut,
   NewTenderRowDtoOut,
-  NewTenderRow
+  NewTenderRow,
+  TenderFileDtoIn,
+  TenderFile
 } from '@/stores/tender/types'
 import dayjs from '@/misc/dayjs'
 
@@ -19,6 +21,13 @@ function convertTenderStatusIn(rawStatus: TenderStatusLogDtoIn): TenderStatusLog
   return {
     ...rawStatus,
     createdAt: dayjs(rawStatus.createdAt)
+  }
+}
+
+export function convertTenderFileIn(rawFile: TenderFileDtoIn): TenderFile {
+  return {
+    ...rawFile,
+    createdAt: dayjs(rawFile.createdAt)
   }
 }
 
@@ -31,6 +40,7 @@ export function convertTenderIn(rawTender: TenderDtoIn): Tender {
     refusedAt: rawTender.refusedAt ? dayjs(rawTender.refusedAt) : null,
     canceledAt: rawTender.canceledAt ? dayjs(rawTender.canceledAt) : null,
     statusLogs: rawTender.statusLogs.map((status) => convertTenderStatusIn(status)),
+    tenderFiles: rawTender.tenderFiles.map((file) => convertTenderFileIn(file)),
     ...('createdAt' in rawTender ? { createdAt: dayjs(rawTender.createdAt) } : {})
   }
 }
