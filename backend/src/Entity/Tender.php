@@ -84,13 +84,6 @@ class Tender
     private ?string $comments = null;
 
     /**
-     * @var ArrayCollection<int, WorkedTime>
-     */
-    #[ORM\OneToMany(targetEntity: WorkedTime::class, mappedBy: 'tender')]
-    #[Groups(['tender_show'])]
-    private Collection $workedTimes;
-
-    /**
      * @var ArrayCollection<int, TenderStatusLog>
      */
     #[ORM\OneToMany(targetEntity: TenderStatusLog::class, mappedBy: 'tender')]
@@ -109,7 +102,6 @@ class Tender
     {
         $this->createdAt = new \DateTime();
         $this->tenderRows = new ArrayCollection();
-        $this->workedTimes = new ArrayCollection();
         $this->statusLogs = new ArrayCollection();
         $this->tenderFiles = new ArrayCollection();
     }
@@ -280,39 +272,6 @@ class Tender
         $this->comments = $comments;
 
         return $this;
-    }
-
-    /**
-     * @return ArrayCollection<int, WorkedTime>
-     */
-    public function getWorkedTimes(): Collection
-    {
-        return $this->workedTimes;
-    }
-
-    public function addWorkedTime(WorkedTime $workedTime): self
-    {
-        $this->workedTimes->add($workedTime);
-
-        return $this;
-    }
-
-    public function removeWorkedTime(WorkedTime $workedTime): self
-    {
-        $this->workedTimes->removeElement($workedTime);
-
-        return $this;
-    }
-
-    #[Groups(['tender_show', 'tender_list', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
-    public function getWorkedDays(): float
-    {
-        $total = 0;
-        foreach ($this->workedTimes as $workedTime) {
-            $total += $workedTime->getWorkedDays();
-        }
-
-        return $total;
     }
 
     /**

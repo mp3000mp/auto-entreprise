@@ -12,6 +12,7 @@ import type {
   OpportunityFile
 } from '@/stores/opportunity/types'
 import dayjs from '@/misc/dayjs'
+import { convertWorkedTimeIn } from '@/stores/workedTime/dto'
 
 function convertOpportunityStatusIn(rawStatus: OpportunityStatusLogDtoIn): OpportunityStatusLog {
   return {
@@ -41,7 +42,8 @@ export function convertOpportunityIn(rawOpportunity: OpportunityDtoIn): Opportun
     payedAt: rawOpportunity.payedAt ? dayjs(rawOpportunity.payedAt) : null,
     canceledAt: rawOpportunity.canceledAt ? dayjs(rawOpportunity.canceledAt) : null,
     statusLogs: rawOpportunity.statusLogs.map((status) => convertOpportunityStatusIn(status)),
-    opportunityFiles: rawOpportunity.opportunityFiles.map((file) => convertOpportunityFileIn(file))
+    opportunityFiles: rawOpportunity.opportunityFiles.map((file) => convertOpportunityFileIn(file)),
+    workedTimes: rawOpportunity.workedTimes.map((workedTime) => convertWorkedTimeIn(workedTime))
   }
 }
 export function convertListOpportunityIn(rawOpportunity: ListOpportunityDtoIn): ListOpportunity {

@@ -21,7 +21,7 @@ export function convertWorkedTimeOut(
   return {
     ...workedTime,
     date: workedTime.date.format('YYYY-MM-DD'),
-    tender: '/api/tenders/' + workedTime.tender.id,
+    opportunity: '/api/opportunities/' + workedTime.opportunity.id,
     user: '/api/users/' + workedTime.user.id
   }
 }

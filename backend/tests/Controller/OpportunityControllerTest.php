@@ -122,7 +122,7 @@ class OpportunityControllerTest extends AbstractController
         $this->assertResponseCode(200);
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
-        self::assertCount(2, $jsonResponse);
+        self::assertCount(1, $jsonResponse);
     }
 
     public function testOpportunityDeleteContact(): void

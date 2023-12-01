@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Entity\Tender;
+use App\Entity\Opportunity;
 use App\Entity\User;
 use App\Entity\WorkedTime;
 
@@ -13,13 +13,13 @@ class WorkedTimeControllerTest extends AbstractController
     public function testWorkedTimeAdd(): void
     {
         $this->loginUser($this->client);
-        $tenders = $this->em->getRepository(Tender::class)->findAll();
+        $opportunities = $this->em->getRepository(Opportunity::class)->findAll();
         $users = $this->em->getRepository(User::class)->findAll();
         $rawWorkedTime = [
             'date' => '2023-11-10',
             'workedDays' => 0.25,
             'user' => sprintf('/api/users/%d', $users[0]->getId()),
-            'tender' => sprintf('/api/tenders/%d', $tenders[0]->getId()),
+            'opportunity' => sprintf('/api/opportunities/%d', $opportunities[0]->getId()),
         ];
 
         $this->client->request('POST', '/api/worked_times', content: json_encode($rawWorkedTime));

@@ -103,6 +103,13 @@ function hideStatusLogsPopin() {
   isStatusLogsShowing.value = false
 }
 
+const isFileFormShowing = ref(false)
+function showFileForm() {
+  isFileFormShowing.value = true
+}
+function hideFileForm() {
+  isFileFormShowing.value = false
+}
 async function removeFile(fileId: number) {
   await tenderStore.removeTenderFile(fileId)
 }
@@ -175,7 +182,12 @@ onMounted(async () => {
         [{{ tenderFileTypeLabels[file.type] }}] {{ file.name }}
         <mp3000-icon icon="trash" @click="removeFile(file.id)" />
       </a>
-      <tender-file-form :tender-id="tenderId" />
+      <mp3000-icon icon="plus" title="Ajouter" @click="showFileForm" />
+      <tender-file-form
+        :tender-id="tenderId"
+        :is-showing="isFileFormShowing"
+        @stop-showing="hideFileForm"
+      />
     </div>
 
     <h3>Lignes</h3>

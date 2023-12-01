@@ -44,8 +44,7 @@ describe('TendersView.vue', () => {
         { columnName: 'Statut', columnIdx: 3, expectedIdsOrder: [1, 2, 3] },
         { columnName: 'Montant', columnIdx: 4, expectedIdsOrder: [2, 1, 3] },
         { columnName: 'Jours vendus', columnIdx: 5, expectedIdsOrder: [2, 1, 3] },
-        { columnName: 'Jours travaillés', columnIdx: 6, expectedIdsOrder: [3, 1, 2] },
-        { columnName: 'Date création', columnIdx: 7, expectedIdsOrder: [1, 2, 3] }
+        { columnName: 'Date création', columnIdx: 6, expectedIdsOrder: [1, 2, 3] }
       ],
       TenderRow,
       'tender'

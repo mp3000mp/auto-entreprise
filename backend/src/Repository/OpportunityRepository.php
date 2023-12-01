@@ -30,6 +30,9 @@ FROM opportunity
 WHERE opportunity.id NOT IN (
     SELECT opportunity_id FROM tender
 )
+AND opportunity.id NOT IN (
+    SELECT opportunity_id FROM worked_time
+)
         ';
         $q = $this->getEntityManager()->createNativeQuery($sql, $rsm);
 

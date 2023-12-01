@@ -151,7 +151,7 @@ export const useTenderStore = defineStore('tender', {
         }
         this.currentTender.tenderRows.push(rawTenderRow)
       } catch (err: unknown) {
-        notifyError('Error while adding worked time: ', err)
+        notifyError('Error while adding tender row: ', err)
       }
     },
     async editTenderRow(tenderRow: TenderRow) {
@@ -168,7 +168,7 @@ export const useTenderStore = defineStore('tender', {
         const tenderRowIdx = this.currentTender.tenderRows.findIndex((c) => c.id === tenderRow.id)
         this.currentTender.tenderRows.splice(tenderRowIdx, 1, editedTenderRow)
       } catch (err: unknown) {
-        notifyError('Error while editing worked time: ', err)
+        notifyError('Error while editing tender row: ', err)
       }
     },
     async deleteTenderRow(id: number) {
@@ -180,7 +180,7 @@ export const useTenderStore = defineStore('tender', {
         const idx = this.currentTender.tenderRows.findIndex((tenderRow) => tenderRow.id === id)
         this.currentTender.tenderRows.splice(idx, 1)
       } catch (err: unknown) {
-        notifyError('Error while deleting worked time: ', err)
+        notifyError('Error while deleting tender row: ', err)
       }
     },
     async addTenderFile(formData: FormData, type: TenderFileTypeEnum, tenderId: number) {

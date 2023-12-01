@@ -1,7 +1,6 @@
 import type {ListTender, Tender, TenderRow, TenderStatus, TenderStatusLog} from "@/stores/tender/types";
 import {initOpportunities} from "./opportunity";
 import dayjs from "@/misc/dayjs";
-import {initWorkedTimes} from "./workedTime";
 
 export function initTenderStatuses(): TenderStatus[] {
     return [
@@ -45,7 +44,6 @@ export function initTenders(noOpportunity: boolean = true): ListTender[] {
             status: initTenderStatuses()[0],
             createdAt: dayjs('2023-11-01'),
             averageDailyRate: 100,
-            workedDays: 1.5,
             soldDays: 2,
             tenderRows: [],
         },
@@ -56,7 +54,6 @@ export function initTenders(noOpportunity: boolean = true): ListTender[] {
             status: initTenderStatuses()[0],
             createdAt: dayjs('2023-11-02'),
             averageDailyRate: 100,
-            workedDays: 2,
             soldDays: 1.5,
             tenderRows: [],
         },
@@ -67,7 +64,6 @@ export function initTenders(noOpportunity: boolean = true): ListTender[] {
             status: initTenderStatuses()[0],
             createdAt: dayjs('2023-11-03'),
             averageDailyRate: 100,
-            workedDays: 0,
             soldDays: 3,
             tenderRows: [],
         }
@@ -83,7 +79,6 @@ export function initEmptyTender(): Tender {
         opportunity: initOpportunities()[0],
         averageDailyRate: 100,
         soldDays: 2,
-        workedDays: 1.5,
         createdAt: dayjs('2023-11-01'),
         sentAt: null,
         acceptedAt: null,
@@ -91,9 +86,7 @@ export function initEmptyTender(): Tender {
         canceledAt: null,
         comments: null,
         tenderRows: [],
-        workedTimes: [],
-        tenderFileDocx: null,
-        tenderFilePdf: null,
+        tenderFiles: [],
     }
 }
 
@@ -104,6 +97,5 @@ export function initTender(): Tender {
         status: initTenderStatuses()[1],
         statusLogs: [initTenderStatusLog(initTenderStatuses()[1], sentDate)],
         tenderRows: initTenderRows(),
-        workedTimes: initWorkedTimes(),
     }
 }

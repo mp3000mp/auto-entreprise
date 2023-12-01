@@ -62,7 +62,6 @@ const sorter = new Sorter(
       customCompare: (a: Tender, b: Tender) =>
         a.soldDays * a.averageDailyRate - b.soldDays * b.averageDailyRate
     },
-    { property: 'workedDays', type: SortConfigTypeEnum.NUMBER },
     { property: 'createdAt', type: SortConfigTypeEnum.DATE }
   ],
   filteredTenders
@@ -122,7 +121,6 @@ onMounted(async () => {
           <mp3000-table-header property="status" :sorter="sorter" label="Statut" />
           <mp3000-table-header property="soldDays" :sorter="sorter" label="Jours vendus" />
           <mp3000-table-header property="amount" :sorter="sorter" label="Montant" />
-          <mp3000-table-header property="workedDays" :sorter="sorter" label="Jours travaillés" />
           <mp3000-table-header property="createdAt" :sorter="sorter" label="Création" />
         </tr>
       </template>

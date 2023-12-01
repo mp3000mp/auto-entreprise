@@ -65,12 +65,7 @@ const sorter = new Sorter(
       customCompare: (a: Opportunity, b: Opportunity) =>
         (a.lastTender?.soldDays ?? 0) - (b.lastTender?.soldDays ?? 0)
     },
-    {
-      property: 'workedDays',
-      type: SortConfigTypeEnum.CUSTOM,
-      customCompare: (a: Opportunity, b: Opportunity) =>
-        (a.lastTender?.workedDays ?? 0) - (b.lastTender?.workedDays ?? 0)
-    },
+    { property: 'workedDays', type: SortConfigTypeEnum.NUMBER },
     { property: 'createdAt', type: SortConfigTypeEnum.DATE }
   ],
   filteredOpportunities

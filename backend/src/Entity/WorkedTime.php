@@ -13,8 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 #[ApiResource(
     operations: [
-        new Post(normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'worked_time_add']),
-        new Put(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'tender_show'], denormalizationContext: ['groups' => 'worked_time_edit']),
+        new Post(normalizationContext: ['groups' => 'opportunity_show'], denormalizationContext: ['groups' => 'worked_time_add']),
+        new Put(requirements: ['id' => '\d+'], normalizationContext: ['groups' => 'opportunity_show'], denormalizationContext: ['groups' => 'worked_time_edit']),
         new Delete(),
     ]
 )]
@@ -23,19 +23,19 @@ class WorkedTime
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['tender_show'])]
+    #[Groups(['opportunity_show'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['tender_show', 'worked_time_add', 'worked_time_edit'])]
+    #[Groups(['opportunity_show', 'worked_time_add', 'worked_time_edit'])]
     #[Assert\GreaterThan(0)]
     private float $workedDays;
 
     // todo opportunity ?
-    #[ORM\ManyToOne(targetEntity: Tender::class, inversedBy: 'workedTimes')]
+    #[ORM\ManyToOne(targetEntity: Opportunity::class, inversedBy: 'workedTimes')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['worked_time_add'])]
-    private Tender $tender;
+    private Opportunity $opportunity;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'workedTimes')]
     #[ORM\JoinColumn(nullable: false)]
@@ -43,7 +43,7 @@ class WorkedTime
     private User $user;
 
     #[ORM\Column(type: 'date')]
-    #[Groups(['tender_show', 'worked_time_add', 'worked_time_edit'])]
+    #[Groups(['opportunity_show', 'worked_time_add', 'worked_time_edit'])]
     #[Assert\LessThanOrEqual('now')]
     private \DateTime $date;
 
@@ -64,14 +64,14 @@ class WorkedTime
         return $this;
     }
 
-    public function getTender(): Tender
+    public function getOpportunity(): Opportunity
     {
-        return $this->tender;
+        return $this->opportunity;
     }
 
-    public function setTender(Tender $tender): self
+    public function setOpportunity(Opportunity $opportunity): self
     {
-        $this->tender = $tender;
+        $this->opportunity = $opportunity;
 
         return $this;
     }

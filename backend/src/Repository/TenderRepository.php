@@ -28,7 +28,7 @@ class TenderRepository extends ServiceEntityRepository
 SELECT tender.id 
 FROM tender
 WHERE tender.id NOT IN (
-    SELECT tender_id FROM worked_time
+    SELECT tender_id FROM tender_row
 )
         ';
         $q = $this->getEntityManager()->createNativeQuery($sql, $rsm);

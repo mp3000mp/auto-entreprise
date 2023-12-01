@@ -7,6 +7,7 @@ import {
 import {initCompanies} from "./company";
 import dayjs from "@/misc/dayjs";
 import {initTenders} from "./tender";
+import {initWorkedTimes} from "./workedTime";
 
 export function initMeanOfPayments(): MeanOfPayment[] {
     return [
@@ -51,6 +52,7 @@ export function initOpportunities(noTender: boolean = true): ListOpportunity[] {
             createdAt: dayjs('2023-11-01'),
             forecastedDelivery: null,
             lastTender: noTender ? null : tenders[0],
+            workedDays: 1.5,
         },
         {
             id: 2,
@@ -60,6 +62,7 @@ export function initOpportunities(noTender: boolean = true): ListOpportunity[] {
             createdAt: dayjs('2023-11-02'),
             forecastedDelivery: null,
             lastTender: noTender ? null : tenders[1],
+            workedDays: 2,
         },
         {
             id: 3,
@@ -69,6 +72,7 @@ export function initOpportunities(noTender: boolean = true): ListOpportunity[] {
             createdAt: dayjs('2023-11-03'),
             forecastedDelivery: null,
             lastTender: noTender ? null : tenders[2],
+            workedDays: 0,
         }
     ]
 }
@@ -93,10 +97,10 @@ export function initEmptyOpportunity(): Opportunity {
         customerRef1: null,
         customerRef2: null,
         paymentRef: null,
-        billFileDocx: null,
-        billFilePdf: null,
         opportunityFiles: [],
         comments: null,
+        workedDays: 0,
+        workedTimes: [],
     }
 }
 
@@ -109,5 +113,7 @@ export function initOpportunity(): Opportunity {
         lastTender: initTenders()[0],
         tenders: initTenders(),
         meanOfPayment: initMeanOfPayments()[0],
+        workedDays: 2.25,
+        workedTimes: initWorkedTimes(),
     }
 }

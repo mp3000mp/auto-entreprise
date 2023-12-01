@@ -21,6 +21,9 @@ import OpportunityFileForm from '@/views/opportunities/OpportunityFileForm.vue'
 import config from '@/misc/config'
 import { opportunityFileTypeLabels } from '@/stores/opportunity/types'
 import { getFileIcon } from '@/misc/utils'
+import WorkedTimeForm from '@/views/workedTimes/WorkedTimeForm.vue'
+import WorkedTimeRow from '@/views/workedTimes/WorkedTimeRow.vue'
+import type { WorkedTime } from '@/stores/workedTime/types'
 
 const opportunityStore = useOpportunityStore()
 const tenderStore = useTenderStore()
@@ -80,7 +83,6 @@ const tendersSorter = new Sorter(
       customCompare: (a: Tender, b: Tender) =>
         a.soldDays * a.averageDailyRate - b.soldDays * b.averageDailyRate
     },
-    { property: 'workedDays', type: SortConfigTypeEnum.NUMBER },
     { property: 'createdAt', type: SortConfigTypeEnum.DATE }
   ],
   filteredTenders
@@ -124,8 +126,38 @@ function hideStatusLogsPopin() {
   isStatusLogsShowing.value = false
 }
 
+const isFileFormShowing = ref(false)
+function showFileForm() {
+  isFileFormShowing.value = true
+}
+function hideFileForm() {
+  isFileFormShowing.value = false
+}
 async function removeFile(fileId: number) {
   await opportunityStore.removeOpportunityFile(fileId)
+}
+
+const isWorkedTimeHistoryShowing = ref(false)
+function showWorkedTimeHistory() {
+  isWorkedTimeHistoryShowing.value = true
+}
+function hideWorkedTimeHistory() {
+  isWorkedTimeHistoryShowing.value = false
+}
+
+const totalWorkedDays = computed(() =>
+  opportunity.value.workedTimes.reduce((acc, workedTime) => acc + workedTime.workedDays, 0)
+)
+
+const isWorkedTimeFormShowing = ref(false)
+const currentWorkedTime = ref(null) as Ref<WorkedTime | null>
+function showWorkedTimeForm(workedTime: WorkedTime | null) {
+  currentWorkedTime.value = workedTime
+  isWorkedTimeFormShowing.value = true
+}
+function hideWorkedTimeForm() {
+  isWorkedTimeFormShowing.value = false
+  currentWorkedTime.value = null
 }
 
 onMounted(async () => {
@@ -178,9 +210,35 @@ onMounted(async () => {
       Date d'annulation: {{ opportunity.canceledAt?.format('YYYY-MM-DD') ?? '-' }}<br />
       Ref client: {{ opportunity.customerRef1 ?? '-' }}<br />
       Ref client2: {{ opportunity.customerRef2 ?? '-' }}<br />
-      Moyen de paiement: {{ opportunity.meanOfPayment?.label ?? '-' }} Ref de paiement:
-      {{ opportunity.paymentRef ?? '-' }}<br />
+      Moyen de paiement: {{ opportunity.meanOfPayment?.label ?? '-' }}<br />
+      Ref de paiement: {{ opportunity.paymentRef ?? '-' }}<br />
+      Jours travaillés: {{ totalWorkedDays }}
+      <mp3000-icon icon="circle-info" title="Voir" @click="showWorkedTimeHistory" />
+      <mp3000-icon icon="plus" title="Ajouter" @click="showWorkedTimeForm(null)" />
     </p>
+    <worked-time-form
+      :is-showing="isWorkedTimeFormShowing"
+      :opportunity="opportunity"
+      :worked-time="currentWorkedTime"
+      @stop-showing="hideWorkedTimeForm"
+    />
+    <bootstrap-modal :is-showing="isWorkedTimeHistoryShowing" @stop-showing="hideWorkedTimeHistory">
+      <template #header>
+        <h5>Temps</h5>
+      </template>
+      <template #body>
+        <worked-time-row
+          v-for="workedTime in opportunity.workedTimes"
+          :key="workedTime.id"
+          :worked-time="workedTime"
+          @show-form="showWorkedTimeForm(workedTime)"
+        />
+        <div>Total: {{ totalWorkedDays }}</div>
+      </template>
+      <template #footer>
+        <mp3000-button @click.prevent="hideWorkedTimeHistory" :outline="true" label="Fermer" />
+      </template>
+    </bootstrap-modal>
     <bootstrap-modal :is-showing="isStatusLogsShowing" @stop-showing="hideStatusLogsPopin">
       <template #header>
         <h5>Status logs</h5>
@@ -240,7 +298,12 @@ onMounted(async () => {
         [{{ opportunityFileTypeLabels[file.type] }}] {{ file.name }}
         <mp3000-icon icon="trash" @click="removeFile(file.id)" />
       </a>
-      <opportunity-file-form :opportunity-id="opportunityId" />
+      <mp3000-icon icon="plus" title="Ajouter" @click="showFileForm" />
+      <opportunity-file-form
+        :opportunity-id="opportunityId"
+        :is-showing="isFileFormShowing"
+        @stop-showing="hideFileForm"
+      />
     </div>
 
     <h3>Devis</h3>
@@ -263,11 +326,6 @@ onMounted(async () => {
         <mp3000-table-header property="status" :sorter="tendersSorter" label="Statut" />
         <mp3000-table-header property="soldDays" :sorter="tendersSorter" label="Jours vendus" />
         <mp3000-table-header property="amount" :sorter="tendersSorter" label="Montant" />
-        <mp3000-table-header
-          property="workedDays"
-          :sorter="tendersSorter"
-          label="Jours travaillés"
-        />
       </template>
       <template #body>
         <tr v-if="tendersSorter.sortedList.value.length === 0">

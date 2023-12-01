@@ -135,6 +135,14 @@ class Opportunity
     #[Groups(['opportunity_show'])]
     private Collection $opportunityFiles;
 
+    /**
+     * @var ArrayCollection<int, WorkedTime>
+     */
+    #[ORM\OneToMany(targetEntity: WorkedTime::class, mappedBy: 'opportunity')]
+    #[ORM\OrderBy(['date' => 'ASC'])]
+    #[Groups(['opportunity_show'])]
+    private Collection $workedTimes;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -142,6 +150,7 @@ class Opportunity
         $this->tenders = new ArrayCollection();
         $this->opportunityFiles = new ArrayCollection();
         $this->statusLogs = new ArrayCollection();
+        $this->workedTimes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -457,5 +466,38 @@ class Opportunity
         $this->opportunityFiles->removeElement($opportunityFile);
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection<int, WorkedTime>
+     */
+    public function getWorkedTimes(): Collection
+    {
+        return $this->workedTimes;
+    }
+
+    public function addWorkedTime(WorkedTime $workedTime): self
+    {
+        $this->workedTimes->add($workedTime);
+
+        return $this;
+    }
+
+    public function removeWorkedTime(WorkedTime $workedTime): self
+    {
+        $this->workedTimes->removeElement($workedTime);
+
+        return $this;
+    }
+
+    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
+    public function getWorkedDays(): float
+    {
+        $total = 0;
+        foreach ($this->workedTimes as $workedTime) {
+            $total += $workedTime->getWorkedDays();
+        }
+
+        return $total;
     }
 }

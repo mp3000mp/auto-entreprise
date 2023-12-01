@@ -2,6 +2,7 @@ import type { ListCompany } from '@/stores/company/types'
 import type { ListContact } from '@/stores/contact/types'
 import type { Dayjs } from 'dayjs'
 import type { ListTender, OpportunityTender } from '@/stores/tender/types'
+import type { WorkedTime, WorkedTimeDtoIn } from '@/stores/workedTime/types'
 
 export type MeanOfPayment = {
   id: number
@@ -70,14 +71,23 @@ export type Opportunity = {
   comments: string | null
   statusLogs: OpportunityStatusLog[]
   opportunityFiles: OpportunityFile[]
+  workedDays: number
+  workedTimes: WorkedTime[]
 }
 export type NewOpportunity = Omit<
   Opportunity,
-  'id' | 'contacts' | 'tenders' | 'statusLogs' | 'opportunityFiles'
+  'id' | 'contacts' | 'tenders' | 'statusLogs' | 'opportunityFiles' | 'workedDays' | 'workedTimes'
 >
 export type ListOpportunity = Pick<
   Opportunity,
-  'id' | 'company' | 'ref' | 'status' | 'createdAt' | 'forecastedDelivery' | 'lastTender'
+  | 'id'
+  | 'company'
+  | 'ref'
+  | 'status'
+  | 'createdAt'
+  | 'forecastedDelivery'
+  | 'lastTender'
+  | 'workedDays'
 >
 export type TenderOpportunity = Omit<ListOpportunity, 'createdAt' | 'lastTender'>
 export type OpportunityDtoIn = Omit<
@@ -92,6 +102,7 @@ export type OpportunityDtoIn = Omit<
   | 'canceledAt'
   | 'statusLogs'
   | 'opportunityFiles'
+  | 'workedTimes'
 > & {
   createdAt: string
   trackedAt: string
@@ -103,6 +114,7 @@ export type OpportunityDtoIn = Omit<
   canceledAt: string | null
   statusLogs: OpportunityStatusLogDtoIn[]
   opportunityFiles: OpportunityFileDtoIn[]
+  workedTimes: WorkedTimeDtoIn[]
 }
 export type ListOpportunityDtoIn = Omit<ListOpportunity, 'createdAt' | 'forecastedDelivery'> & {
   createdAt: string
@@ -125,6 +137,8 @@ export type OpportunityDtoOut = Omit<
   | 'tenders'
   | 'statusLogs'
   | 'opportunityFiles'
+  | 'workedDays'
+  | 'workedTimes'
 > & {
   company: string
   status: string

@@ -21,6 +21,9 @@ class OpportunityController extends AbstractController
         if (count($opportunity->getTenders()) > 0) {
             return $this->jsonError('You cannot remove an opportunity with tenders.', Response::HTTP_BAD_REQUEST);
         }
+        if (count($opportunity->getWorkedTimes()) > 0) {
+            return $this->jsonError('You cannot remove an opportunity with worked times.', Response::HTTP_BAD_REQUEST);
+        }
 
         foreach ($opportunity->getStatusLogs() as $statusLog) {
             $this->em->remove($statusLog);

@@ -7,9 +7,11 @@ withDefaults(
   defineProps<{
     isShowing: boolean
     isLoading?: boolean
+    zIndex?: number
   }>(),
   {
-    isLoading: false
+    isLoading: false,
+    zIndex: 1055
   }
 )
 
@@ -29,7 +31,12 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <div class="modal" :class="{ hidden: !isShowing, show: isShowing }" v-if="isShowing">
+    <div
+      class="modal"
+      :class="{ hidden: !isShowing, show: isShowing }"
+      :style="{ 'z-index': zIndex }"
+      v-if="isShowing"
+    >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <bootstrap-loader v-if="isLoading" />
@@ -52,6 +59,6 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    <div class="modal-backdrop fade show" v-if="isShowing"></div>
+    <div class="modal-backdrop fade show" :style="{ 'z-index': zIndex - 1 }" v-if="isShowing"></div>
   </div>
 </template>

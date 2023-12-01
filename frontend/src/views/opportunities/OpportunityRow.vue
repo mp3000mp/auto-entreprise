@@ -53,7 +53,7 @@ async function remove() {
       }}€
     </td>
     <td>{{ opportunity.lastTender?.soldDays ?? 0 }}</td>
-    <td>{{ opportunity.lastTender?.workedDays ?? 0 }}</td>
+    <td>{{ opportunity.workedDays }}</td>
     <td>{{ opportunity.createdAt.format('YYYY-MM-DD') }}</td>
   </tr>
 </template>

@@ -19,9 +19,6 @@ class TenderController extends AbstractController
         if (null !== $tender->getSentAt()) {
             return $this->jsonError('You cannot remove a sent tender.', Response::HTTP_BAD_REQUEST);
         }
-        if (count($tender->getWorkedTimes()) > 0) {
-            return $this->jsonError('You cannot remove a tender with worked times.', Response::HTTP_BAD_REQUEST);
-        }
 
         foreach ($tender->getStatusLogs() as $statusLog) {
             $this->em->remove($statusLog);

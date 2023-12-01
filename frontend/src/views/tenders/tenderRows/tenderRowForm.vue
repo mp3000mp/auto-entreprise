@@ -7,6 +7,7 @@ import BootstrapModal from '@/components/BootstrapModal.vue'
 import type { TenderRow, NewTenderRow, Tender } from '@/stores/tender/types'
 
 import Mp3000Button from '@/components/Mp3000Button.vue'
+
 const tenderStore = useTenderStore()
 const emit = defineEmits(['stop-showing'])
 const props = withDefaults(

@@ -3,6 +3,7 @@ import type { WorkedTime, NewWorkedTime, WorkedTimeDtoIn } from '@/stores/worked
 import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
 import { convertWorkedTimeIn, convertWorkedTimeOut } from '@/stores/workedTime/dto'
 import { notifyError } from '@/stores/notification/utils'
+import { useOpportunityStore } from '@/stores/opportunity'
 
 const urlPrefix = '/api/worked_times'
 export const useWorkedTimeStore = defineStore('workedTime', {
@@ -28,7 +29,13 @@ export const useWorkedTimeStore = defineStore('workedTime', {
           urlPrefix,
           convertWorkedTimeOut(workedTime)
         )
-        this.workedTimes.push(convertWorkedTimeIn(rawWorkedTime))
+        const newWorkedTime = convertWorkedTimeIn(rawWorkedTime)
+        this.workedTimes.push(newWorkedTime)
+
+        const opportunityStore = useOpportunityStore()
+        if (opportunityStore.currentOpportunity) {
+          opportunityStore.currentOpportunity.workedTimes.push(newWorkedTime)
+        }
       } catch (err: unknown) {
         notifyError('Error while adding worked time: ', err)
       }
@@ -41,8 +48,16 @@ export const useWorkedTimeStore = defineStore('workedTime', {
           convertWorkedTimeOut(workedTime)
         )
         const editedWorkedTime = convertWorkedTimeIn(rawWorkedTime)
-        const workedTimeIdx = this.workedTimes.findIndex((c) => c.id === workedTime.id)
+        let workedTimeIdx = this.workedTimes.findIndex((c) => c.id === workedTime.id)
         this.workedTimes.splice(workedTimeIdx, 1, editedWorkedTime)
+
+        const opportunityStore = useOpportunityStore()
+        if (opportunityStore.currentOpportunity) {
+          workedTimeIdx = opportunityStore.currentOpportunity.workedTimes.findIndex(
+            (c) => c.id === workedTime.id
+          )
+          opportunityStore.currentOpportunity.workedTimes.splice(workedTimeIdx, 1, editedWorkedTime)
+        }
       } catch (err: unknown) {
         notifyError('Error while editing worked time: ', err)
       }
@@ -50,8 +65,16 @@ export const useWorkedTimeStore = defineStore('workedTime', {
     async delete(id: number) {
       try {
         await ApiClient.query(HttpMethodEnum.DELETE, urlPrefix + '/' + id)
-        const idx = this.workedTimes.findIndex((workedTime) => workedTime.id === id)
-        this.workedTimes.splice(idx, 1)
+        let workedTimeIdx = this.workedTimes.findIndex((workedTime) => workedTime.id === id)
+        this.workedTimes.splice(workedTimeIdx, 1)
+
+        const opportunityStore = useOpportunityStore()
+        if (opportunityStore.currentOpportunity) {
+          workedTimeIdx = opportunityStore.currentOpportunity.workedTimes.findIndex(
+            (c) => c.id === id
+          )
+          opportunityStore.currentOpportunity.workedTimes.splice(workedTimeIdx, 1)
+        }
       } catch (err: unknown) {
         notifyError('Error while deleting worked time: ', err)
       }

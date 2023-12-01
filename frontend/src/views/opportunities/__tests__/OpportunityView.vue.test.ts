@@ -27,6 +27,9 @@ describe('OpportunityView.vue', () => {
               opportunity: {
                 currentOpportunity: initOpportunity()
               },
+              security: {
+                currentUser: { id: 1 }
+              },
               tender: {
                 deletableIds: [1, 2, 3]
               }
@@ -57,6 +60,9 @@ describe('OpportunityView.vue', () => {
             initialState: {
               opportunity: {
                 currentOpportunity: initOpportunity()
+              },
+              security: {
+                currentUser: { id: 1 }
               },
               tender: {
                 statuses: tenderStatuses,
@@ -92,6 +98,9 @@ describe('OpportunityView.vue', () => {
             initialState: {
               opportunity: {
                 currentOpportunity: initEmptyOpportunity()
+              },
+              security: {
+                currentUser: { id: 1 }
               }
             }
           })
@@ -132,6 +141,9 @@ describe('OpportunityView.vue', () => {
             initialState: {
               opportunity: {
                 currentOpportunity: initOpportunity()
+              },
+              security: {
+                currentUser: { id: 1 }
               },
               tender: {
                 deletableIds: [1, 2, 3]

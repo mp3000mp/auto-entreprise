@@ -1,6 +1,5 @@
 import type { Dayjs } from 'dayjs'
 import type { TenderOpportunity } from '@/stores/opportunity/types'
-import type { WorkedTime } from '@/stores/workedTime/types'
 
 export type TenderStatus = {
   id: number
@@ -64,25 +63,13 @@ export type Tender = {
   comments: string | null
   tenderRows: TenderRow[]
   soldDays: number
-  workedDays: number
   statusLogs: TenderStatusLog[]
-  workedTimes: WorkedTime[]
   tenderFiles: TenderFile[]
 }
-export type NewTender = Omit<
-  Tender,
-  'id' | 'tenderRows' | 'statusLogs' | 'workedTimes' | 'tenderFiles'
->
+export type NewTender = Omit<Tender, 'id' | 'tenderRows' | 'statusLogs' | 'tenderFiles'>
 export type ListTender = Pick<
   Tender,
-  | 'id'
-  | 'status'
-  | 'version'
-  | 'createdAt'
-  | 'averageDailyRate'
-  | 'soldDays'
-  | 'workedDays'
-  | 'opportunity'
+  'id' | 'status' | 'version' | 'createdAt' | 'averageDailyRate' | 'soldDays' | 'opportunity'
 > & {
   opportunity: TenderOpportunity
 }
@@ -108,7 +95,6 @@ export type TenderDtoOut = Omit<
   | 'status'
   | 'tenderRows'
   | 'statusLogs'
-  | 'workedTimes'
   | 'canceledAt'
   | 'acceptedAt'
   | 'refusedAt'
