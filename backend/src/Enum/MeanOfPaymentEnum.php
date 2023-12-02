@@ -4,6 +4,6 @@ namespace App\Enum;
 
 enum MeanOfPaymentEnum: string
 {
-    case CHECK = 'check';
-    case TRANSFER = 'transfer';
+    case CHECK = 'Chèque';
+    case TRANSFER = 'Virement';
 }

@@ -5,9 +5,9 @@ import {initOpportunities} from "./opportunity";
 export function initContacts(): ListContact[] {
     const companies = initCompanies()
     return [
-        {id: 1, firstName: 'Albert', lastName: 'De Bert', email: 'ccc', phone: null, company: companies[0]},
-        {id: 2, firstName: 'Sophie', lastName: 'Da Silva', email: 'aaa', phone: '999', company: companies[1]},
-        {id: 3, firstName: 'Martine', lastName: 'Zèbre', email: 'bbb', phone: '111', company: companies[2]},
+        {id: 1, firstName: 'Albert', lastName: 'De Bert', email: 'ccc', phone: null, company: companies[0], comments: 'Comment 1'},
+        {id: 2, firstName: 'Sophie', lastName: 'Da Silva', email: 'aaa', phone: '999', company: companies[1], comments: 'Comment 2'},
+        {id: 3, firstName: 'Martine', lastName: 'Zèbre', email: 'bbb', phone: '111', company: companies[2], comments: 'Comment 3'},
     ]
 }
 

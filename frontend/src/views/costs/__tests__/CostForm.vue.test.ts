@@ -40,17 +40,13 @@ describe('CostForm.vue', () => {
 
     await wrapper.find('.form-select').setValue('2')
     await submit.trigger('click')
-    expect(wrapper.find('.text-danger').text()).toEqual('Montant non valide')
-
-    await wrapper.find('input[type=number]').setValue(100)
-    await submit.trigger('click')
     expect(wrapper.find('.text-danger').text()).toEqual('')
 
     const store = useCostStore()
     expect(store.addCost).toHaveBeenCalledTimes(1)
     const arg = store.addCost.mock.calls[0][0]
     expect(setMidnight(arg, 'date')).toEqual({
-      amount: 100,
+      amount: 0,
       date: dayjs().startOf('day'),
       description: '',
       type: { id: 2, label: '' }

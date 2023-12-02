@@ -50,5 +50,6 @@ async function remove() {
     </td>
     <td>{{ contact.email }}</td>
     <td>{{ contact.phone }}</td>
+    <td>{{ contact.comments }}</td>
   </tr>
 </template>

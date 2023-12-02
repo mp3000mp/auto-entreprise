@@ -56,7 +56,7 @@ class Tender
     private \DateTime $createdAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['tender_show', 'tender_edit'])]
+    #[Groups(['tender_show', 'tender_add', 'tender_edit'])]
     private ?\DateTime $acceptedAt;
 
     #[ORM\Column(nullable: true)]
@@ -64,11 +64,11 @@ class Tender
     private ?\DateTime $canceledAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['tender_show', 'tender_edit'])]
+    #[Groups(['tender_show', 'tender_add', 'tender_edit'])]
     private ?\DateTime $refusedAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['tender_show', 'tender_edit'])]
+    #[Groups(['tender_show', 'tender_add', 'tender_edit'])]
     private ?\DateTime $sentAt;
 
     /**
@@ -80,7 +80,7 @@ class Tender
     private Collection $tenderRows;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['tender_show', 'tender_edit'])]
+    #[Groups(['tender_show', 'tender_add', 'tender_edit'])]
     private ?string $comments = null;
 
     /**

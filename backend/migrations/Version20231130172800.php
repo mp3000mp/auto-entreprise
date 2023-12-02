@@ -14,7 +14,7 @@ final class Version20231130172800 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Link worked time to opportunity';
     }
 
     public function up(Schema $schema): void
@@ -32,7 +32,7 @@ final class Version20231130172800 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_71DECF929A34590F ON worked_time (opportunity_id)');
 
         // remove tender_id column
-        $this->addSql('ALTER TABLE worked_time DROP FOREIGN KEY FK_71DECF929245DE54');
+        $this->addSql('ALTER TABLE worked_time DROP FOREIGN KEY FK_6F9498459245DE54');
         $this->addSql('DROP INDEX IDX_71DECF929245DE54 ON worked_time');
         $this->addSql('ALTER TABLE worked_time DROP COLUMN tender_id');
     }

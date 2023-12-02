@@ -139,7 +139,7 @@ onMounted(async () => {
         <label>Date refus</label>
         <date-picker v-model="currentTender.refusedAt" :disabled="isSubmitting" />
       </div>
-      <div class="form-group">
+      <div class="form-group" v-if="tender">
         <label>Date d'annulation</label>
         <date-picker v-model="currentTender.canceledAt" :disabled="isSubmitting" />
       </div>

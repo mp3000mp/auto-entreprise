@@ -1,0 +1,21 @@
+admin_email: me@me.fr
+
+app_directory: /var/www/app
+maintainer_user: user1
+
+mysql_version: 10.6.8
+mysql_root_password: root_pwd
+mysql_database: template_sf
+mysql_user: user
+mysql_password: user_pwd
+
+back_server_name: template-back.mp3000.fr
+front_server_name: template.mp3000.fr
+back_proxy_port: 5000
+
+app_version: 1.0.0
+app_secret: secret
+
+backup_key: secret
+backup_remote_host: remote
+backup_remote_directory: /tmp

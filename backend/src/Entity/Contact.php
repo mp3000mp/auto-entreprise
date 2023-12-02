@@ -66,7 +66,7 @@ class Contact
     private Collection $opportunities;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['contact_show'])]
+    #[Groups(['contact_show', 'contact_list'])]
     private ?string $comments = null;
 
     public function __construct()

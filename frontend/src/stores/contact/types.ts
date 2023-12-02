@@ -12,7 +12,7 @@ export interface Contact {
   opportunities: ListOpportunity[]
 }
 export type NewContact = Omit<Contact, 'id' | 'opportunities'>
-export type ListContact = Omit<Contact, 'comments' | 'opportunities'>
+export type ListContact = Omit<Contact, 'opportunities'>
 export type ContactDtoIn = Omit<Contact, 'opportunities'> & {
   opportunities: ListOpportunityDtoIn[]
 }

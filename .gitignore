@@ -1,5 +1,3 @@
-aaaaa
-
 .idea
 
 ###> symfony/framework-bundle ###
@@ -37,6 +35,10 @@ package-lock.json
 
 ### docker
 /docker/mariadb/db
+
+### deployment
+/deployment/ansible/vars.yml
+/deployment/ansible/roles/*/vars.yml
 
 ### ansible
 /ansible/vars.yml

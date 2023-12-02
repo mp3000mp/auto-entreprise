@@ -1,0 +1,28 @@
+- name: Create apache directories
+  become: true
+  become_user: root
+  file:
+    path: "{{ app_directory }}{{ item }}"
+    state: directory
+    owner: "{{ maintainer_user }}"
+    group: "{{ maintainer_user }}"
+    mode: '755'
+    recurse: true
+  loop:
+    - ''
+    - '/frontend'
+
+- name: Create main directories
+  become: true
+  become_user: root
+  file:
+    path: "{{ app_directory }}{{ item }}"
+    state: directory
+    owner: "{{ maintainer_user }}"
+    group: "{{ maintainer_user }}"
+    mode: '750'
+    recurse: true
+  loop:
+    - '/backend'
+    - '/docker'
+    - '/backup'

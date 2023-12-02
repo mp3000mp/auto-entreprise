@@ -14,7 +14,7 @@ final class Version20231129200218 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Harmonize file management';
     }
 
     public function up(Schema $schema): void

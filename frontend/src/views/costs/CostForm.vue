@@ -35,9 +35,6 @@ function validate(cost: Cost | NewCost): string {
   if (cost.type.id === 0) {
     return 'Type non valide'
   }
-  if (cost.amount <= 0) {
-    return 'Montant non valide'
-  }
   return ''
 }
 

@@ -91,6 +91,7 @@ async function submit() {
 function refresh() {
   if (props.opportunity) {
     currentOpportunity.value = { ...props.opportunity }
+    delete currentOpportunity.value.contacts
     if (props.company) {
       currentOpportunity.value.company = props.company
     }
@@ -197,7 +198,7 @@ onMounted(async () => {
         <label>Date paiement</label>
         <date-picker v-model="currentOpportunity.payedAt" :disabled="isSubmitting" />
       </div>
-      <div class="form-group">
+      <div class="form-group" v-if="opportunity">
         <label>Date d'annulation</label>
         <date-picker v-model="currentOpportunity.canceledAt" :disabled="isSubmitting" />
       </div>

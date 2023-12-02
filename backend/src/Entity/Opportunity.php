@@ -55,15 +55,15 @@ class Opportunity
     private ?\DateTime $canceledAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['opportunity_show', 'opportunity_edit'])]
+    #[Groups(['opportunity_show', 'opportunity_add', 'opportunity_edit'])]
     private ?\DateTime $billedAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['opportunity_show', 'opportunity_edit'])]
+    #[Groups(['opportunity_show', 'opportunity_add', 'opportunity_edit'])]
     private ?\DateTime $payedAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['opportunity_show', 'opportunity_edit'])]
+    #[Groups(['opportunity_show', 'opportunity_add', 'opportunity_edit'])]
     private ?\DateTime $purchasedAt;
 
     #[ORM\Column]
@@ -71,7 +71,7 @@ class Opportunity
     private \DateTime $trackedAt;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['opportunity_show', 'opportunity_edit'])]
+    #[Groups(['opportunity_show', 'opportunity_add', 'opportunity_edit'])]
     private ?\DateTime $deliveredAt;
 
     #[ORM\Column(nullable: true)]
@@ -95,17 +95,17 @@ class Opportunity
      */
     #[ORM\ManyToMany(targetEntity: Contact::class, inversedBy: 'opportunities')]
     #[ORM\JoinTable('opportunity_contact')]
-    #[Groups(['opportunity_show', 'opportunity_add', 'opportunity_edit'])]
+    #[Groups(['opportunity_show'])]
     private Collection $contacts;
 
     #[ORM\ManyToOne(targetEntity: OpportunityStatus::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show', 'opportunity_edit'])]
+    #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show', 'opportunity_add', 'opportunity_edit'])]
     private ?OpportunityStatus $status = null;
 
     #[ORM\ManyToOne(targetEntity: MeanOfPayment::class)]
     #[ORM\JoinColumn(nullable: true)]
-    #[Groups(['opportunity_show', 'opportunity_edit'])]
+    #[Groups(['opportunity_show', 'opportunity_add', 'opportunity_edit'])]
     private ?MeanOfPayment $meanOfPayment;
 
     /**
@@ -117,7 +117,7 @@ class Opportunity
     private Collection $tenders;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['opportunity_show', 'opportunity_edit'])]
+    #[Groups(['opportunity_show', 'opportunity_add', 'opportunity_edit'])]
     private ?string $comments = null;
 
     /**

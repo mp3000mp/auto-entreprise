@@ -60,7 +60,7 @@ class CompanyControllerTest extends AbstractController
             'street1' => 'Rue de la Reine',
             'street2' => null,
             'city' => 'Versailles',
-            'postcode' => '78000',
+            'postCode' => '78000',
         ];
 
         $this->client->request('PUT', sprintf('/api/companies/%d', $companies[0]->getId()), content: json_encode($rawCompany));

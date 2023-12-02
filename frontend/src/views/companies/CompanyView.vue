@@ -122,7 +122,8 @@ const contactsSorter = new Sorter(
         (a.firstName + a.lastName).localeCompare(b.firstName + b.lastName)
     },
     { property: 'email', type: SortConfigTypeEnum.STRING },
-    { property: 'phone', type: SortConfigTypeEnum.STRING }
+    { property: 'phone', type: SortConfigTypeEnum.STRING },
+    { property: 'comments', type: SortConfigTypeEnum.STRING }
   ],
   filteredContacts
 )
@@ -257,6 +258,11 @@ onMounted(async () => {
             <mp3000-table-header property="name" :sorter="contactsSorter" label="Nom" />
             <mp3000-table-header property="email" :sorter="contactsSorter" label="Email" />
             <mp3000-table-header property="phone" :sorter="contactsSorter" label="Téléphone" />
+            <mp3000-table-header
+              property="comments"
+              :sorter="contactsSorter"
+              label="Commentaires"
+            />
           </tr>
         </template>
         <template v-slot:body>
