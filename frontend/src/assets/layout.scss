@@ -21,6 +21,40 @@ h2 {
   text-align: center;
 }
 
+.main-nav {
+  .main-nav-icon {
+    display: none;
+    cursor: pointer;
+    font-size: 200%;
+    position: absolute;
+    right: 0;
+  }
+}
+@include media-breakpoint-down(lg) {
+  .main-nav {
+    .nav {
+      display: none;
+    }
+    .main-nav-icon {
+      display: inherit;
+    }
+
+    &.expanded {
+      display: flex;
+      align-items: start!important;
+      flex-direction: column;
+      .sub-main-nav {
+        align-items: start!important;
+        flex-direction: column;
+      }
+      .nav {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+}
+
 .admin-form {
   flex: 1;
   overflow-y: auto;

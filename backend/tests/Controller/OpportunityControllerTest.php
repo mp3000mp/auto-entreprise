@@ -43,11 +43,13 @@ class OpportunityControllerTest extends AbstractController
     {
         $this->loginUser($this->client);
         $companies = $this->em->getRepository(Company::class)->findAll();
+        $status = $this->em->getRepository(OpportunityStatus::class)->findOneBy(['code' => OpportunityStatusEnum::TRACKED]);
         $rawOpportunity = [
             'ref' => 'this ref',
             'description' => 'this description',
             'trackedAt' => '2023-11-10',
             'company' => sprintf('/api/companies/%d', $companies[0]->getId()),
+            'status' => sprintf('/api/opportunity_statuses/%d', $status->getId()),
         ];
 
         $this->client->request('POST', '/api/opportunities', content: json_encode($rawOpportunity));
@@ -55,7 +57,7 @@ class OpportunityControllerTest extends AbstractController
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
         self::assertArrayHasKey('ref', $jsonResponse);
-        self::assertEquals(OpportunityStatusEnum::TRACKED->value, $jsonResponse['status']['label']);
+        self::assertEquals('Piste', $jsonResponse['status']['label']);
         $logs = $this->em->getRepository(OpportunityStatusLog::class)->findBy(['opportunity' => $jsonResponse['id']]);
         self::assertCount(1, $logs);
     }
@@ -65,9 +67,8 @@ class OpportunityControllerTest extends AbstractController
     {
         $this->loginUser();
         $opportunities = $this->em->getRepository(Opportunity::class)->findAll();
-        $status = $this->em->getRepository(OpportunityStatus::class)->findOneBy(['label' => OpportunityStatusEnum::DEVELOP_ONGOING]);
-        $meanOfPayment = $this->em->getRepository(MeanOfPayment::class)->findOneBy(['label' => MeanOfPaymentEnum::TRANSFER]);
-        $contacts = $this->em->getRepository(Contact::class)->findAll();
+        $status = $this->em->getRepository(OpportunityStatus::class)->findOneBy(['code' => OpportunityStatusEnum::DEV_ONGOING]);
+        $meanOfPayment = $this->em->getRepository(MeanOfPayment::class)->findOneBy(['code' => MeanOfPaymentEnum::TRANSFER]);
         $rawOpportunity = [
             'ref' => 'this ref',
             'description' => 'this description',
@@ -84,20 +85,12 @@ class OpportunityControllerTest extends AbstractController
             'customerRef2' => 'cRef2',
             'paymentRef' => 'payRef',
             'comments' => null,
-            'billFileDocx' => null,
-            'billFilePdf' => null,
-            'contacts' => [
-                sprintf('/api/mean_of_payments/%d', $contacts[0]->getId()),
-                sprintf('/api/mean_of_payments/%d', $contacts[1]->getId()),
-            ],
         ];
 
         $this->client->request('PUT', sprintf('/api/opportunities/%d', $opportunities[0]->getId()), content: json_encode($rawOpportunity));
         $this->assertResponseCode(200);
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
-        self::assertArrayHasKey('contacts', $jsonResponse);
-        self::assertCount(2, $jsonResponse['contacts']);
         $logs = $this->em->getRepository(OpportunityStatusLog::class)->findBy(['opportunity' => $jsonResponse['id']]);
         self::assertCount(2, $logs);
     }

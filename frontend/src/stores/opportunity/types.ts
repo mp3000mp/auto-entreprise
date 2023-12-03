@@ -8,12 +8,14 @@ export type MeanOfPayment = {
   id: number
   position: number
   label: string
+  code: string
 }
 
 export type OpportunityStatus = {
   id: number
   position: number
   label: string
+  code: string
 }
 
 export type OpportunityStatusLog = {

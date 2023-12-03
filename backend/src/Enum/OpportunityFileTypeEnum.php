@@ -4,7 +4,7 @@ namespace App\Enum;
 
 enum OpportunityFileTypeEnum: string
 {
-    case INVOICE = 'Facture';
-    case ORDER = 'Commande';
-    case OTHER = 'Autre';
+    case INVOICE = 'invoice';
+    case ORDER = 'order';
+    case OTHER = 'other';
 }

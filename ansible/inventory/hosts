@@ -1,2 +1,0 @@
-[prod_servers]
-vps-mp3000 ansible_user=debian

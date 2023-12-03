@@ -44,7 +44,7 @@ class Opportunity
     #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'opportunities')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['opportunity_list', 'opportunity_show', 'tender_show', 'tender_list', 'opportunity_add'])]
-    private Company $company;
+    private ?Company $company = null;
 
     #[ORM\Column]
     #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
@@ -101,7 +101,7 @@ class Opportunity
     #[ORM\ManyToOne(targetEntity: OpportunityStatus::class)]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['opportunity_list', 'opportunity_show', 'company_show', 'contact_show', 'opportunity_add', 'opportunity_edit'])]
-    private ?OpportunityStatus $status = null;
+    private OpportunityStatus $status;
 
     #[ORM\ManyToOne(targetEntity: MeanOfPayment::class)]
     #[ORM\JoinColumn(nullable: true)]

@@ -2,7 +2,9 @@ import type { Dayjs } from 'dayjs'
 
 export type CostType = {
   id: number
+  position: number
   label: string
+  code: string
 }
 
 export interface Cost {

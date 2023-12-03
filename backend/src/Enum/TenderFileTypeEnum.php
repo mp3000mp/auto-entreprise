@@ -4,6 +4,6 @@ namespace App\Enum;
 
 enum TenderFileTypeEnum: string
 {
-    case TENDER = 'Devis';
-    case OTHER = 'Autre';
+    case TENDER = 'tender';
+    case OTHER = 'other';
 }

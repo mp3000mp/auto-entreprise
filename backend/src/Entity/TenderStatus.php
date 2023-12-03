@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use App\Enum\TenderStatusEnum;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,6 +33,11 @@ class TenderStatus
     #[Assert\NotBlank]
     private string $label;
 
+    #[ORM\Column(length: 55, unique: true, enumType: TenderStatusEnum::class)]
+    #[Groups(['tender_status_list'])]
+    #[Assert\NotBlank]
+    private TenderStatusEnum $code;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -57,6 +63,18 @@ class TenderStatus
     public function setLabel(string $label): self
     {
         $this->label = $label;
+
+        return $this;
+    }
+
+    public  function getCode(): TenderStatusEnum
+    {
+        return $this->code;
+    }
+
+    public  function setCode(TenderStatusEnum $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

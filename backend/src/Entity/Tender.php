@@ -34,8 +34,8 @@ class Tender
 
     #[ORM\ManyToOne(targetEntity: TenderStatus::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['tender_show', 'tender_list', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show', 'tender_edit'])]
-    private ?TenderStatus $status = null;
+    #[Groups(['tender_show', 'tender_list', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show', 'tender_add', 'tender_edit'])]
+    private TenderStatus $status;
 
     #[ORM\ManyToOne(targetEntity: Opportunity::class, inversedBy: 'tenders')]
     #[ORM\JoinColumn(nullable: false)]

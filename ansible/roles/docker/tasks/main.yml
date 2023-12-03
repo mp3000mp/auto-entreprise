@@ -1,9 +1,0 @@
-- name: Docker compose down
-  docker_compose:
-    project_src: "{{ app_directory }}"
-    state: absent
-
-- name: Docker compose up
-  docker_compose:
-    project_src: "{{ app_directory }}"
-    state: present

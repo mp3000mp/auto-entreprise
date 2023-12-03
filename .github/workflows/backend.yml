@@ -24,7 +24,7 @@ jobs:
 
       - name: Install Dependencies
         working-directory: ./backend
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dis
+        run: composer install -q --no-ansi --no-interaction --no-suggest --no-scripts --no-progress --prefer-dist
 
       - name: PHP cs fixer
         working-directory: ./backend
@@ -65,7 +65,7 @@ jobs:
 
       - name: Install Dependencies
         working-directory: ./backend
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dis
+        run: composer install -q --no-ansi --no-interaction --no-suggest --no-scripts --no-progress --prefer-dist
 
       - name: Create database
         working-directory: ./backend

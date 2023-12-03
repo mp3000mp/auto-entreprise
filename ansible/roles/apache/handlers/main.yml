@@ -1,6 +1,0 @@
-- name: restart apache2
-  become: true
-  become_user: root
-  service:
-    name: apache2
-    state: restarted

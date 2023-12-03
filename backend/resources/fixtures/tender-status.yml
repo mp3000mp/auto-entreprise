@@ -2,15 +2,20 @@ App\Entity\TenderStatus:
   tenderStatus10:
     position: 10
     label: En cours
+    code: ongoing
   tenderStatus20:
     position: 20
     label: Envoyé
+    code: sent
   tenderStatus30:
     position: 30
     label: Accepté
+    code: accepted
   tenderStatus40:
     position: 40
     label: Refusé
+    code: refused
   tenderStatus50:
     position: 50
     label: Annulé
+    code: canceled

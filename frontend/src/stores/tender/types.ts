@@ -5,6 +5,7 @@ export type TenderStatus = {
   id: number
   position: number
   label: string
+  code: string
 }
 
 export type TenderStatusLog = {

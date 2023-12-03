@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use App\Enum\CostTypeEnum;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,6 +33,11 @@ class CostType
     #[Assert\NotBlank]
     private string $label;
 
+    #[ORM\Column(length: 55, unique: true, enumType: CostTypeEnum::class)]
+    #[Groups(['cost_type_list'])]
+    #[Assert\NotBlank]
+    private CostTypeEnum $code;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -57,6 +63,18 @@ class CostType
     public function setLabel(string $label): self
     {
         $this->label = $label;
+
+        return $this;
+    }
+
+    public  function getCode(): CostTypeEnum
+    {
+        return $this->code;
+    }
+
+    public  function setCode(CostTypeEnum $code): self
+    {
+        $this->code = $code;
 
         return $this;
     }

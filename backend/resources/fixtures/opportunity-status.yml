@@ -2,30 +2,40 @@ App\Entity\OpportunityStatus:
   opportunityStatus10:
     position: 10
     label: Piste
+    code: tracked
   opportunityStatus20:
     position: 20
     label: Expr. besoin en cours
+    code: need_ongoing
   opportunityStatus30:
     position: 30
     label: Expr. besoin envoyée
+    code: need_sent
   opportunityStatus40:
     position: 40
     label: Devis en cours
+    code: tender_ongoing
   opportunityStatus50:
     position: 45
     label: Devis envoyé
+    code: tender_sent
   opportunityStatus60:
     position: 50
     label: Dev en cours
+    code: dev_ongoing
   opportunityStatus70:
     position: 60
     label: Recette
+    code: delivered
   opportunityStatus80:
     position: 70
     label: Facture envoyée
+    code: billed
   opportunityStatus90:
     position: 80
     label: Payé
+    code: payed
   opportunityStatus100:
     position: 90
     label: annulé
+    code: canceled

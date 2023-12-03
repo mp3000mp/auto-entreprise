@@ -146,7 +146,7 @@ onMounted(async () => {
           :disabled="isSubmitting"
         />
       </div>
-      <div class="form-group" v-if="null === company">
+      <div class="form-group" v-if="null === opportunity">
         <label>Client</label>
         <bootstrap-loader v-if="areRelationshipsLoading" />
         <select

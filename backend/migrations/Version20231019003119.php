@@ -30,31 +30,35 @@ final class Version20231019003119 extends AbstractMigration
         $this->addSql('ALTER TABLE contact_audit_trail CHANGE modif_type modif_type INT NOT NULL COMMENT \'1=insert, 2=update, 3=delete\', CHANGE details details JSON DEFAULT NULL COMMENT \'(DC2Type:json)\'');
         $this->addSql('ALTER TABLE cost CHANGE description description VARCHAR(255) NOT NULL');
 
-        $this->addSql('ALTER TABLE cost_type ADD label VARCHAR(55) DEFAULT NULL');
+        $this->addSql('ALTER TABLE cost_type ADD label VARCHAR(55) DEFAULT NULL, ADD code VARCHAR(55) DEFAULT NULL');
         $this->addSql('UPDATE cost_type SET label = REPLACE(JSON_EXTRACT(trad, \'$.fr\'), \'"\', \'\') WHERE 1=1');
-        $this->addSql('ALTER TABLE cost_type MODIFY label VARCHAR(55) NOT NULL');
+        $this->addSql('UPDATE cost_type SET code = REPLACE(JSON_EXTRACT(trad, \'$.en\'), \'"\', \'\') WHERE 1=1');
+        $this->addSql('ALTER TABLE cost_type MODIFY label VARCHAR(55) NOT NULL, MODIFY code VARCHAR(55) NOT NULL');
         $this->addSql('ALTER TABLE cost_type DROP trad, CHANGE position position INT NOT NULL');
 
-        $this->addSql('ALTER TABLE mean_of_payment ADD label VARCHAR(55) DEFAULT NULL');
+        $this->addSql('ALTER TABLE mean_of_payment ADD label VARCHAR(55) DEFAULT NULL, ADD code VARCHAR(55) DEFAULT NULL');
         $this->addSql('UPDATE mean_of_payment SET label = REPLACE(JSON_EXTRACT(trad, \'$.fr\'), \'"\', \'\') WHERE 1=1');
-        $this->addSql('ALTER TABLE mean_of_payment MODIFY label VARCHAR(55) NOT NULL');
+        $this->addSql('UPDATE mean_of_payment SET code = REPLACE(JSON_EXTRACT(trad, \'$.en\'), \'"\', \'\') WHERE 1=1');
+        $this->addSql('ALTER TABLE mean_of_payment MODIFY label VARCHAR(55) NOT NULL, MODIFY code VARCHAR(55) NOT NULL');
         $this->addSql('ALTER TABLE mean_of_payment DROP trad, CHANGE position position INT NOT NULL');
         $this->addSql('ALTER TABLE opportunity CHANGE mean_of_payment_id mean_of_payment_id INT DEFAULT NULL');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8389C3D7146F3EA3 ON opportunity (ref)');
 
         $this->addSql('ALTER TABLE opportunity_audit_trail CHANGE modif_type modif_type INT NOT NULL COMMENT \'1=insert, 2=update, 3=delete\', CHANGE details details JSON DEFAULT NULL COMMENT \'(DC2Type:json)\'');
 
-        $this->addSql('ALTER TABLE opportunity_status ADD label VARCHAR(55) DEFAULT NULL');
+        $this->addSql('ALTER TABLE opportunity_status ADD label VARCHAR(55) DEFAULT NULL, ADD code VARCHAR(55) DEFAULT NULL');
         $this->addSql('UPDATE opportunity_status SET label = REPLACE(JSON_EXTRACT(trad, \'$.fr\'), \'"\', \'\') WHERE 1=1');
-        $this->addSql('ALTER TABLE opportunity_status MODIFY label VARCHAR(55) NOT NULL');
+        $this->addSql('UPDATE opportunity_status SET code = REPLACE(JSON_EXTRACT(trad, \'$.en\'), \'"\', \'\') WHERE 1=1');
+        $this->addSql('ALTER TABLE opportunity_status MODIFY label VARCHAR(55) NOT NULL, MODIFY code VARCHAR(55) NOT NULL');
         $this->addSql('ALTER TABLE opportunity_status DROP trad, CHANGE position position INT NOT NULL');
 
         $this->addSql('ALTER TABLE tender CHANGE version version INT NOT NULL');
         $this->addSql('ALTER TABLE tender_row CHANGE position position INT NOT NULL, CHANGE title title VARCHAR(255) NOT NULL');
 
-        $this->addSql('ALTER TABLE tender_status ADD label VARCHAR(55) DEFAULT NULL');
+        $this->addSql('ALTER TABLE tender_status ADD label VARCHAR(55) DEFAULT NULL, ADD code VARCHAR(55) DEFAULT NULL');
         $this->addSql('UPDATE tender_status SET label = REPLACE(JSON_EXTRACT(trad, \'$.fr\'), \'"\', \'\') WHERE 1=1');
-        $this->addSql('ALTER TABLE tender_status MODIFY label VARCHAR(55) NOT NULL');
+        $this->addSql('UPDATE tender_status SET code = REPLACE(JSON_EXTRACT(trad, \'$.en\'), \'"\', \'\') WHERE 1=1');
+        $this->addSql('ALTER TABLE tender_status MODIFY label VARCHAR(55) NOT NULL, MODIFY code VARCHAR(55) NOT NULL');
         $this->addSql('ALTER TABLE tender_status DROP trad, CHANGE position position INT NOT NULL');
 
         $this->addSql('ALTER TABLE user ADD username VARCHAR(55) NOT NULL, DROP nb_failed_connexion, DROP is_active, DROP first_name, DROP last_name, DROP password_updated_at, DROP reset_password_token, DROP reset_password_at, DROP locale, CHANGE roles roles JSON NOT NULL COMMENT \'(DC2Type:json)\'');
@@ -70,19 +74,19 @@ final class Version20231019003119 extends AbstractMigration
         $this->addSql('ALTER TABLE mp3000mp_terms_of_service_signature ADD CONSTRAINT FK_810727E0A5DEBC29 FOREIGN KEY (terms_of_service_id) REFERENCES mp3000mp_terms_of_service (id) ON DELETE CASCADE');
         $this->addSql('DROP TABLE messenger_messages');
         $this->addSql('ALTER TABLE company_audit_trail CHANGE modif_type modif_type SMALLINT NOT NULL COMMENT \'1=insert, 2=update, 3=delete\', CHANGE details details JSON DEFAULT NULL COMMENT \'(DC2Type:json)\'');
-        $this->addSql('ALTER TABLE mean_of_payment ADD trad JSON NOT NULL COMMENT \'(DC2Type:json)\', DROP label, CHANGE position position SMALLINT NOT NULL');
+        $this->addSql('ALTER TABLE mean_of_payment ADD trad JSON NOT NULL COMMENT \'(DC2Type:json)\', DROP label, DROP code, CHANGE position position SMALLINT NOT NULL');
         $this->addSql('ALTER TABLE tender_row CHANGE position position SMALLINT NOT NULL, CHANGE title title VARCHAR(55) NOT NULL');
         $this->addSql('ALTER TABLE cost CHANGE description description LONGTEXT NOT NULL');
         $this->addSql('DROP INDEX UNIQ_4C62E638E7927C74 ON contact');
         $this->addSql('ALTER TABLE tender CHANGE version version SMALLINT NOT NULL');
-        $this->addSql('ALTER TABLE opportunity_status DROP label');
+        $this->addSql('ALTER TABLE opportunity_status DROP label, DROP code');
         $this->addSql('ALTER TABLE opportunity_status ADD trad JSON NOT NULL COMMENT \'(DC2Type:json)\', CHANGE position position SMALLINT NOT NULL');
         $this->addSql('DROP INDEX UNIQ_8D93D649F85E0677 ON user');
         $this->addSql('ALTER TABLE user ADD nb_failed_connexion SMALLINT NOT NULL, ADD is_active TINYINT(1) NOT NULL, ADD last_name VARCHAR(55) NOT NULL, ADD password_updated_at DATETIME DEFAULT NULL, ADD reset_password_token VARCHAR(255) DEFAULT NULL, ADD reset_password_at DATETIME DEFAULT NULL, ADD locale VARCHAR(2) NOT NULL, CHANGE roles roles JSON NOT NULL COMMENT \'(DC2Type:json)\', CHANGE username first_name VARCHAR(55) NOT NULL');
         $this->addSql('DROP INDEX UNIQ_8389C3D7146F3EA3 ON opportunity');
         $this->addSql('ALTER TABLE opportunity CHANGE mean_of_payment_id mean_of_payment_id INT NOT NULL');
-        $this->addSql('ALTER TABLE cost_type ADD trad JSON NOT NULL COMMENT \'(DC2Type:json)\', DROP label, CHANGE position position SMALLINT NOT NULL');
-        $this->addSql('ALTER TABLE tender_status DROP label');
+        $this->addSql('ALTER TABLE cost_type ADD trad JSON NOT NULL COMMENT \'(DC2Type:json)\', DROP label, DROP code, CHANGE position position SMALLINT NOT NULL');
+        $this->addSql('ALTER TABLE tender_status DROP label, DROP code');
         $this->addSql('ALTER TABLE tender_status ADD trad JSON NOT NULL COMMENT \'(DC2Type:json)\', CHANGE position position SMALLINT NOT NULL');
         $this->addSql('ALTER TABLE opportunity_audit_trail CHANGE modif_type modif_type SMALLINT NOT NULL COMMENT \'1=insert, 2=update, 3=delete\', CHANGE details details JSON DEFAULT NULL COMMENT \'(DC2Type:json)\'');
         $this->addSql('ALTER TABLE contact_audit_trail CHANGE modif_type modif_type SMALLINT NOT NULL COMMENT \'1=insert, 2=update, 3=delete\', CHANGE details details JSON DEFAULT NULL COMMENT \'(DC2Type:json)\'');
