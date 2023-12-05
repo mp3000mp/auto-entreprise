@@ -135,6 +135,8 @@ onMounted(async () => {
       <br />
       <font-awesome-icon :icon="['fa', 'phone']" />
       {{ contact.phone }}
+      <br />
+      Commentaires: {{ contact.comments }}
     </p>
 
     <h3>Opportunités</h3>

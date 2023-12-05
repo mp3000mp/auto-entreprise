@@ -68,7 +68,7 @@ describe('OpportunityForm.vue', () => {
       description: 'desc1',
       company: { id: 2, name: '' },
       status: statuses[0],
-      meanOfPayment: null,
+      meanOfPayment: { id: null },
       trackedAt: dayjs().startOf('day'),
       purchasedAt: null,
       forecastedDelivery: null,

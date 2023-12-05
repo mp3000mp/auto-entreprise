@@ -67,12 +67,12 @@ class TenderStatus
         return $this;
     }
 
-    public  function getCode(): TenderStatusEnum
+    public function getCode(): TenderStatusEnum
     {
         return $this->code;
     }
 
-    public  function setCode(TenderStatusEnum $code): self
+    public function setCode(TenderStatusEnum $code): self
     {
         $this->code = $code;
 

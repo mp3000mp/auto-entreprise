@@ -58,12 +58,15 @@ function toggleMenu() {
 
 <template>
   <header class="container-fluid border-bottom">
-    <nav class="d-flex align-items-center justify-content-between main-nav" :class="{expanded: expandedMenu}">
+    <nav
+      class="d-flex align-items-center justify-content-between main-nav"
+      :class="{ expanded: expandedMenu }"
+    >
       <div class="sub-main-nav d-flex align-items-center">
         <h1 class="navbar-brand">
           <router-link :to="{ name: 'home' }">MP3000 AE</router-link>
         </h1>
-        <div class="main-nav-icon me-3" :class="{'mt-2': expandedMenu}" @click="toggleMenu">
+        <div class="main-nav-icon me-3" :class="{ 'mt-2': expandedMenu }" @click="toggleMenu">
           <font-awesome-icon :icon="['fa', 'bars']" />
         </div>
         <ul class="nav" v-if="null !== currentUser">

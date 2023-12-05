@@ -30,7 +30,7 @@ class JsonRequestHelper
      * @param ?class-string<T> $class
      * @param T|null           $entity
      *
-     * @return T|bool
+     * @return T|mixed
      */
     public function handleRequest(string $rawData, string $schema, string $class = null, $entity = null)
     {
@@ -39,18 +39,18 @@ class JsonRequestHelper
         $jsonSchema = json_decode(file_get_contents($this->pathSchemas.'/'.$schema.'.json'));
         $this->jsonValidator->validate($jsonData, $jsonSchema);
         if (!$this->jsonValidator->isValid()) {
-            $err = "JSON does not validate. Violations:\n";
+            $err = "JSON does not validate with the following errors:\n";
 
             foreach ($this->jsonValidator->getErrors() as $error) {
-                $err .= sprintf("[%s] %s\n", $error['property'], implode(', ', $error['message']));
+                $err .= sprintf("  [%s] %s\n", $error['property'], $error['message']);
             }
             $this->logger->error($err);
             // throw new JsonSchemaException(400, $err);
-            throw new JsonSchemaException(400, 'Invalid request content.');
+            throw new JsonSchemaException(400, sprintf('Invalid request content: %s', $err));
         }
 
         if (null === $class) {
-            return true;
+            return $jsonData;
         }
 
         // entity validation

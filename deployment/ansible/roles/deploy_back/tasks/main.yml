@@ -1,3 +1,4 @@
+# todo composer install --no-dev
 - name: Rsync backend directories
   synchronize:
     delete: true

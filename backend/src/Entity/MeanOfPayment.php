@@ -71,12 +71,12 @@ class MeanOfPayment
         return $this;
     }
 
-    public  function getCode(): MeanOfPaymentEnum
+    public function getCode(): MeanOfPaymentEnum
     {
         return $this->code;
     }
 
-    public  function setCode(MeanOfPaymentEnum $code): self
+    public function setCode(MeanOfPaymentEnum $code): self
     {
         $this->code = $code;
 

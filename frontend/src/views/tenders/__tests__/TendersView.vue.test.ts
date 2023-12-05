@@ -5,7 +5,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { vi } from 'vitest'
 import { getRowIds, testSorter } from '@tests/utils/mp3000Table'
 import TenderRow from '@/views/tenders/TenderRow.vue'
-import { initTenders } from '@tests/data/tender'
+import {initTenders, initTenderStatuses} from '@tests/data/tender'
 import { initCompanies } from '@tests/data/company'
 
 const stubs = ['font-awesome-icon', 'router-link']
@@ -20,7 +20,8 @@ describe('TendersView.vue', () => {
             stubActions: true,
             initialState: {
               tender: {
-                tenders: initTenders(false)
+                tenders: initTenders(false),
+                statuses: initTenderStatuses(),
               }
             }
           })
@@ -63,7 +64,8 @@ describe('TendersView.vue', () => {
                 companies: initCompanies()
               },
               tender: {
-                tenders: initTenders(false)
+                tenders: initTenders(false),
+                statuses: initTenderStatuses(),
               }
             }
           })

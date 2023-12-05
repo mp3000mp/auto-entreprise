@@ -153,6 +153,7 @@ onMounted(async () => {
       Date de commande: {{ tender.acceptedAt?.format('YYYY-MM-DD') ?? '-' }}<br />
       Date de refus: {{ tender.refusedAt?.format('YYYY-MM-DD') ?? '-' }}<br />
       Date d'annulation: {{ tender.canceledAt?.format('YYYY-MM-DD') ?? '-' }}<br />
+      Commentaires: {{ tender.comments }}<br />
     </p>
     <bootstrap-modal :is-showing="isStatusLogsShowing" @stop-showing="hideStatusLogsPopin">
       <template #header>
@@ -206,7 +207,7 @@ onMounted(async () => {
         </div>
       </template>
       <template v-slot:header>
-        <mp3000-table-header property="titre" :sorter="tenderRowsSorter" label="Titre" />
+        <mp3000-table-header property="title" :sorter="tenderRowsSorter" label="Titre" />
         <mp3000-table-header
           property="description"
           :sorter="tenderRowsSorter"
@@ -219,14 +220,20 @@ onMounted(async () => {
         <tr v-if="tenderRowsSorter.sortedList.value.length === 0">
           <td colspan="100">Aucune ligne</td>
         </tr>
-        <tender-row-row
-          v-else
-          v-for="tenderRow in tenderRowsSorter.sortedList.value"
-          :key="tenderRow.id"
-          :tender-row="tenderRow"
-          :average-daily-rate="tender.averageDailyRate"
-          @show-form="showTenderRowForm(tenderRow)"
-        />
+        <template v-else>
+          <tender-row-row
+            v-for="tenderRow in tenderRowsSorter.sortedList.value"
+            :key="tenderRow.id"
+            :tender-row="tenderRow"
+            :average-daily-rate="tender.averageDailyRate"
+            @show-form="showTenderRowForm(tenderRow)"
+          />
+          <tr class="total" v-if="tenderRowFilterSearch.length < 3">
+            <td colspan="2" class="text-end">Total:</td>
+            <td>{{ tender.soldDays }}</td>
+            <td>{{ tender.soldDays * tender.averageDailyRate }}€</td>
+          </tr>
+        </template>
       </template>
     </mp3000-table>
     <tender-row-form
@@ -244,3 +251,13 @@ onMounted(async () => {
     />
   </div>
 </template>
+
+<style lang="scss">
+table {
+  .total {
+    font-weight: bold;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+  }
+}
+</style>

@@ -44,7 +44,7 @@ function getEmptyOpportunity(): NewOpportunity {
     description: '',
     status: { id: 0, label: '' },
     company: props.company ? props.company : { id: 0, name: '' },
-    meanOfPayment: null,
+    meanOfPayment: { id: null },
     trackedAt: dayjs(),
     purchasedAt: null,
     forecastedDelivery: null,
@@ -229,20 +229,25 @@ onMounted(async () => {
           :disabled="isSubmitting"
         />
       </div>
-      <!--      <div class="form-group">-->
-      <!--        <label>Moyen de paiement</label>-->
-      <!--        <bootstrap-loader v-if="areRelationshipsLoading" />-->
-      <!--        <select-->
-      <!--            v-else-->
-      <!--            class="form-select"-->
-      <!--            v-model="currentOpportunity.meanOfPayment.id"-->
-      <!--            :disabled="isSubmitting"-->
-      <!--        >-->
-      <!--          <option v-for="meanOfPayment in meanOfPayments" :key="meanOfPayment.id" :value="meanOfPayment.id">-->
-      <!--            {{ meanOfPayment.label }}-->
-      <!--          </option>-->
-      <!--        </select>-->
-      <!--      </div>-->
+      <div class="form-group">
+        <label>Moyen de paiement</label>
+        <bootstrap-loader v-if="areRelationshipsLoading" />
+        <select
+          v-else
+          class="form-select"
+          v-model="currentOpportunity.meanOfPayment.id"
+          :disabled="isSubmitting"
+        >
+          <option :value="null">-</option>
+          <option
+            v-for="meanOfPayment in meanOfPayments"
+            :key="meanOfPayment.id"
+            :value="meanOfPayment.id"
+          >
+            {{ meanOfPayment.label }}
+          </option>
+        </select>
+      </div>
       <div class="form-group">
         <label>Ref de paiement</label>
         <input

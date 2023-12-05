@@ -48,7 +48,7 @@ class Tender
     private int $version;
 
     #[ORM\Column]
-    #[Groups(['tender_show', 'tender_list', 'opportunity_show', 'tender_add', 'tender_edit'])]
+    #[Groups(['tender_show', 'tender_list', 'opportunity_list', 'opportunity_show', 'tender_add', 'tender_edit'])]
     private int $averageDailyRate;
 
     #[ORM\Column]
@@ -242,14 +242,14 @@ class Tender
     }
 
     #[Groups(['tender_show', 'tender_list', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
-    public function getSoldDays(): int
+    public function getSoldDays(): float
     {
         $soldDays = 0;
         foreach ($this->tenderRows as $tenderRow) {
             $soldDays += $tenderRow->getSoldDays();
         }
 
-        return $soldDays;
+        return round($soldDays, 2);
     }
 
     public function getAmount(): float

@@ -67,12 +67,12 @@ class OpportunityStatus
         return $this;
     }
 
-    public  function getCode(): OpportunityStatusEnum
+    public function getCode(): OpportunityStatusEnum
     {
         return $this->code;
     }
 
-    public  function setCode(OpportunityStatusEnum $code): self
+    public function setCode(OpportunityStatusEnum $code): self
     {
         $this->code = $code;
 

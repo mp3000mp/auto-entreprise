@@ -9,6 +9,7 @@
 		Require all granted
 		Order allow,deny
 		allow from all
+
 		RewriteEngine on
 		RewriteBase /
 		RewriteRule ^index\.html$ - [L]
@@ -16,6 +17,8 @@
 		RewriteCond %{REQUEST_FILENAME} !-d
 		RewriteRule . /index.html [L]
 	</Directory>
+
+	FallbackResource /index.html
 
 	ErrorLog "{{ app_directory }}/frontend/log/apache_error.log"
 	CustomLog "{{ app_directory }}/frontend/log/apache_access.log" combined

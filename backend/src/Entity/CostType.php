@@ -67,12 +67,12 @@ class CostType
         return $this;
     }
 
-    public  function getCode(): CostTypeEnum
+    public function getCode(): CostTypeEnum
     {
         return $this->code;
     }
 
-    public  function setCode(CostTypeEnum $code): self
+    public function setCode(CostTypeEnum $code): self
     {
         $this->code = $code;
 

@@ -3,7 +3,6 @@ import UsersView from '../views/users/UsersView.vue'
 import LoginView from '../views/security/LoginView.vue'
 
 import { useSecurityStore } from '@/stores/security'
-import HomeView from '@/views/HomeView.vue'
 import OpportunitiesView from '@/views/opportunities/OpportunitiesView.vue'
 import TendersView from '@/views/tenders/TendersView.vue'
 import ContactsView from '@/views/contacts/ContactsView.vue'
@@ -28,7 +27,8 @@ const router = createRouter({
       alias: '',
       path: '/',
       name: 'home',
-      component: HomeView
+      // component: HomeView
+      component: OpportunitiesView
     },
     {
       path: '/opportunities',
@@ -101,11 +101,11 @@ router.beforeEach(async (to, from, next) => {
   const securityStore = useSecurityStore()
 
   if (!securityStore.loggedInChecked) {
-    await securityStore.checkisLoggedIn()
+    await securityStore.checkIsLoggedIn()
   }
 
   if (securityStore.currentUser === null && to.name !== 'login') {
-    return next({ name: 'login' })
+    return next({ name: 'login', query: { redirect: to.href } })
   }
   if (securityStore.currentUser !== null && to.name === 'login') {
     return next({ name: 'home' })

@@ -62,7 +62,7 @@ export function convertOpportunityOut(
   return {
     ...opportunity,
     company: '/api/companies/' + opportunity.company.id,
-    meanOfPayment: opportunity.meanOfPayment
+    meanOfPayment: opportunity.meanOfPayment?.id
       ? '/api/mean_of_payments/' + opportunity.meanOfPayment.id
       : null,
     status: '/api/opportunity_statuses/' + opportunity.status.id,

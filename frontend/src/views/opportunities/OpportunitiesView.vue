@@ -20,15 +20,20 @@ const isFormLoading = ref(false)
 const isFormShowing = ref(false)
 
 const companies = computed(() => companyStore.companies)
+const statuses = computed(() => opportunityStore.statuses)
 const opportunities = computed(() => opportunityStore.opportunities)
 const deletableIds = computed(() => opportunityStore.deletableIds)
 const currentOpportunity = computed(() => opportunityStore.currentOpportunity)
 
 const filterSearch = ref('')
 const filterCompanyId = ref(null) as Ref<number | null>
+const filterStatusId = ref(null) as Ref<number | null>
 const filteredOpportunities = computed(() =>
   opportunities.value.filter((opportunity) => {
     if (null !== filterCompanyId.value && opportunity.company.id !== filterCompanyId.value) {
+      return false
+    }
+    if (null !== filterStatusId.value && opportunity.status.id !== filterStatusId.value) {
       return false
     }
     if (filterSearch.value.length < 3) {
@@ -90,6 +95,7 @@ onMounted(async () => {
   sorter.addSort('createdAt', false)
   isLoading.value = true
   await Promise.all([
+    statuses.value.length ? null : opportunityStore.fetchStatuses(),
     opportunityStore.fetch(),
     opportunityStore.fetchDeletables(),
     companies.value.length ? null : companyStore.fetch()
@@ -119,6 +125,17 @@ onMounted(async () => {
               <option :value="null">-</option>
               <option v-for="company in companies" :key="company.id" :value="company.id">
                 {{ company.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="form-group">
+            <label>Statut</label>
+            <select class="form-select" v-model="filterStatusId">
+              <option :value="null">-</option>
+              <option v-for="status in statuses" :key="status.id" :value="status.id">
+                {{ status.label }}
               </option>
             </select>
           </div>

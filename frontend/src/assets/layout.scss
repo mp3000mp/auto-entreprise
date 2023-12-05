@@ -41,10 +41,10 @@ h2 {
 
     &.expanded {
       display: flex;
-      align-items: start!important;
+      align-items: start !important;
       flex-direction: column;
       .sub-main-nav {
-        align-items: start!important;
+        align-items: start !important;
         flex-direction: column;
       }
       .nav {

@@ -21,7 +21,7 @@ async function connect() {
   isLoading.value = true
   try {
     await securityStore.login(userName.value, password.value)
-    router.push({ name: 'home' })
+    router.push({ path: router.currentRoute.value.query?.redirect ?? '/' })
   } catch (err: unknown) {
     isLoading.value = false
   }

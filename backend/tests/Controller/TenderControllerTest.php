@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\Controller;
 
 use App\Entity\Opportunity;
-use App\Entity\OpportunityStatus;
 use App\Entity\Tender;
 use App\Entity\TenderRow;
 use App\Entity\TenderStatus;
 use App\Entity\TenderStatusLog;
-use App\Enum\OpportunityStatusEnum;
 use App\Enum\TenderStatusEnum;
 
 class TenderControllerTest extends AbstractController

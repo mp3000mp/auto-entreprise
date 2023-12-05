@@ -213,8 +213,9 @@ onMounted(async () => {
       Moyen de paiement: {{ opportunity.meanOfPayment?.label ?? '-' }}<br />
       Ref de paiement: {{ opportunity.paymentRef ?? '-' }}<br />
       Jours travaillés: {{ totalWorkedDays }}
-      <mp3000-icon icon="circle-info" title="Voir" @click="showWorkedTimeHistory" />
-      <mp3000-icon icon="plus" title="Ajouter" @click="showWorkedTimeForm(null)" />
+      <mp3000-icon icon="circle-info" class="me-1" title="Voir" @click="showWorkedTimeHistory" />
+      <mp3000-icon icon="plus" title="Ajouter" @click="showWorkedTimeForm(null)" /><br />
+      Commentaires: {{ opportunity.comments }}<br />
     </p>
     <worked-time-form
       :is-showing="isWorkedTimeFormShowing"
@@ -286,18 +287,18 @@ onMounted(async () => {
 
     <h3>Fichiers</h3>
     <div>
-      <a
-        v-for="file in opportunity.opportunityFiles"
-        :key="file.id"
-        :href="config.backendBaseUrl + '/api/opportunity_files/' + file.id"
-        title="Télécharger"
-        target="_blank"
-        class="me-1"
-      >
-        <font-awesome-icon :icon="['fa', getFileIcon(file.extension)]" />
-        [{{ opportunityFileTypeLabels[file.type] }}] {{ file.name }}
-        <mp3000-icon icon="trash" @click="removeFile(file.id)" />
-      </a>
+      <template v-for="file in opportunity.opportunityFiles" :key="file.id">
+        <a
+          :href="config.backendBaseUrl + '/api/opportunity_files/' + file.id"
+          title="Télécharger"
+          target="_blank"
+          class="me-1"
+        >
+          <font-awesome-icon :icon="['fa', getFileIcon(file.extension)]" />
+          [{{ opportunityFileTypeLabels[file.type] }}] {{ file.name }}
+        </a>
+        <mp3000-icon class="me-1" icon="trash" @click="removeFile(file.id)" />
+      </template>
       <mp3000-icon icon="plus" title="Ajouter" @click="showFileForm" />
       <opportunity-file-form
         :opportunity-id="opportunityId"

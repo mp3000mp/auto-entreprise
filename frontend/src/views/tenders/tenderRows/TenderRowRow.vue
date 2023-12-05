@@ -38,10 +38,10 @@ async function remove() {
         title="Supprimer"
         :is-loading="isRemoving"
       />
-      {{ tenderRow.position }}. {{ tenderRow.title }}
+      <span>{{ tenderRow.position }}. {{ tenderRow.title }}</span>
     </td>
     <td>{{ tenderRow.description }}</td>
     <td>{{ tenderRow.soldDays }}</td>
-    <td>{{ tenderRow.soldDays * averageDailyRate }}</td>
+    <td>{{ tenderRow.soldDays * averageDailyRate }}€</td>
   </tr>
 </template>
