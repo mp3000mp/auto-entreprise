@@ -5,7 +5,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { vi } from 'vitest'
 
 vi.mock('vue-router')
-const stubs = ['router-link']
+const stubs = ['router-link', 'font-awesome-icon']
 
 describe('MenuView.vue', () => {
   test('does not show links', () => {

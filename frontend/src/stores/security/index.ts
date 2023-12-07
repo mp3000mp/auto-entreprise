@@ -2,27 +2,62 @@ import { defineStore } from 'pinia'
 import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
 import { notifyError } from '@/stores/notification/utils'
 import type { User } from '@/stores/user/types'
+import config from '@/misc/config'
+
+type LoginResponse = {
+  twoFactorAuthRequired: boolean
+  me?: User
+}
 
 type EditPasswordPayload = {
   currentPassword: string
   newPassword: string
 }
 
+type CheckTwoFactorAuthResponse = {
+  success: boolean
+  message: string
+}
+
 export const useSecurityStore = defineStore('security', {
   state: () => ({
     currentUser: null as User | null,
-    loggedInChecked: false
+    loggedInChecked: false,
+    qrCodeUrl: config.backendBaseUrl + '/api/2fa/qr-code',
+    twoFactorAuthRequired: false
   }),
   actions: {
     async login(username: string, password: string) {
       try {
-        this.currentUser = await ApiClient.query(HttpMethodEnum.POST, '/api/login', {
+        const response = (await ApiClient.query(HttpMethodEnum.POST, '/api/login', {
           username,
           password
-        })
+        })) as LoginResponse
+        this.twoFactorAuthRequired = response.twoFactorAuthRequired
+        if (this.twoFactorAuthRequired) {
+          return
+        }
+        if (response.me) {
+          this.currentUser = response.me
+          this.loggedInChecked = true
+        } else {
+          await this.checkIsLoggedIn()
+        }
       } catch (err: unknown) {
         this.currentUser = null
         notifyError('Authentication error: ', err)
+        throw err
+      }
+    },
+    async twoFactorAuth(twoFactorAuthToken: string) {
+      try {
+        this.currentUser = await ApiClient.query(HttpMethodEnum.POST, '/api/2fa', {
+          twoFactorAuthToken
+        })
+        this.loggedInChecked = true
+      } catch (err: unknown) {
+        this.currentUser = null
+        notifyError('Two factor authentication error: ', err)
         throw err
       }
     },
@@ -48,6 +83,31 @@ export const useSecurityStore = defineStore('security', {
         await ApiClient.query(HttpMethodEnum.PUT, '/api/password', payload)
       } catch (err: unknown) {
         notifyError('Error while updating password: ', err)
+      }
+    },
+    async getTwoFactorAuthEnable() {
+      try {
+        await ApiClient.query(HttpMethodEnum.POST, '/api/2fa/enable')
+        this.currentUser.isTotpAuthenticationEnabled = true
+      } catch (err: unknown) {
+        notifyError('Error while enabling QR code: ', err)
+      }
+    },
+    async getTwoFactorAuthDisable() {
+      try {
+        await ApiClient.query(HttpMethodEnum.POST, '/api/2fa/disable')
+        this.currentUser.isTotpAuthenticationEnabled = false
+      } catch (err: unknown) {
+        notifyError('Error while disabling QR code: ', err)
+      }
+    },
+    async checkTwoFactorAuth(twoFactorAuthToken: string) {
+      try {
+        return (await ApiClient.query(HttpMethodEnum.POST, '/api/2fa/check-code', {
+          twoFactorAuthToken
+        })) as CheckTwoFactorAuthResponse
+      } catch (err: unknown) {
+        notifyError('Error while checking QR code: ', err)
       }
     }
   }

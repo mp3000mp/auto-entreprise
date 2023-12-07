@@ -1,0 +1,14 @@
+framework:
+  rate_limiter:
+    main:
+      policy: sliding_window
+      limit: 3
+      interval: 10 minutes
+
+when@test:
+  framework:
+    rate_limiter:
+      main:
+        policy: sliding_window
+        limit: 9999
+        interval: 1 second

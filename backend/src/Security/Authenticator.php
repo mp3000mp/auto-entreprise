@@ -2,6 +2,8 @@
 
 namespace App\Security;
 
+use App\Entity\User;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +21,7 @@ class Authenticator extends AbstractLoginFormAuthenticator
 {
     private const TOO_MANY_ATTEMPT_MSG = 'Too many attempts, please try later.';
 
-    public function __construct(private SerializerInterface $serializer, /* private RateLimiterFactory $loginRouteLimiter, */ private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private SerializerInterface $serializer, private RateLimiterFactory $mainLimiter, private UrlGeneratorInterface $urlGenerator)
     {
     }
 
@@ -33,15 +35,14 @@ class Authenticator extends AbstractLoginFormAuthenticator
     public function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate('security.login_check');
-        //        return $this->urlGenerator->generate('security.login_check');
     }
 
     public function authenticate(Request $request): Passport
     {
-        //        $limiter = $this->loginRouteLimiter->create($request->getClientIp());
-        //        if (!$limiter->consume(1)->isAccepted()) {
-        //            throw new AuthenticationException(self::TOO_MANY_ATTEMPT_MSG);
-        //        }
+        $limiter = $this->mainLimiter->create($request->getClientIp());
+        if (!$limiter->consume()->isAccepted()) {
+            throw new AuthenticationException(self::TOO_MANY_ATTEMPT_MSG);
+        }
 
         $content = json_decode($request->getContent(), true);
         $password = $request->request->get('password')
@@ -61,7 +62,18 @@ class Authenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return new JsonResponse(json_decode($this->serializer->serialize($token->getUser(), 'json', ['groups' => ['me']])));
+        /** @var User $currentUser */
+        $currentUser = $token->getUser();
+
+        $twoFactorRequired = $token instanceof TwoFactorTokenInterface;
+        $json = [
+            'twoFactorAuthRequired' => $twoFactorRequired,
+        ];
+        if (!$twoFactorRequired) {
+            $json['me'] = json_decode($this->serializer->serialize($currentUser, 'json', ['groups' => ['me']]));
+        }
+
+        return new JsonResponse($json);
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response

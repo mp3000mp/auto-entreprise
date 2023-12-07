@@ -33,22 +33,29 @@ describe('AccountView.vue', () => {
     const submit = wrapper.findAllComponents(Mp3000Button)[1]
 
     await submit.trigger('click')
+    expect(wrapper.find('.text-danger').text()).toEqual('Veuillez saisir votre mot de passe actuel')
+
+    await wrapper.findAll('input[type=password]')[0].setValue('goodPassword')
+    await submit.trigger('click')
     expect(wrapper.find('.text-danger').text()).toEqual(
       'Le mot de passe doit contenir au moins 8 caractères'
     )
 
-    await wrapper.findAll('input[type=password]')[0].setValue('goodPassword')
+    await wrapper.findAll('input[type=password]')[1].setValue('goodPassword')
     await submit.trigger('click')
     expect(wrapper.find('.text-danger').text()).toEqual(
       'Les deux mots de passe saisis ne correspondent pas'
     )
 
-    await wrapper.findAll('input[type=password]')[1].setValue('goodPassword')
+    await wrapper.findAll('input[type=password]')[2].setValue('goodPassword')
     await submit.trigger('click')
     expect(wrapper.find('.text-danger').exists()).toBeFalsy()
 
     const store = useSecurityStore()
     expect(store.editPassword).toHaveBeenCalledTimes(1)
-    expect(store.editPassword).toHaveBeenLastCalledWith('goodPassword')
+    expect(store.editPassword).toHaveBeenLastCalledWith({
+      currentPassword: 'goodPassword',
+      newPassword: 'goodPassword'
+    })
   })
 })

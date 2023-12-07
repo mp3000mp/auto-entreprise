@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\Writer\PngWriter;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,5 +56,56 @@ class SecurityController extends AbstractController
         $this->em->flush();
 
         return $this->json(['message' => 'OK']);
+    }
+
+    #[Route(path: '/2fa/enable', name: 'security.2fa.enable', methods: ['POST'])]
+    public function enableTwoFactorAth(#[CurrentUser] User $user, TotpAuthenticatorInterface $totpAuthenticator): Response
+    {
+        $user->setTotpSecret($totpAuthenticator->generateSecret());
+        $this->em->flush();
+
+        return $this->json([
+            'message' => 'ok',
+        ]);
+    }
+
+    #[Route(path: '/2fa/disable', name: 'security.2fa.disable', methods: ['POST'])]
+    public function disableTwoFactorAth(#[CurrentUser] User $user): Response
+    {
+        $user->setTotpSecret(null);
+        $this->em->flush();
+
+        return $this->json([
+            'message' => 'ok',
+        ]);
+    }
+
+    #[Route(path: '/2fa/qr-code', name: 'security.2fa.qr_code', methods: ['GET'])]
+    public function getTwoFactorAuthQrCode(#[CurrentUser] User $user, TotpAuthenticatorInterface $totpAuthenticator): Response
+    {
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([])
+            ->data($totpAuthenticator->getQRContent($user))
+            ->encoding(new Encoding('UTF-8'))
+//            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size(200)
+            ->margin(0)
+//            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+            ->build();
+
+        return new Response($result->getString(), 200, ['Content-Type' => 'image/png']);
+    }
+
+    #[Route(path: '/2fa/check-code', name: 'security.2fa.check_code', methods: ['POST'])]
+    public function checkTwoFactorAuth(Request $request, #[CurrentUser] User $user, TotpAuthenticatorInterface $totpAuthenticator): Response
+    {
+        $content = $this->requestHelper->handleRequest($request->getContent(), '2fa_check');
+        $success = $totpAuthenticator->checkCode($user, $content->twoFactorAuthToken);
+
+        return $this->json([
+            'success' => $success,
+            'message' => $success ? 'OK' : 'Erreur',
+        ]);
     }
 }

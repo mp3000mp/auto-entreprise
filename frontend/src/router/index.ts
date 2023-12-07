@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import UsersView from '../views/users/UsersView.vue'
 import LoginView from '../views/security/LoginView.vue'
 
+import apiClient from '@/misc/api-client'
+
 import { useSecurityStore } from '@/stores/security'
 import OpportunitiesView from '@/views/opportunities/OpportunitiesView.vue'
 import TendersView from '@/views/tenders/TendersView.vue'
@@ -111,6 +113,14 @@ router.beforeEach(async (to, from, next) => {
     return next({ name: 'home' })
   }
   next()
+})
+
+apiClient.setOnUnauthorizedCallback((response) => {
+  if (response.message === 'twoFactorAuthRequired') {
+    const securityStore = useSecurityStore()
+    securityStore.twoFactorAuthRequired = true
+  }
+  router.push({ name: 'login', query: { redirect: router.currentRoute.value.path } })
 })
 
 export default router

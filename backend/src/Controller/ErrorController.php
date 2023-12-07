@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -14,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class ErrorController extends AbstractController
 {
-    public function error(\Throwable $exception, LoggerInterface $logger): JsonResponse
+    public function error(\Throwable $exception): JsonResponse
     {
         $statusCode = $exception instanceof HttpException ? $exception->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
 

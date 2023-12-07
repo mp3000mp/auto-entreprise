@@ -49,7 +49,7 @@ class TenderRow
 
     #[ORM\ManyToOne(targetEntity: Tender::class, inversedBy: 'tenderRows')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['tender_show', 'tender_row_add'])]
+    #[Groups(['tender_row_add'])]
     private Tender $tender;
 
     public function getId(): ?int

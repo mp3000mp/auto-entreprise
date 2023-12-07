@@ -8,19 +8,24 @@ export enum HttpMethodEnum {
   PUT = 'PUT'
 }
 
+type OnUnauthorizedCallback = (response: any) => void
+
 export class ApiError {
   message = ''
 }
 
 export type ApiClientOptions = {
   ignoreResponse?: boolean
+  isJson?: boolean
   headers: any
 }
 const defaultApiClientOptions = {
-  ignoreResponse: false
+  ignoreResponse: false,
+  isJson: true
 }
 
-export class ApiClient {
+class ApiClient {
+  onUnauthorizedCallback = null as OnUnauthorizedCallback | null
   baseUrl = config.backendBaseUrl
   headers = {
     Accept: 'application/json',
@@ -51,15 +56,25 @@ export class ApiClient {
     }
     try {
       const response = await fetch(this.baseUrl + url, fetchOptions)
-      const jsonResponse =
-        options.ignoreResponse || response.status === 204 ? null : await response.json()
+      let jsonResponse = response
+      if (options.isJson) {
+        jsonResponse =
+          options.ignoreResponse || response.status === 204 ? null : await response.json()
+      }
       if (response.ok) {
         return await jsonResponse
+      }
+      if (response.status === 401 && this.onUnauthorizedCallback !== null) {
+        this.onUnauthorizedCallback(jsonResponse)
       }
       throw jsonResponse
     } catch (err) {
       throw err
     }
+  }
+
+  public setOnUnauthorizedCallback(callback: OnUnauthorizedCallback) {
+    this.onUnauthorizedCallback = callback
   }
 }
 

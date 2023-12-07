@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use App\Entity\User;
+
 class SecurityControllerTest extends AbstractController
 {
     public function testLogin(): void
@@ -12,7 +14,25 @@ class SecurityControllerTest extends AbstractController
         $this->assertResponseCode(200);
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
-        self::assertArrayHasKey('email', $jsonResponse);
+        self::assertArrayHasKey('twoFactorAuthRequired', $jsonResponse);
+        self::assertFalse($jsonResponse['twoFactorAuthRequired']);
+        self::assertArrayHasKey('me', $jsonResponse);
+        self::assertArrayHasKey('email', $jsonResponse['me']);
+    }
+
+    public function testTwoFactorAuth(): void
+    {
+        $user = $this->em->getRepository(User::class)->findOneBy(['username' => 'user']);
+        $user->setTotpSecret('secret');
+        $this->em->flush();
+
+        $this->client->request('POST', '/api/login', content: json_encode(['username' => 'user', 'password' => 'Test2000!']));
+        $this->assertResponseCode(200);
+        $jsonResponse = $this->getResponseJson($this->client->getResponse());
+
+        self::assertArrayHasKey('twoFactorAuthRequired', $jsonResponse);
+        self::assertTrue($jsonResponse['twoFactorAuthRequired']);
+        self::assertArrayNotHasKey('me', $jsonResponse);
     }
 
     public function testMe(): void

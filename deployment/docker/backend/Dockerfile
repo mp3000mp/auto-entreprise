@@ -12,7 +12,7 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
 RUN curl -sSk https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # install ext
-RUN docker-php-ext-install iconv pdo_mysql intl
+RUN docker-php-ext-install iconv pdo_mysql intl gd
 
 # config apache
 RUN a2enmod rewrite \

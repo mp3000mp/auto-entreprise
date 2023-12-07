@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "2fa_check",
+  "type": "object",
+  "properties": {
+    "twoFactorAuthToken": {
+      "type": "string"
+    }
+  },
+  "required": ["twoFactorAuthToken"],
+  "additionalProperties": false
+}

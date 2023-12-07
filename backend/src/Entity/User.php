@@ -7,6 +7,9 @@ use ApiPlatform\Metadata\GetCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Scheb\TwoFactorBundle\Model\Totp\TotpConfiguration;
+use Scheb\TwoFactorBundle\Model\Totp\TotpConfigurationInterface;
+use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -21,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(paginationEnabled: false, normalizationContext: ['groups' => 'user_list']),
     ]
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -55,6 +58,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: WorkedTime::class, mappedBy: 'user')]
     #[ORM\OrderBy(['date' => 'DESC'])]
     private Collection $workedTimes;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $totpSecret = null;
 
     public function __construct()
     {
@@ -159,5 +165,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->workedTimes->removeElement($workedTime);
 
         return $this;
+    }
+
+    public function getTotpSecret(): ?string
+    {
+        return $this->totpSecret;
+    }
+
+    public function setTotpSecret(?string $totpSecret): self
+    {
+        $this->totpSecret = $totpSecret;
+
+        return $this;
+    }
+
+    public function isTotpAuthenticationEnabled(): bool
+    {
+        return null !== $this->totpSecret;
+    }
+
+    #[Groups(['user_list', 'me'])]
+    public function getIsTotpAuthenticationEnabled(): bool
+    {
+        return $this->isTotpAuthenticationEnabled();
+    }
+
+    public function getTotpAuthenticationUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function getTotpAuthenticationConfiguration(): ?TotpConfigurationInterface
+    {
+        return new TotpConfiguration($this->totpSecret, TotpConfiguration::ALGORITHM_SHA1, 20, 8);
     }
 }

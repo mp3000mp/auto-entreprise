@@ -95,6 +95,9 @@ function refresh() {
     if (props.company) {
       currentOpportunity.value.company = props.company
     }
+    if (!currentOpportunity.meanOfPayment) {
+      currentOpportunity.meanOfPayment = {id: null}
+    }
   } else {
     currentOpportunity.value = getEmptyOpportunity()
     currentOpportunity.value.status = statuses.value[0]
@@ -231,7 +234,7 @@ onMounted(async () => {
       </div>
       <div class="form-group">
         <label>Moyen de paiement</label>
-        <bootstrap-loader v-if="areRelationshipsLoading" />
+        <bootstrap-loader v-if="areRelationshipsLoading || !currentOpportunity.meanOfPayment" />
         <select
           v-else
           class="form-select"

@@ -1,0 +1,2 @@
+2fa_login_check:
+    path: /api/2fa

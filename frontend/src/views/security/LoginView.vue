@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { Ref } from 'vue'
-import { nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useSecurityStore } from '@/stores/security'
 import { useRouter } from 'vue-router'
 
@@ -14,6 +14,19 @@ const userName = ref('')
 const password = ref('')
 const userNameInput = ref(null) as Ref<HTMLInputElement | null>
 
+async function focus() {
+  await nextTick()
+  if (twoFactorAuthRequired.value) {
+    twoFactorAuthInput.value?.focus()
+  } else {
+    userNameInput.value?.focus()
+  }
+}
+
+function redirectAfterLogin() {
+  router.push({ path: router.currentRoute.value.query?.redirect ?? '/' })
+}
+
 async function connect() {
   if (userName.value === '' || password.value === '') {
     return
@@ -21,45 +34,83 @@ async function connect() {
   isLoading.value = true
   try {
     await securityStore.login(userName.value, password.value)
-    router.push({ path: router.currentRoute.value.query?.redirect ?? '/' })
+    if (!twoFactorAuthRequired.value) {
+      redirectAfterLogin()
+    }
+  } finally {
+    isLoading.value = false
+    await focus()
+  }
+}
+
+const twoFactorAuthRequired = computed(() => securityStore.twoFactorAuthRequired)
+const twoFactorAuthCode = ref('')
+const twoFactorAuthInput = ref(null) as Ref<HTMLInputElement | null>
+
+async function twoFactorAuth() {
+  if (twoFactorAuthCode.value === '') {
+    return
+  }
+  isLoading.value = true
+  try {
+    await securityStore.twoFactorAuth(twoFactorAuthCode.value)
+    redirectAfterLogin()
   } catch (err: unknown) {
     isLoading.value = false
   }
 }
 
 onMounted(async () => {
-  await nextTick()
-  userNameInput.value?.focus()
+  await focus()
 })
 </script>
 
 <template>
   <div class="login-content">
     <div class="login-input">
-      <input
-        v-model="userName"
-        ref="userNameInput"
-        @keyup.enter="connect"
-        class="form-control"
-        type="text"
-        placeholder="Username"
-        :disabled="isLoading"
-      />
-      <input
-        v-model="password"
-        @keyup.enter="connect"
-        class="form-control"
-        type="password"
-        placeholder="Password"
-        :disabled="isLoading"
-      />
-      <mp3000-button
-        @click.prevent="connect"
-        :is-loading="isLoading"
-        :outline="true"
-        label="OK"
-        class="ms-2"
-      />
+      <template v-if="twoFactorAuthRequired">
+        <input
+          v-model="twoFactorAuthCode"
+          @keyup.enter="twoFactorAuth"
+          class="form-control"
+          type="string"
+          placeholder="Code"
+          :disabled="isLoading"
+        />
+        <mp3000-button
+          @click.prevent="twoFactorAuth"
+          :is-loading="isLoading"
+          :outline="true"
+          label="OK"
+          class="ms-2"
+        />
+      </template>
+      <template v-else>
+        <input
+          v-model="userName"
+          ref="userNameInput"
+          @keyup.enter="connect"
+          class="form-control"
+          type="text"
+          placeholder="Username"
+          :disabled="isLoading"
+        />
+        <input
+          v-model="password"
+          @keyup.enter="connect"
+          class="form-control"
+          type="password"
+          placeholder="Password"
+          :disabled="isLoading"
+        />
+        <mp3000-button
+          @click.prevent="connect"
+          :is-loading="isLoading"
+          :outline="true"
+          label="OK"
+          class="ms-2"
+        />
+      </template>
     </div>
   </div>
 </template>

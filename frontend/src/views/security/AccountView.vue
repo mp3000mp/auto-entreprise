@@ -12,6 +12,7 @@ const currentPassword = ref('')
 const newPassword = ref('')
 const newPasswordConfirm = ref('')
 const errorMessage = ref('')
+const successMessage = ref('')
 const currentPasswordEl = ref(null) as Ref<HTMLInputElement | null>
 
 const currentUser = computed(() => securityStore.currentUser)
@@ -54,6 +55,42 @@ async function updatePassword() {
   newPassword.value = ''
   newPasswordConfirm.value = ''
 }
+
+const isTwoFactorAuthFormShowing = ref(false)
+const qrCodeUrl = computed(() => securityStore.qrCodeUrl)
+const twoFactorAuthCode = ref('')
+async function showTwoFactorAuthForm() {
+  isTwoFactorAuthFormShowing.value = true
+}
+function hideTwoFactorAuthForm() {
+  isTwoFactorAuthFormShowing.value = false
+}
+
+async function toggleTwoFactorAuth() {
+  try {
+    if (currentUser.value.isTotpAuthenticationEnabled) {
+      await securityStore.getTwoFactorAuthDisable()
+      hideTwoFactorAuthForm()
+    } else {
+      await securityStore.getTwoFactorAuthEnable()
+      showTwoFactorAuthForm()
+    }
+  } catch (err: unknown) {
+    errorMessage.value = String(err)
+  }
+}
+async function checkTwoFactorCheck() {
+  isSubmitting.value = true
+  const response = await securityStore.checkTwoFactorAuth(twoFactorAuthCode.value)
+  if (response.success) {
+    errorMessage.value = ''
+    successMessage.value = response.message
+  } else {
+    errorMessage.value = response.message
+    successMessage.value = ''
+  }
+  isSubmitting.value = false
+}
 </script>
 
 <template>
@@ -64,6 +101,7 @@ async function updatePassword() {
       Email: {{ currentUser.email }}<br />
       Roles: {{ currentUser.roles }}
     </p>
+    <h2>Mot de passe</h2>
     <button
       @click.prevent="showPasswordForm"
       class="btn btn-primary mt-4"
@@ -109,7 +147,7 @@ async function updatePassword() {
           />
         </div>
       </div>
-      <span class="text-danger">{{ errorMessage }}</span>
+      <span v-if="errorMessage" class="text-danger">{{ errorMessage }}</span>
       <div class="col-12 mt-2">
         <mp3000-button
           @click.prevent="hidePasswordForm"
@@ -121,5 +159,56 @@ async function updatePassword() {
         <mp3000-button @click.prevent="updatePassword" :is-loading="isSubmitting" label="Valider" />
       </div>
     </div>
+    <h2>Double authentification</h2>
+    <button @click.prevent="toggleTwoFactorAuth" class="btn btn-primary mt-4">
+      {{ currentUser.isTotpAuthenticationEnabled ? 'Désactiver' : 'Activer' }} la double
+      authentification
+    </button>
+    <button
+      @click.prevent="showTwoFactorAuthForm"
+      class="btn btn-primary mt-4 ms-3"
+      v-if="!isTwoFactorAuthFormShowing && currentUser.isTotpAuthenticationEnabled"
+    >
+      Afficher QR code
+    </button>
+    <span v-if="errorMessage" class="text-danger">{{ errorMessage }}</span>
+    <span v-if="successMessage" class="text-success">{{ successMessage }}</span>
+    <div class="row" v-if="isTwoFactorAuthFormShowing">
+      <div class="col-auto">
+        <img alt="qr code" :src="qrCodeUrl" class="qr-code mt-2" />
+      </div>
+      <div class="col-auto">
+        <div class="form-group">
+          <label>Code</label>
+          <input
+            type="string"
+            class="form-control"
+            v-model="twoFactorAuthCode"
+            :disabled="isSubmitting"
+            @keyup.enter="checkTwoFactorCheck"
+          />
+        </div>
+      </div>
+      <div class="col-12 mt-2">
+        <mp3000-button
+          @click.prevent="hideTwoFactorAuthForm"
+          :disabled="isSubmitting"
+          :outline="true"
+          label="Masquer"
+          class="me-3"
+        />
+        <mp3000-button
+          @click.prevent="checkTwoFactorCheck"
+          :is-loading="isSubmitting"
+          label="Checker le code"
+        />
+      </div>
+    </div>
   </div>
 </template>
+
+<style lang="scss">
+.qr-code {
+  width: 250px;
+}
+</style>
