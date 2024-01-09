@@ -12,6 +12,6 @@ defineProps<{
     <td>{{ user.id }}</td>
     <td>{{ user.email }}</td>
     <td>{{ user.username }}</td>
-    <td>{{ user.roles }}</td>
+    <td>{{ user.roles.join(',') }}</td>
   </tr>
 </template>

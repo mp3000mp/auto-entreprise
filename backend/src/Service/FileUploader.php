@@ -39,6 +39,7 @@ class FileUploader
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             $file->getFilename(),
+            $this->toAscii($file->getFilename()),
         ));
 
         return $response;
@@ -69,5 +70,12 @@ class FileUploader
         }
 
         return $path;
+    }
+
+    private function toAscii(string $str): string
+    {
+        $toBeReplaced = ['é', 'è', 'ế', 'e', 'ù', 'ô', 'î', 'à', 'ç'];
+
+        return str_replace($toBeReplaced, array_fill(0, count($toBeReplaced), ''), $str);
     }
 }

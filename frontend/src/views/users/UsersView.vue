@@ -15,7 +15,7 @@ const users = computed(() => userStore.users)
 const filterSearch = ref('')
 const filteredContacts = computed(() =>
   users.value.filter((user) => {
-    if (filterSearch.value.length < 3) {
+    if (filterSearch.value.length < 1) {
       return true
     }
     return (user.email + user.username).toLowerCase().includes(filterSearch.value.toLowerCase())

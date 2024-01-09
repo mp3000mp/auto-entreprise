@@ -2,7 +2,7 @@ FROM php:8.2-apache
 
 # install utilities
 RUN apt update \
-    && apt install -y --no-install-recommends curl zip unzip locales apt-utils vim git libicu-dev software-properties-common;
+    && apt install -y --no-install-recommends curl zip unzip locales apt-utils vim git libicu-dev software-properties-common libpng-dev;
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && echo "fr_FR.UTF-8 UTF-8" >> /etc/locale.gen \

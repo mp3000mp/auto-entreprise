@@ -36,7 +36,7 @@ const filteredOpportunities = computed(() =>
     if (null !== filterStatusId.value && opportunity.status.id !== filterStatusId.value) {
       return false
     }
-    if (filterSearch.value.length < 3) {
+    if (filterSearch.value.length < 1) {
       return true
     }
     return opportunity.ref.toLowerCase().includes(filterSearch.value.toLowerCase())

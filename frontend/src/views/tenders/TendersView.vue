@@ -35,7 +35,7 @@ const filteredTenders = computed(() =>
     if (null !== filterStatusId.value && tender.status.id !== filterStatusId.value) {
       return false
     }
-    if (filterSearch.value.length < 3) {
+    if (filterSearch.value.length < 1) {
       return true
     }
     return tender.opportunity.ref.toLowerCase().includes(filterSearch.value.toLowerCase())
@@ -87,7 +87,7 @@ onMounted(async () => {
   sorter.addSort('createdAt', false)
   isLoading.value = true
   await Promise.all([
-    statuses.value.length ? null : opportunityStore.fetchStatuses(),
+    statuses.value.length ? null : tenderStore.fetchStatuses(),
     tenderStore.fetch(),
     tenderStore.fetchDeletables(),
     companies.value.length ? null : companyStore.fetch()

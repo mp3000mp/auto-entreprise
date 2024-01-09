@@ -30,7 +30,7 @@ const filteredContacts = computed(() =>
     if (null !== filterCompanyId.value && contact.company.id !== filterCompanyId.value) {
       return false
     }
-    if (filterSearch.value.length < 3) {
+    if (filterSearch.value.length < 1) {
       return true
     }
     return (contact.firstName + contact.lastName + contact.email)

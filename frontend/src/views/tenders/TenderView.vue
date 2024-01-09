@@ -56,7 +56,7 @@ const currentTenderRow = ref(null) as Ref<TenderRow | null>
 const tenderRowFilterSearch = ref('')
 const filteredTenderRows = computed(() => {
   return (tender.value?.tenderRows ?? []).filter((tenderRow) => {
-    if (tenderRowFilterSearch.value.length < 3) {
+    if (tenderRowFilterSearch.value.length < 1) {
       return true
     }
     return (tenderRow.title + tenderRow.description)

@@ -46,7 +46,7 @@ const deletableOpportuntyIds = opportunityStore.deletableIds
 const opportunityFilterSearch = ref('')
 const filteredOpportunities = computed(() => {
   return (contact.value?.opportunities ?? []).filter((opportunity) => {
-    if (opportunityFilterSearch.value.length < 3) {
+    if (opportunityFilterSearch.value.length < 1) {
       return true
     }
     return opportunity.ref.toLowerCase().includes(opportunityFilterSearch.value.toLowerCase())

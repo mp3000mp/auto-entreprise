@@ -99,7 +99,7 @@ async function checkTwoFactorCheck() {
     <h3>{{ currentUser.username }}</h3>
     <p>
       Email: {{ currentUser.email }}<br />
-      Roles: {{ currentUser.roles }}
+      Roles: {{ currentUser.roles.join(',') }}
     </p>
     <h2>Mot de passe</h2>
     <button

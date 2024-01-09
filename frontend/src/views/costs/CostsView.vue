@@ -26,7 +26,7 @@ const filteredCosts = computed(() =>
     if (null !== filterTypeId.value && cost.type.id !== filterTypeId.value) {
       return false
     }
-    if (filterSearch.value.length < 3) {
+    if (filterSearch.value.length < 1) {
       return true
     }
     return cost.description.toLowerCase().includes(filterSearch.value.toLowerCase())

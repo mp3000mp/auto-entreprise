@@ -62,7 +62,7 @@ const tenderFilterSearch = ref('')
 const deletableTenderIds = tenderStore.deletableIds
 const filteredTenders = computed(() =>
   opportunity.value.tenders.filter((tender) => {
-    if (tenderFilterSearch.value.length < 3) {
+    if (tenderFilterSearch.value.length < 1) {
       return true
     }
     return tender.opportunity.ref.toLowerCase().includes(tenderFilterSearch.value.toLowerCase())

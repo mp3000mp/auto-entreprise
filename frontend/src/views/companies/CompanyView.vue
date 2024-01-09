@@ -51,7 +51,7 @@ const deletableOpportuntyIds = opportunityStore.deletableIds
 const opportunityFilterSearch = ref('')
 const filteredOpportunities = computed(() => {
   return (company.value?.opportunities ?? []).filter((opportunity) => {
-    if (opportunityFilterSearch.value.length < 3) {
+    if (opportunityFilterSearch.value.length < 1) {
       return true
     }
     return opportunity.ref.toLowerCase().includes(opportunityFilterSearch.value.toLowerCase())
@@ -105,7 +105,7 @@ const deletableContactIds = contactStore.deletableIds
 const contactFilterSearch = ref('')
 const filteredContacts = computed(() => {
   return (company.value?.contacts ?? []).filter((contact) => {
-    if (contactFilterSearch.value.length < 3) {
+    if (contactFilterSearch.value.length < 1) {
       return true
     }
     return (contact.firstName + contact.lastName + contact.email)

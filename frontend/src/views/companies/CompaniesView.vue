@@ -24,7 +24,7 @@ const currentCompany = computed(() => companyStore.currentCompany)
 const filterSearch = ref('')
 const filteredCompanies = computed(() =>
   companies.value.filter((company) => {
-    if (filterSearch.value.length < 3) {
+    if (filterSearch.value.length < 1) {
       return true
     }
     return company.name.toLowerCase().includes(filterSearch.value.toLowerCase())
