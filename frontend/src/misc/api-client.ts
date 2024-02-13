@@ -17,7 +17,7 @@ export class ApiError {
 export type ApiClientOptions = {
   ignoreResponse?: boolean
   isJson?: boolean
-  headers: any
+  headers?: any
 }
 const defaultApiClientOptions = {
   ignoreResponse: false,
@@ -33,12 +33,12 @@ class ApiClient {
   }
 
   // todo rename json to body as it accepts FormData
-  public async query(
+  public async query<T>(
     httpMethod: HttpMethodEnum,
     url: string,
     json: any = null,
     options: ApiClientOptions = {}
-  ) {
+  ): Promise<T> {
     options = {
       ...defaultApiClientOptions,
       ...options
@@ -54,23 +54,25 @@ class ApiClient {
     } else if (json !== null) {
       fetchOptions.body = JSON.stringify(json)
     }
-    try {
+    // try {
       const response = await fetch(this.baseUrl + url, fetchOptions)
-      let jsonResponse = response
+      let jsonResponse = response as T
       if (options.isJson) {
-        jsonResponse =
-          options.ignoreResponse || response.status === 204 ? null : await response.json()
+        if (options.ignoreResponse || response.status === 204) {
+          return null
+        }
+        jsonResponse = await response.json()
       }
       if (response.ok) {
-        return await jsonResponse
+        return jsonResponse
       }
       if (response.status === 401 && this.onUnauthorizedCallback !== null) {
         this.onUnauthorizedCallback(jsonResponse)
       }
       throw jsonResponse
-    } catch (err) {
-      throw err
-    }
+    // } catch (err) {
+    //   throw err
+    // }
   }
 
   public setOnUnauthorizedCallback(callback: OnUnauthorizedCallback) {

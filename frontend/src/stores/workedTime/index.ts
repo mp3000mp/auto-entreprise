@@ -13,10 +13,10 @@ export const useWorkedTimeStore = defineStore('workedTime', {
   actions: {
     async fetch() {
       try {
-        const rawWorkedTimes = (await ApiClient.query(
+        const rawWorkedTimes = await ApiClient.query<WorkedTimeDtoIn[]>(
           HttpMethodEnum.GET,
           urlPrefix
-        )) as WorkedTimeDtoIn[]
+        )
         this.workedTimes = rawWorkedTimes.map((rawWorkedTime) => convertWorkedTimeIn(rawWorkedTime))
       } catch (err: unknown) {
         notifyError('Error while fetching worked times: ', err)
@@ -24,7 +24,7 @@ export const useWorkedTimeStore = defineStore('workedTime', {
     },
     async add(workedTime: NewWorkedTime) {
       try {
-        const rawWorkedTime = await ApiClient.query(
+        const rawWorkedTime = await ApiClient.query<WorkedTimeDtoIn>(
           HttpMethodEnum.POST,
           urlPrefix,
           convertWorkedTimeOut(workedTime)
@@ -42,7 +42,7 @@ export const useWorkedTimeStore = defineStore('workedTime', {
     },
     async edit(workedTime: WorkedTime) {
       try {
-        const rawWorkedTime = await ApiClient.query(
+        const rawWorkedTime = await ApiClient.query<WorkedTimeDtoIn>(
           HttpMethodEnum.PUT,
           urlPrefix + '/' + workedTime.id,
           convertWorkedTimeOut(workedTime)

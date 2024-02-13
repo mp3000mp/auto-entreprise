@@ -4,6 +4,7 @@ import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
 import { convertContactIn, convertContactOut } from '@/stores/contact/dto'
 import { notifyError } from '@/stores/notification/utils'
 import { useCompanyStore } from '@/stores/company'
+import type {ContactDtoIn} from "@/stores/contact/types";
 
 const urlPrefix = '/api/contacts'
 export const useContactStore = defineStore('contact', {
@@ -15,7 +16,7 @@ export const useContactStore = defineStore('contact', {
   actions: {
     async fetch() {
       try {
-        this.contacts = (await ApiClient.query(HttpMethodEnum.GET, urlPrefix)) as ListContact[]
+        this.contacts = await ApiClient.query<ListContact[]>(HttpMethodEnum.GET, urlPrefix)
       } catch (err: unknown) {
         notifyError('Error while fetching contacts: ', err)
       }
@@ -23,7 +24,7 @@ export const useContactStore = defineStore('contact', {
     async fetchOne(id: number) {
       try {
         this.currentContact = convertContactIn(
-          await ApiClient.query(HttpMethodEnum.GET, urlPrefix + '/' + id)
+          await ApiClient.query<ContactDtoIn>(HttpMethodEnum.GET, urlPrefix + '/' + id)
         )
       } catch (err: unknown) {
         notifyError('Error while fetching contact: ', err)
@@ -34,7 +35,7 @@ export const useContactStore = defineStore('contact', {
     },
     async add(contact: NewContact) {
       try {
-        const rawContact = await ApiClient.query(
+        const rawContact = await ApiClient.query<ContactDtoIn>(
           HttpMethodEnum.POST,
           urlPrefix,
           convertContactOut(contact)
@@ -52,7 +53,7 @@ export const useContactStore = defineStore('contact', {
     },
     async edit(contact: Contact) {
       try {
-        const rawContact = await ApiClient.query(
+        const rawContact = await ApiClient.query<ContactDtoIn>(
           HttpMethodEnum.PUT,
           urlPrefix + '/' + contact.id,
           convertContactOut(contact)
@@ -77,10 +78,10 @@ export const useContactStore = defineStore('contact', {
     },
     async fetchDeletables() {
       try {
-        this.deletableIds = (await ApiClient.query(
+        this.deletableIds = await ApiClient.query<number[]>(
           HttpMethodEnum.GET,
           urlPrefix + '/deletable'
-        )) as number[]
+        )
       } catch (err: unknown) {
         notifyError('Error while fetching deletable contacts: ', err)
       }

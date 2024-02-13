@@ -29,10 +29,10 @@ export const useSecurityStore = defineStore('security', {
   actions: {
     async login(username: string, password: string) {
       try {
-        const response = (await ApiClient.query(HttpMethodEnum.POST, '/api/login', {
+        const response = await ApiClient.query<LoginResponse>(HttpMethodEnum.POST, '/api/login', {
           username,
           password
-        })) as LoginResponse
+        })
         this.twoFactorAuthRequired = response.twoFactorAuthRequired
         if (this.twoFactorAuthRequired) {
           return
@@ -51,7 +51,7 @@ export const useSecurityStore = defineStore('security', {
     },
     async twoFactorAuth(twoFactorAuthToken: string) {
       try {
-        this.currentUser = await ApiClient.query(HttpMethodEnum.POST, '/api/2fa', {
+        this.currentUser = await ApiClient.query<User>(HttpMethodEnum.POST, '/api/2fa', {
           twoFactorAuthToken
         })
         this.loggedInChecked = true
@@ -63,7 +63,7 @@ export const useSecurityStore = defineStore('security', {
     },
     async checkIsLoggedIn() {
       try {
-        this.currentUser = await ApiClient.query(HttpMethodEnum.GET, '/api/me')
+        this.currentUser = await ApiClient.query<User>(HttpMethodEnum.GET, '/api/me')
       } catch (err: unknown) {
         this.currentUser = null
       } finally {
@@ -88,7 +88,9 @@ export const useSecurityStore = defineStore('security', {
     async getTwoFactorAuthEnable() {
       try {
         await ApiClient.query(HttpMethodEnum.POST, '/api/2fa/enable')
-        this.currentUser.isTotpAuthenticationEnabled = true
+        if (this.currentUser) {
+          this.currentUser.isTotpAuthenticationEnabled = true
+        }
       } catch (err: unknown) {
         notifyError('Error while enabling QR code: ', err)
       }
@@ -96,16 +98,18 @@ export const useSecurityStore = defineStore('security', {
     async getTwoFactorAuthDisable() {
       try {
         await ApiClient.query(HttpMethodEnum.POST, '/api/2fa/disable')
-        this.currentUser.isTotpAuthenticationEnabled = false
+        if (this.currentUser) {
+          this.currentUser.isTotpAuthenticationEnabled = false
+        }
       } catch (err: unknown) {
         notifyError('Error while disabling QR code: ', err)
       }
     },
     async checkTwoFactorAuth(twoFactorAuthToken: string) {
       try {
-        return (await ApiClient.query(HttpMethodEnum.POST, '/api/2fa/check-code', {
+        return await ApiClient.query<CheckTwoFactorAuthResponse>(HttpMethodEnum.POST, '/api/2fa/check-code', {
           twoFactorAuthToken
-        })) as CheckTwoFactorAuthResponse
+        })
       } catch (err: unknown) {
         notifyError('Error while checking QR code: ', err)
       }

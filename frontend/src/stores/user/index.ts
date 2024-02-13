@@ -11,7 +11,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async fetch() {
       try {
-        this.users = await ApiClient.query(HttpMethodEnum.GET, urlPrefix)
+        this.users = await ApiClient.query<User[]>(HttpMethodEnum.GET, urlPrefix)
       } catch (err: unknown) {
         notifyError('Error while loading users: ', err)
       }

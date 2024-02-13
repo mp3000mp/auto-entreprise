@@ -68,7 +68,7 @@ function hideTwoFactorAuthForm() {
 
 async function toggleTwoFactorAuth() {
   try {
-    if (currentUser.value.isTotpAuthenticationEnabled) {
+    if (currentUser.value?.isTotpAuthenticationEnabled) {
       await securityStore.getTwoFactorAuthDisable()
       hideTwoFactorAuthForm()
     } else {

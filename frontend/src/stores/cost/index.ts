@@ -13,7 +13,7 @@ export const useCostStore = defineStore('cost', {
   actions: {
     async fetchCosts() {
       try {
-        const rawCosts = (await ApiClient.query(HttpMethodEnum.GET, urlPrefix)) as CostDtoIn[]
+        const rawCosts = await ApiClient.query<CostDtoIn[]>(HttpMethodEnum.GET, urlPrefix)
         this.costs = rawCosts.map((rawCost) => convertCostIn(rawCost))
       } catch (err: unknown) {
         notifyError('Error while fetching costs: ', err)
@@ -21,14 +21,14 @@ export const useCostStore = defineStore('cost', {
     },
     async fetchCostTypes() {
       try {
-        this.costTypes = await ApiClient.query(HttpMethodEnum.GET, '/api/cost_types')
+        this.costTypes = await ApiClient.query<CostType[]>(HttpMethodEnum.GET, '/api/cost_types')
       } catch (err: unknown) {
         notifyError('Error while fetching cost types: ', err)
       }
     },
     async addCost(cost: NewCost) {
       try {
-        const rawCost = await ApiClient.query(HttpMethodEnum.POST, urlPrefix, convertCostOut(cost))
+        const rawCost = await ApiClient.query<CostDtoIn>(HttpMethodEnum.POST, urlPrefix, convertCostOut(cost))
         this.costs.push(convertCostIn(rawCost))
       } catch (err: unknown) {
         notifyError('Error while adding cost: ', err)
@@ -36,7 +36,7 @@ export const useCostStore = defineStore('cost', {
     },
     async editCost(cost: Cost) {
       try {
-        const rawCost = await ApiClient.query(
+        const rawCost = await ApiClient.query<CostDtoIn>(
           HttpMethodEnum.PUT,
           urlPrefix + '/' + cost.id,
           convertCostOut(cost)

@@ -18,7 +18,7 @@ import {
 import { notifyError } from '@/stores/notification/utils'
 import { useCompanyStore } from '@/stores/company'
 import { useContactStore } from '@/stores/contact'
-import { OpportunityFileTypeEnum } from '@/stores/opportunity/types'
+import type {OpportunityFileDtoIn, OpportunityFileTypeEnum} from '@/stores/opportunity/types'
 
 const urlPrefix = '/api/opportunities'
 const fileUrlPrefix = '/api/opportunity_files'
@@ -33,10 +33,10 @@ export const useOpportunityStore = defineStore('opportunity', {
   actions: {
     async fetch() {
       try {
-        const rawOpportunities = (await ApiClient.query(
+        const rawOpportunities = await ApiClient.query<ListOpportunityDtoIn[]>(
           HttpMethodEnum.GET,
           urlPrefix
-        )) as ListOpportunityDtoIn[]
+        )
         this.opportunities = rawOpportunities.map((rawOpportunity) =>
           convertListOpportunityIn(rawOpportunity)
         )
@@ -46,20 +46,20 @@ export const useOpportunityStore = defineStore('opportunity', {
     },
     async fetchMeanOfPayments() {
       try {
-        this.meanOfPayments = (await ApiClient.query(
+        this.meanOfPayments = await ApiClient.query<MeanOfPayment[]>(
           HttpMethodEnum.GET,
           '/api/mean_of_payments'
-        )) as MeanOfPayment[]
+        )
       } catch (err: unknown) {
         notifyError('Error while fetching mean of payments: ', err)
       }
     },
     async fetchStatuses() {
       try {
-        this.statuses = (await ApiClient.query(
+        this.statuses = await ApiClient.query<OpportunityStatus[]>(
           HttpMethodEnum.GET,
           '/api/opportunity_statuses'
-        )) as OpportunityStatus[]
+        )
       } catch (err: unknown) {
         notifyError('Error while fetching opportunity statuses: ', err)
       }
@@ -67,7 +67,7 @@ export const useOpportunityStore = defineStore('opportunity', {
     async fetchOne(id: number) {
       try {
         this.currentOpportunity = convertOpportunityIn(
-          await ApiClient.query(HttpMethodEnum.GET, urlPrefix + '/' + id)
+          await ApiClient.query<OpportunityDtoIn>(HttpMethodEnum.GET, urlPrefix + '/' + id)
         )
       } catch (err: unknown) {
         notifyError('Error while fetching opportunity: ', err)
@@ -78,11 +78,11 @@ export const useOpportunityStore = defineStore('opportunity', {
     },
     async add(opportunity: NewOpportunity) {
       try {
-        const rawOpportunity = (await ApiClient.query(
+        const rawOpportunity = await ApiClient.query<OpportunityDtoIn>(
           HttpMethodEnum.POST,
           urlPrefix,
           convertOpportunityOut(opportunity)
-        )) as OpportunityDtoIn
+        )
         const newOpportunity = convertOpportunityIn(rawOpportunity)
         this.opportunities.push(newOpportunity)
 
@@ -101,7 +101,7 @@ export const useOpportunityStore = defineStore('opportunity', {
     },
     async edit(opportunity: Opportunity) {
       try {
-        const rawOpportunity = await ApiClient.query(
+        const rawOpportunity = await ApiClient.query<OpportunityDtoIn>(
           HttpMethodEnum.PUT,
           urlPrefix + '/' + opportunity.id,
           convertOpportunityOut(opportunity)
@@ -134,10 +134,10 @@ export const useOpportunityStore = defineStore('opportunity', {
     },
     async fetchDeletables() {
       try {
-        this.deletableIds = (await ApiClient.query(
+        this.deletableIds = await ApiClient.query<number[]>(
           HttpMethodEnum.GET,
           urlPrefix + '/deletable'
-        )) as number[]
+        )
       } catch (err: unknown) {
         notifyError('Error while fetching deletable opportunities: ', err)
       }
@@ -165,7 +165,7 @@ export const useOpportunityStore = defineStore('opportunity', {
     },
     async linkContact(opportunityId: number, contactId: number) {
       try {
-        const rawOpportunity = await ApiClient.query(
+        const rawOpportunity = await ApiClient.query<OpportunityDtoIn>(
           HttpMethodEnum.POST,
           urlPrefix + '/' + opportunityId + '/contacts/' + contactId
         )
@@ -181,7 +181,7 @@ export const useOpportunityStore = defineStore('opportunity', {
     },
     async unlinkContact(opportunityId: number, contactId: number) {
       try {
-        const rawOpportunity = await ApiClient.query(
+        const rawOpportunity = await ApiClient.query<OpportunityDtoIn>(
           HttpMethodEnum.DELETE,
           urlPrefix + '/' + opportunityId + '/contacts/' + contactId
         )
@@ -202,7 +202,7 @@ export const useOpportunityStore = defineStore('opportunity', {
     ) {
       try {
         const url = new URLSearchParams({ type, opportunityId: String(opportunityId) })
-        const rawFile = await ApiClient.query(
+        const rawFile = await ApiClient.query<OpportunityFileDtoIn>(
           HttpMethodEnum.POST,
           fileUrlPrefix + '?' + url.toString(),
           formData

@@ -27,9 +27,9 @@ class SecurityController extends AbstractController
 
     // todo add doc in api platform
     #[Route('/me', 'users.me', methods: ['GET'])]
-    public function me(): Response
+    public function me(#[CurrentUser] User $user): Response
     {
-        return $this->responseHelper->createResponse($this->getUser(), ['me']);
+        return $this->responseHelper->createResponse($user, ['me']);
     }
 
     #[Route(path: '/logout', name: 'security.logout', methods: ['GET'])]
