@@ -165,7 +165,11 @@ onMounted(async () => {
         </div>
       </template>
       <template #footer>
-        <mp3000-button @click.prevent="hideStatusLogsPopin" :outline="true" label="Fermer" />
+        <mp3000-button
+          @click.prevent="hideStatusLogsPopin"
+          class="btn-outline-primary"
+          label="Fermer"
+        />
       </template>
     </bootstrap-modal>
 

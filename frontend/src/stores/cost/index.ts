@@ -28,7 +28,11 @@ export const useCostStore = defineStore('cost', {
     },
     async addCost(cost: NewCost) {
       try {
-        const rawCost = await ApiClient.query<CostDtoIn>(HttpMethodEnum.POST, urlPrefix, convertCostOut(cost))
+        const rawCost = await ApiClient.query<CostDtoIn>(
+          HttpMethodEnum.POST,
+          urlPrefix,
+          convertCostOut(cost)
+        )
         this.costs.push(convertCostIn(rawCost))
       } catch (err: unknown) {
         notifyError('Error while adding cost: ', err)

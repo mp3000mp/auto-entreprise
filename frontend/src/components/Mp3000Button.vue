@@ -4,12 +4,10 @@ withDefaults(
     disabled?: boolean
     isLoading?: boolean
     label: string
-    outline?: boolean
   }>(),
   {
     disabled: false,
-    isLoading: false,
-    outline: false
+    isLoading: false
   }
 )
 </script>
@@ -19,9 +17,7 @@ withDefaults(
     class="btn"
     type="submit"
     :class="{
-      disabled: disabled || isLoading,
-      'btn-outline-primary': outline,
-      'btn-primary': !outline
+      disabled: disabled || isLoading
     }"
     :disabled="disabled || isLoading"
   >

@@ -237,7 +237,11 @@ onMounted(async () => {
         <div>Total: {{ totalWorkedDays }}</div>
       </template>
       <template #footer>
-        <mp3000-button @click.prevent="hideWorkedTimeHistory" :outline="true" label="Fermer" />
+        <mp3000-button
+          @click.prevent="hideWorkedTimeHistory"
+          class="btn-outline-primary"
+          label="Fermer"
+        />
       </template>
     </bootstrap-modal>
     <bootstrap-modal :is-showing="isStatusLogsShowing" @stop-showing="hideStatusLogsPopin">
@@ -250,7 +254,11 @@ onMounted(async () => {
         </div>
       </template>
       <template #footer>
-        <mp3000-button @click.prevent="hideStatusLogsPopin" :outline="true" label="Fermer" />
+        <mp3000-button
+          @click.prevent="hideStatusLogsPopin"
+          class="btn-outline-primary"
+          label="Fermer"
+        />
       </template>
     </bootstrap-modal>
     <bootstrap-modal :is-showing="isAddContactFormShowing" @stop-showing="hideAddContactForm">
@@ -259,16 +267,19 @@ onMounted(async () => {
       </template>
       <template #body>
         <mp3000-button
-          class="me-1"
+          class="btn-outline-primary me-1"
           v-for="contact in notLinkedContacts"
           :key="contact.id"
           @click.prevent="addContact(contact.id)"
-          :outline="true"
           :label="contact.firstName + ' ' + contact.lastName"
         />
       </template>
       <template #footer>
-        <mp3000-button @click.prevent="hideAddContactForm" :outline="true" label="Annuler" />
+        <mp3000-button
+          @click.prevent="hideAddContactForm"
+          class="btn-outline-primary"
+          label="Annuler"
+        />
       </template>
     </bootstrap-modal>
     <bootstrap-modal :is-showing="isStatusLogsShowing" @stop-showing="hideStatusLogsPopin">
@@ -281,7 +292,11 @@ onMounted(async () => {
         </div>
       </template>
       <template #footer>
-        <mp3000-button @click.prevent="hideStatusLogsPopin" :outline="true" label="Fermer" />
+        <mp3000-button
+          @click.prevent="hideStatusLogsPopin"
+          class="btn-outline-primary"
+          label="Fermer"
+        />
       </template>
     </bootstrap-modal>
 

@@ -151,12 +151,16 @@ async function checkTwoFactorCheck() {
       <div class="col-12 mt-2">
         <mp3000-button
           @click.prevent="hidePasswordForm"
+          class="btn-outline-primary me-3"
           :disabled="isSubmitting"
-          :outline="true"
           label="Annuler"
-          class="me-3"
         />
-        <mp3000-button @click.prevent="updatePassword" :is-loading="isSubmitting" label="Valider" />
+        <mp3000-button
+          @click.prevent="updatePassword"
+          :is-loading="isSubmitting"
+          class="btn-primary"
+          label="Valider"
+        />
       </div>
     </div>
     <h2>Double authentification</h2>
@@ -193,12 +197,12 @@ async function checkTwoFactorCheck() {
         <mp3000-button
           @click.prevent="hideTwoFactorAuthForm"
           :disabled="isSubmitting"
-          :outline="true"
           label="Masquer"
-          class="me-3"
+          class="btn-outline-primary me-3"
         />
         <mp3000-button
           @click.prevent="checkTwoFactorCheck"
+          class="btn-primary"
           :is-loading="isSubmitting"
           label="Checker le code"
         />

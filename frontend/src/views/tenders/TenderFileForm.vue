@@ -79,8 +79,8 @@ setOptions({
     <template #footer>
       <mp3000-button
         @click.prevent="emit('stop-showing')"
+        class="btn-outline-primary"
         :disabled="isSubmitting"
-        :outline="true"
         label="Annuler"
       />
     </template>

@@ -4,7 +4,7 @@ import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
 import { convertContactIn, convertContactOut } from '@/stores/contact/dto'
 import { notifyError } from '@/stores/notification/utils'
 import { useCompanyStore } from '@/stores/company'
-import type {ContactDtoIn} from "@/stores/contact/types";
+import type { ContactDtoIn } from '@/stores/contact/types'
 
 const urlPrefix = '/api/contacts'
 export const useContactStore = defineStore('contact', {

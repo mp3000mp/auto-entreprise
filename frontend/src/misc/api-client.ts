@@ -55,21 +55,21 @@ class ApiClient {
       fetchOptions.body = JSON.stringify(json)
     }
     // try {
-      const response = await fetch(this.baseUrl + url, fetchOptions)
-      let jsonResponse = response as T
-      if (options.isJson) {
-        if (options.ignoreResponse || response.status === 204) {
-          return null
-        }
-        jsonResponse = await response.json()
+    const response = await fetch(this.baseUrl + url, fetchOptions)
+    let jsonResponse = response as T
+    if (options.isJson) {
+      if (options.ignoreResponse || response.status === 204) {
+        return null
       }
-      if (response.ok) {
-        return jsonResponse
-      }
-      if (response.status === 401 && this.onUnauthorizedCallback !== null) {
-        this.onUnauthorizedCallback(jsonResponse)
-      }
-      throw jsonResponse
+      jsonResponse = await response.json()
+    }
+    if (response.ok) {
+      return jsonResponse
+    }
+    if (response.status === 401 && this.onUnauthorizedCallback !== null) {
+      this.onUnauthorizedCallback(jsonResponse)
+    }
+    throw jsonResponse
     // } catch (err) {
     //   throw err
     // }

@@ -96,7 +96,7 @@ function refresh() {
       currentOpportunity.value.company = props.company
     }
     if (!currentOpportunity.meanOfPayment) {
-      currentOpportunity.meanOfPayment = {id: null}
+      currentOpportunity.meanOfPayment = { id: null }
     }
   } else {
     currentOpportunity.value = getEmptyOpportunity()
@@ -265,8 +265,8 @@ onMounted(async () => {
       <span class="text-danger">{{ errorMessage }}</span>
       <mp3000-button
         @click.prevent="emit('stop-showing')"
+        class="btn-outline-primary"
         :disabled="isSubmitting"
-        :outline="true"
         label="Annuler"
       />
       <mp3000-button @click.prevent="submit" :is-loading="isSubmitting" label="Valider" />

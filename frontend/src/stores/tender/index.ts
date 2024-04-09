@@ -17,7 +17,7 @@ import {
 } from '@/stores/tender/dto'
 import { notifyError } from '@/stores/notification/utils'
 import { useOpportunityStore } from '@/stores/opportunity'
-import type {TenderDtoIn, TenderFileDtoIn, TenderFileTypeEnum} from '@/stores/tender/types'
+import type { TenderDtoIn, TenderFileDtoIn, TenderFileTypeEnum } from '@/stores/tender/types'
 import { convertTenderFileIn } from '@/stores/tender/dto'
 
 const urlPrefix = '/api/tenders'
@@ -33,10 +33,7 @@ export const useTenderStore = defineStore('tender', {
   actions: {
     async fetch() {
       try {
-        const rawTenders = await ApiClient.query<ListTenderDtoIn[]>(
-          HttpMethodEnum.GET,
-          urlPrefix
-        )
+        const rawTenders = await ApiClient.query<ListTenderDtoIn[]>(HttpMethodEnum.GET, urlPrefix)
         this.tenders = rawTenders.map((rawTender) => convertListTenderIn(rawTender))
       } catch (err: unknown) {
         notifyError('Error while fetching tenders: ', err)
@@ -64,7 +61,7 @@ export const useTenderStore = defineStore('tender', {
     resetCurrentTender() {
       this.currentTender = null
     },
-    async add(tender: NewTender): Promise<Tender|null> {
+    async add(tender: NewTender): Promise<Tender | null> {
       try {
         const rawTender = await ApiClient.query<TenderDtoIn>(
           HttpMethodEnum.POST,
@@ -85,7 +82,7 @@ export const useTenderStore = defineStore('tender', {
         return null
       }
     },
-    async edit(tender: Tender): Promise<Tender|null> {
+    async edit(tender: Tender): Promise<Tender | null> {
       try {
         const rawTender = await ApiClient.query<TenderDtoIn>(
           HttpMethodEnum.PUT,

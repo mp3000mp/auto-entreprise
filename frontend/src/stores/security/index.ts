@@ -107,9 +107,13 @@ export const useSecurityStore = defineStore('security', {
     },
     async checkTwoFactorAuth(twoFactorAuthToken: string) {
       try {
-        return await ApiClient.query<CheckTwoFactorAuthResponse>(HttpMethodEnum.POST, '/api/2fa/check-code', {
-          twoFactorAuthToken
-        })
+        return await ApiClient.query<CheckTwoFactorAuthResponse>(
+          HttpMethodEnum.POST,
+          '/api/2fa/check-code',
+          {
+            twoFactorAuthToken
+          }
+        )
       } catch (err: unknown) {
         notifyError('Error while checking QR code: ', err)
       }

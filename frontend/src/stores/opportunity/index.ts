@@ -18,7 +18,7 @@ import {
 import { notifyError } from '@/stores/notification/utils'
 import { useCompanyStore } from '@/stores/company'
 import { useContactStore } from '@/stores/contact'
-import type {OpportunityFileDtoIn, OpportunityFileTypeEnum} from '@/stores/opportunity/types'
+import type { OpportunityFileDtoIn, OpportunityFileTypeEnum } from '@/stores/opportunity/types'
 
 const urlPrefix = '/api/opportunities'
 const fileUrlPrefix = '/api/opportunity_files'

@@ -79,10 +79,9 @@ onMounted(async () => {
         />
         <mp3000-button
           @click.prevent="twoFactorAuth"
+          class="btn-outline-primary ms-2"
           :is-loading="isLoading"
-          :outline="true"
           label="OK"
-          class="ms-2"
         />
       </template>
       <template v-else>
@@ -105,10 +104,9 @@ onMounted(async () => {
         />
         <mp3000-button
           @click.prevent="connect"
+          class="btn-outline-primary ms-2"
           :is-loading="isLoading"
-          :outline="true"
           label="OK"
-          class="ms-2"
         />
       </template>
     </div>

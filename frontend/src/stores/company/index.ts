@@ -4,7 +4,7 @@ import ApiClient, { HttpMethodEnum } from '@/misc/api-client'
 import type { Company } from '@/stores/company/types'
 import { notifyError } from '@/stores/notification/utils'
 import { convertCompanyIn } from '@/stores/company/dto'
-import type {CompanyDtoIn} from "@/stores/company/types";
+import type { CompanyDtoIn } from '@/stores/company/types'
 
 const urlPrefix = '/api/companies'
 export const useCompanyStore = defineStore('company', {
@@ -16,7 +16,7 @@ export const useCompanyStore = defineStore('company', {
   actions: {
     async fetch() {
       try {
-        this.companies = await ApiClient.query<ListCompany[]>(HttpMethodEnum.GET, urlPrefix) ?? []
+        this.companies = (await ApiClient.query<ListCompany[]>(HttpMethodEnum.GET, urlPrefix)) ?? []
       } catch (err: unknown) {
         notifyError('Error while fetching companies: ', err)
       }
@@ -35,7 +35,11 @@ export const useCompanyStore = defineStore('company', {
     },
     async add(company: NewCompany) {
       try {
-        const rawCompany = await ApiClient.query<CompanyDtoIn>(HttpMethodEnum.POST, urlPrefix, company)
+        const rawCompany = await ApiClient.query<CompanyDtoIn>(
+          HttpMethodEnum.POST,
+          urlPrefix,
+          company
+        )
         const newCompany = convertCompanyIn(rawCompany)
         this.companies.push(newCompany)
       } catch (err: unknown) {

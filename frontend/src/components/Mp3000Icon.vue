@@ -50,8 +50,8 @@ function confirm() {
       <p>{{ confirmMessage }}</p>
     </template>
     <template v-slot:footer>
-      <mp3000-button @click.prevent="cancel()" :outline="true" label="Annuler" />
-      <mp3000-button @click.prevent="confirm()" label="Valider" />
+      <mp3000-button @click.prevent="cancel()" class="btn-outline-primary" label="Annuler" />
+      <mp3000-button @click.prevent="confirm()" class="btn-primary" label="Valider" />
     </template>
   </bootstrap-modal>
 </template>
