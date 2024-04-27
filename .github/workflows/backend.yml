@@ -30,7 +30,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup PHP
-        working-directory: ${{ env.DIRECTORY }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
