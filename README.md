@@ -4,6 +4,8 @@ Gestion de micro entreprise
 Manage your contacts, opportunities, tenders, incomes, taxes and costs in this amazing application. 
 
 [![In Progress](https://img.shields.io/badge/in%20progress-yes-red)](https://img.shields.io/badge/in%20progress-yes-red)
+[![backend](https://github.com/autoentreprise/actions/workflows/backend.yml/badge.svg)](https://github.com/autoentreprise/actions/workflows/backend.yml)
+[![frontend](https://github.com/autoentreprise/actions/workflows/frontend.yml/badge.svg)](https://github.com/autoentreprise/actions/workflows/frontend.yml)
 
 This is just a POC.
 

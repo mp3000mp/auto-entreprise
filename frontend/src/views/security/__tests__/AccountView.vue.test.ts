@@ -29,7 +29,7 @@ describe('AccountView.vue', () => {
 
     const btn = wrapper.find('button')
     await btn.trigger('click')
-    const submit = wrapper.findAllComponents(Mp3000Button)[1]
+    const submit = wrapper.findAllComponents(Mp3000Button)[1].find('button')
 
     await submit.trigger('click')
     expect(wrapper.find('.text-danger').text()).toEqual('Veuillez saisir votre mot de passe actuel')

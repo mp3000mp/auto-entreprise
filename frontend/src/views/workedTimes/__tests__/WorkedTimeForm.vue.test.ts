@@ -33,7 +33,7 @@ describe('WorkedTimeForm.vue', () => {
         stubs
       }
     })
-    const submit = wrapper.findAllComponents(Mp3000Button)[1]
+    const submit = wrapper.findAllComponents(Mp3000Button)[1].find('button')
 
     await submit.trigger('click')
     expect(wrapper.find('.text-danger').text()).toEqual('Temps non valide')

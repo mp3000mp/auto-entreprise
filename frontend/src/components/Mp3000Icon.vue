@@ -1,57 +1,39 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-import BootstrapModal from '@/components/BootstrapModal.vue'
+import type { ConfirmModalConfig } from '@/components/types'
 import Mp3000Button from '@/components/Mp3000Button.vue'
 
-const emit = defineEmits(['click'])
+defineEmits(['click'])
 defineOptions({
   inheritAttrs: false
 })
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    confirmMessage?: string | null
+    confirmConfig?: ConfirmModalConfig | null
     disabled?: boolean
     isLoading?: boolean
     icon: string
   }>(),
   {
-    confirmMessage: null,
+    confirmConfig: null,
     disabled: false,
     isLoading: false
   }
 )
-
-const showConfirm = ref(false)
-
-function click() {
-  if (props.disabled) {
-    return
-  }
-  props.confirmMessage ? (showConfirm.value = true) : confirm()
-}
-function cancel() {
-  showConfirm.value = false
-}
-function confirm() {
-  emit('click')
-}
 </script>
 
 <template>
-  <a href="#" @click="click()" :title="$attrs.title" :class="$attrs.class">
-    <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status"></span>
-    <font-awesome-icon v-else :icon="['fa', icon]" />
-  </a>
-  <bootstrap-modal v-if="confirmMessage" :is-showing="showConfirm" @stop-showing="cancel()">
-    <template v-slot:header>
-      <h5>Etes-vous sûr(e)</h5>
+  <mp3000-button
+    :label="String($attrs.title)"
+    :confirm-config="confirmConfig"
+    :disabled="disabled"
+    :is-loading="isLoading"
+    @click="$emit('click')"
+  >
+    <template v-slot:button="scope">
+      <a href="#" v-bind="$attrs" @click.prevent="scope.click($event)">
+        <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status"></span>
+        <font-awesome-icon v-else :icon="['fa', icon]" />
+      </a>
     </template>
-    <template v-slot:body>
-      <p>{{ confirmMessage }}</p>
-    </template>
-    <template v-slot:footer>
-      <mp3000-button @click.prevent="cancel()" class="btn-outline-primary" label="Annuler" />
-      <mp3000-button @click.prevent="confirm()" class="btn-primary" label="Valider" />
-    </template>
-  </bootstrap-modal>
+  </mp3000-button>
 </template>

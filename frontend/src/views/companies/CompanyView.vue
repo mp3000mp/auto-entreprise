@@ -29,7 +29,10 @@ const props = defineProps<{
 
 const isFormShowing = ref(false)
 const isRemoving = ref(false)
-const confirmMessage = computed(() => 'Confirmer la suppression de ' + company.value?.name)
+const confirmMessage = computed(() => ({
+  message: 'Confirmer la suppression de ' + company.value?.name,
+  title: 'Suppression'
+}))
 
 const company = computed(() => companyStore.currentCompany)
 const isDeletable = computed(
@@ -163,7 +166,7 @@ onMounted(async () => {
       </a>
       <mp3000-icon
         v-if="isDeletable"
-        :confirm-message="confirmMessage"
+        :confirm-config="confirmMessage"
         @click="remove()"
         icon="trash"
         title="Supprimer"

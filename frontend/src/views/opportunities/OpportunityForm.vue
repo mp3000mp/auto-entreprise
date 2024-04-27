@@ -269,7 +269,12 @@ onMounted(async () => {
         :disabled="isSubmitting"
         label="Annuler"
       />
-      <mp3000-button @click.prevent="submit" :is-loading="isSubmitting" label="Valider" />
+      <mp3000-button
+        @click.prevent="submit"
+        :is-loading="isSubmitting"
+        class="btn-primary"
+        label="Valider"
+      />
     </template>
   </bootstrap-modal>
 </template>

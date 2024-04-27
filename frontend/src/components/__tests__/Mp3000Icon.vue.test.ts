@@ -36,7 +36,7 @@ describe('Mp3000Icon.vue', () => {
     expect(wrapper.emitted()['click']?.length ?? 0).toBe(0)
   })
 
-  test('shows label', async () => {
+  test('emits click event', async () => {
     const wrapper = mount(Component, {
       props: {
         icon: 'test',
@@ -46,9 +46,6 @@ describe('Mp3000Icon.vue', () => {
         stubs
       }
     })
-    expect(wrapper.findAll('.spinner-border').length).toBe(0)
-    expect(wrapper.findAll('font-awesome-icon-stub').length).toBe(1)
-
     await wrapper.find('a').trigger('click')
     expect(wrapper.emitted()['click'].length).toBe(1)
   })
@@ -58,7 +55,10 @@ describe('Mp3000Icon.vue', () => {
       props: {
         icon: 'test',
         isLoading: false,
-        confirmMessage: 'confirm message'
+        confirmConfig: {
+          title: 'confirm title',
+          message: 'confirm message'
+        }
       },
       global: {
         stubs
@@ -80,7 +80,10 @@ describe('Mp3000Icon.vue', () => {
       props: {
         icon: 'test',
         isLoading: false,
-        confirmMessage: 'confirm message'
+        confirmConfig: {
+          title: 'confirm title',
+          message: 'confirm message'
+        }
       },
       global: {
         stubs

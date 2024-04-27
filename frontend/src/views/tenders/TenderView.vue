@@ -34,13 +34,14 @@ const newTenderRowPosition = computed(() =>
     ? 10
     : (Math.ceil(Math.max(...tender.value.tenderRows.map((row) => row.position)) / 10) + 1) * 10
 )
-const confirmMessage = computed(
-  () =>
+const confirmMessage = computed(() => ({
+  message:
     'Confirmer la suppression de ' +
     tender.value?.opportunity.ref +
     ' version ' +
-    tender.value?.version
-)
+    tender.value?.version,
+  title: 'Suppression'
+}))
 
 const tender = computed(() => tenderStore.currentTender)
 const isDeletable = computed(() => null === tender.value || tender.value.tenderRows.length === 0)
@@ -132,7 +133,7 @@ onMounted(async () => {
       </a>
       <mp3000-icon
         v-if="isDeletable"
-        :confirm-message="confirmMessage"
+        :confirm-config="confirmMessage"
         @click="remove()"
         icon="trash"
         title="Supprimer"

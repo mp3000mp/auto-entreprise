@@ -12,17 +12,17 @@ const props = defineProps<{
 }>()
 
 const isRemoving = ref(false)
-const confirmMessage = computed(
-  () =>
+const confirmMessage = computed(() => ({
+  message:
     'Confirmer la suppression de ' +
     props.cost.amount +
     '€ le ' +
     props.cost.date.format('YYYY-MM-DD') +
     ' (' +
     props.cost.description +
-    ')'
-)
-
+    ')',
+  title: 'Suppression'
+}))
 async function remove() {
   isRemoving.value = true
   await costStore.deleteCost(props.cost.id)
@@ -38,7 +38,7 @@ async function remove() {
       </a>
       <mp3000-icon
         class="me-1"
-        :confirm-message="confirmMessage"
+        :confirm-config="confirmMessage"
         @click="remove()"
         icon="trash"
         title="Supprimer"

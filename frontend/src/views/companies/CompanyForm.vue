@@ -54,11 +54,7 @@ async function submit() {
 }
 
 function refresh() {
-  if (props.company) {
-    currentCompany.value = { ...props.company }
-  } else {
-    currentCompany.value = getEmptyCompany()
-  }
+  currentCompany.value = props.company ? { ...props.company } : getEmptyCompany()
 }
 
 watch(
@@ -135,7 +131,12 @@ onMounted(() => {
         :disabled="isSubmitting"
         label="Annuler"
       />
-      <mp3000-button @click.prevent="submit" :is-loading="isSubmitting" label="Valider" />
+      <mp3000-button
+        @click.prevent="submit"
+        :is-loading="isSubmitting"
+        class="btn-primary"
+        label="Valider"
+      />
     </template>
   </bootstrap-modal>
 </template>
