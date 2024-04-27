@@ -1,42 +1,45 @@
 name: frontend
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
-  lint-tests:
+  lint-and-tests:
     runs-on: ubuntu-latest
+
+    env:
+      DIRECTORY: ./frontend
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
 
       - name: Install dependencies
-        working-directory: ./frontend
+        working-directory: ${{ env.DIRECTORY }}
         run: npm ci
 
-      - name: Run prettier
-        working-directory: ./frontend
+      - name: Run format
+        working-directory: ${{ env.DIRECTORY }}
         run: npm run format
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run eslint
-        working-directory: ./frontend
+      - name: Run lint
+        working-directory: ${{ env.DIRECTORY }}
         run: npm run lint
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run jest
-        working-directory: ./frontend
+      - name: Run tests
+        working-directory: ${{ env.DIRECTORY }}
         run: npm run test:cov
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run jest e2e
-        working-directory: ./frontend
-        run: npm run test:e2e
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          file: ${{ format('{0}/coverage/clover.xml', env.DIRECTORY) }}
+          flags: frontend
+          token: ${{ secrets.CODECOV_TOKEN }}

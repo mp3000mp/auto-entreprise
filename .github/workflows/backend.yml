@@ -1,45 +1,20 @@
 name: backend
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
-  lint:
+  lint-and-tests:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        working-directory: ./backend
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: ctype, iconv, mbstring, mysql
-          tools: composer:v2
-          coverage: none
-
-      - name: Install Dependencies
-        working-directory: ./backend
-        run: composer install -q --no-ansi --no-interaction --no-suggest --no-scripts --no-progress --prefer-dist
-
-      - name: PHP cs fixer
-        working-directory: ./backend
-        run: composer cs
-
-      - name: PHPStan
-        working-directory: ./backend
-        run: composer ps
-
-  tests:
-    runs-on: ubuntu-latest
-    needs: [lint]
+    env:
+      DATABASE_URL: "mysql://user1:password1@127.0.0.1:${{ job.services.mariadb.ports['3306'] }}/auto_entreprise_test"
+      DIRECTORY: ./backend
 
     services:
-      mariadb_test:
+      mariadb:
         image: mariadb:10.9
         env:
           MYSQL_ROOT_PASSWORD: secret
@@ -52,10 +27,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
-        working-directory: ./backend
+        working-directory: ${{ env.DIRECTORY }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
@@ -64,17 +39,32 @@ jobs:
           coverage: xdebug
 
       - name: Install Dependencies
-        working-directory: ./backend
-        run: composer install -q --no-ansi --no-interaction --no-suggest --no-scripts --no-progress --prefer-dist
+        working-directory: ${{ env.DIRECTORY }}
+        run: composer install -q --no-ansi --no-interaction --no-suggest --no-scripts --no-progress --prefer-dist --optimize-autoloader
+
+      - name: PHP cs fixer
+        working-directory: ${{ env.DIRECTORY }}
+        run: composer cs
+
+      - name: PHPStan
+        working-directory: ${{ env.DIRECTORY }}
+        run: composer ps
 
       - name: Create database
-        working-directory: ./backend
+        working-directory: ${{ env.DIRECTORY }}
         run: php bin/console doc:database:create --no-interaction -e test
 
       - name: Migrate database
-        working-directory: ./backend
+        working-directory: ${{ env.DIRECTORY }}
         run: php bin/console doc:mig:mig --no-interaction -e test
 
       - name: Exec tests
-        working-directory: ./backend
-        run: composer tuc
+        working-directory: ${{ env.DIRECTORY }}
+        run: composer tuci
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          file: ${{ format('{0}/coverage.xml', env.DIRECTORY) }}
+          flags: backend
+          token: ${{ secrets.CODECOV_TOKEN }}

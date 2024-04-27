@@ -85,6 +85,7 @@
         "ps": "phpstan analyse -c phpstan.dist.neon",
         "tu": "bin/phpunit --testdox",
         "tuc": "bin/phpunit --testdox --coverage-html coverage",
+        "tuci": "bin/phpunit --testdox --coverage-clover ./coverage.xml",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
