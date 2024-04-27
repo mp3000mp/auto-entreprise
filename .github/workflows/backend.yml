@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DATABASE_URL: "mysql://user1:password1@127.0.0.1:${{ job.services.mariadb.ports['3306'] }}/auto_entreprise_test"
+      DATABASE_URL: "mysql://user1:password1@localhost:3306/auto_entreprise_test"
       DIRECTORY: ./backend
 
     services:
