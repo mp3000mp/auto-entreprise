@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DATABASE_URL: "mysql://user1:password1@localhost:3306/auto_entreprise_test?serverVersion=10.9.6-MariaDB"
+#      DATABASE_URL: "mysql://user1:password1@127.0.0.1:3306/auto_entreprise_test?serverVersion=10.9.6-MariaDB"
       DIRECTORY: ./backend
 
     services:
@@ -22,7 +22,7 @@ jobs:
           MARIADB_PASSWORD: password1
           MARIADB_DATABASE: auto_entreprise_test
         ports:
-          - 3306:3306
+          - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
@@ -33,7 +33,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: ctype, iconv, mbstring, mysql
+          extensions: ctype, iconv, mbstring, intl, pdo_sqlite, mysql
           tools: composer:v2
           coverage: xdebug
 
@@ -52,14 +52,20 @@ jobs:
       - name: Create database
         working-directory: ${{ env.DIRECTORY }}
         run: php bin/console doc:database:create --no-interaction -e test
+        env:
+          DATABASE_URL: "mysql://user1:password1@127.0.0.1:{{ job.services.mariadb.ports['3306'] }}/auto_entreprise_test?serverVersion=10.9.6-MariaDB"
 
       - name: Migrate database
         working-directory: ${{ env.DIRECTORY }}
         run: php bin/console doc:mig:mig --no-interaction -e test
+        env:
+          DATABASE_URL: "mysql://user1:password1@127.0.0.1:{{ job.services.mariadb.ports['3306'] }}/auto_entreprise_test?serverVersion=10.9.6-MariaDB"
 
       - name: Exec tests
         working-directory: ${{ env.DIRECTORY }}
         run: composer tuci
+        env:
+          DATABASE_URL: "mysql://user1:password1@127.0.0.1:{{ job.services.mariadb.ports['3306'] }}/auto_entreprise_test?serverVersion=10.9.6-MariaDB"
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
