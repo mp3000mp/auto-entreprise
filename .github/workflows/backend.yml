@@ -1,16 +1,16 @@
 name: backend
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 jobs:
   lint-and-tests:
     runs-on: ubuntu-latest
 
     env:
-      DATABASE_URL: "mysql://user1:password1@127.0.0.1:3306/auto_entreprise_test?serverVersion=10.9.6-MariaDB"
+      DATABASE_URL: "mysql://user1:password1@localhost:3306/auto_entreprise_test?serverVersion=10.9.6-MariaDB"
       DIRECTORY: ./backend
 
     services:
@@ -48,14 +48,6 @@ jobs:
       - name: PHPStan
         working-directory: ${{ env.DIRECTORY }}
         run: composer ps
-
-      - name: debug 1
-        working-directory: ${{ env.DIRECTORY }}
-        run: docker ps -a
-
-      - name: debug 2
-        working-directory: ${{ env.DIRECTORY }}
-        run: docker exec mariadb mysql -u root -psecret -Bse "show databases"
 
       - name: Create database
         working-directory: ${{ env.DIRECTORY }}
