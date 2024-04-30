@@ -32,7 +32,7 @@ class JsonRequestHelper
      *
      * @return T|mixed
      */
-    public function handleRequest(string $rawData, string $schema, string $class = null, $entity = null)
+    public function handleRequest(string $rawData, string $schema, ?string $class = null, $entity = null)
     {
         // json schema
         $jsonData = json_decode($rawData);
