@@ -39,7 +39,7 @@ class Cost
 
     #[ORM\Column]
     #[Groups(['cost_list', 'cost_write'])]
-    #[Assert\GreaterThan(0)]
+    #[Assert\GreaterThanOrEqual(0)]
     private float $amount;
 
     #[ORM\ManyToOne(targetEntity: CostType::class)]
