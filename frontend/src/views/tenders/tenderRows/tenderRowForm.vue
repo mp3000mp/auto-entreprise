@@ -53,8 +53,8 @@ async function submit() {
   }
   isSubmitting.value = true
   await ('id' in currentTenderRow.value
-    ? tenderStore.editTenderRow(currentTenderRow.value)
-    : tenderStore.addTenderRow(currentTenderRow.value))
+    ? tenderStore.editTenderRow(currentTenderRow.value, props.tender)
+    : tenderStore.addTenderRow(currentTenderRow.value, props.tender))
   emit('stop-showing')
   isSubmitting.value = false
 }

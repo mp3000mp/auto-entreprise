@@ -63,10 +63,11 @@ export function convertTenderOut(tender: Tender | NewTender): TenderDtoOut | New
   }
 }
 export function convertTenderRowOut(
-  tenderRow: TenderRow | NewTenderRow
+  tenderRow: TenderRow | NewTenderRow,
+  tender: Tender,
 ): TenderRowDtoOut | NewTenderRowDtoOut {
   return {
     ...tenderRow,
-    tender: '/api/tenders/' + tenderRow.tender.id
+    tender: '/api/tenders/' + tender.id
   }
 }

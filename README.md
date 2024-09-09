@@ -26,14 +26,28 @@ Clone this repository
 git clone https://github.com/mp3000mp/auto-entreprise.git
 ```
 
-Install scripts and database
+Install frontend
 ```shell
-composer install
 npm install
 npm run build
+```
+
+Install backend and database
+```shell
+composer install
 php bin/console doctrine:database:create
 php bin/console doctrine:migration:migrate
 php bin/console doctrine:fixtures:load
+```
+
+Launch frontend
+```shell
+npm run dev
+```
+
+Launch backend
+```shell
+symfony server:start
 ```
 
 OR 

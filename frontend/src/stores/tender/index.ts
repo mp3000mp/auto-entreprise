@@ -138,12 +138,12 @@ export const useTenderStore = defineStore('tender', {
         notifyError('Error while deleting tender: ', err)
       }
     },
-    async addTenderRow(tenderRow: NewTenderRow) {
+    async addTenderRow(tenderRow: NewTenderRow, tender: Tender) {
       try {
         const rawTenderRow = await ApiClient.query<TenderRow>(
           HttpMethodEnum.POST,
           rowUrlPrefix,
-          convertTenderRowOut(tenderRow)
+          convertTenderRowOut(tenderRow, tender)
         )
         if (null === this.currentTender) {
           return
@@ -153,12 +153,12 @@ export const useTenderStore = defineStore('tender', {
         notifyError('Error while adding tender row: ', err)
       }
     },
-    async editTenderRow(tenderRow: TenderRow) {
+    async editTenderRow(tenderRow: TenderRow, tender: Tender) {
       try {
         const rawTenderRow = await ApiClient.query<TenderRow>(
           HttpMethodEnum.PUT,
           rowUrlPrefix + '/' + tenderRow.id,
-          convertTenderRowOut(tenderRow)
+          convertTenderRowOut(tenderRow, tender)
         )
         if (null === this.currentTender) {
           return

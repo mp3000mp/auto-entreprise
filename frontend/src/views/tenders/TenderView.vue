@@ -44,6 +44,7 @@ const confirmMessage = computed(() => ({
 }))
 
 const tender = computed(() => tenderStore.currentTender)
+const tenderSoldDays = computed(() => tender.value.tenderRows.reduce((acc, tenderRow) => acc + tenderRow.soldDays, 0))
 const isDeletable = computed(() => null === tender.value || tender.value.tenderRows.length === 0)
 function showForm() {
   isFormShowing.value = true
@@ -149,7 +150,7 @@ onMounted(async () => {
       Statut: {{ tender.status.label }}
       <mp3000-icon icon="circle-info" title="Historique" @click="showStatusLogsPopin" /><br />
       TJM: {{ tender.averageDailyRate }}<br />
-      Jours vendus: {{ tender.soldDays }}<br />
+      Jours vendus: {{ tenderSoldDays }}<br />
       Date d'envoi: {{ tender.sentAt?.format('YYYY-MM-DD') ?? '-' }}<br />
       Date de commande: {{ tender.acceptedAt?.format('YYYY-MM-DD') ?? '-' }}<br />
       Date de refus: {{ tender.refusedAt?.format('YYYY-MM-DD') ?? '-' }}<br />
@@ -235,8 +236,8 @@ onMounted(async () => {
           />
           <tr class="total" v-if="tenderRowFilterSearch.length < 3">
             <td colspan="2" class="text-end">Total:</td>
-            <td>{{ tender.soldDays }}</td>
-            <td>{{ tender.soldDays * tender.averageDailyRate }}€</td>
+            <td>{{ tenderSoldDays }}</td>
+            <td>{{ tenderSoldDays * tender.averageDailyRate }}€</td>
           </tr>
         </template>
       </template>
