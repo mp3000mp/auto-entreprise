@@ -73,7 +73,7 @@ onMounted(async () => {
           v-model="twoFactorAuthCode"
           @keyup.enter="twoFactorAuth"
           class="form-control"
-          type="string"
+          type="text"
           placeholder="Code"
           :disabled="isLoading"
         />
@@ -97,7 +97,7 @@ onMounted(async () => {
         <input
           v-model="password"
           @keyup.enter="connect"
-          class="form-control"
+          class="form-control ms-2"
           type="password"
           placeholder="Password"
           :disabled="isLoading"
