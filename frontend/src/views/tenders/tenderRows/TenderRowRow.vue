@@ -43,6 +43,7 @@ async function remove() {
     </td>
     <td>{{ tenderRow.description }}</td>
     <td>{{ tenderRow.soldDays }}</td>
+    <td>{{ tenderRow.fixedRate }}</td>
     <td>{{ tenderRow.soldDays * averageDailyRate }}€</td>
   </tr>
 </template>

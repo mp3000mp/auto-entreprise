@@ -128,12 +128,12 @@ onMounted(async () => {
         </select>
       </div>
       <div class="form-group">
-        <label>Date commande</label>
-        <date-picker v-model="currentTender.acceptedAt" :disabled="isSubmitting" />
-      </div>
-      <div class="form-group">
         <label>Date envoi</label>
         <date-picker v-model="currentTender.sentAt" :disabled="isSubmitting" />
+      </div>
+      <div class="form-group">
+        <label>Date commande</label>
+        <date-picker v-model="currentTender.acceptedAt" :disabled="isSubmitting" />
       </div>
       <div class="form-group">
         <label>Date refus</label>

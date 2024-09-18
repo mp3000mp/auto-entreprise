@@ -64,7 +64,7 @@ export function convertTenderOut(tender: Tender | NewTender): TenderDtoOut | New
 }
 export function convertTenderRowOut(
   tenderRow: TenderRow | NewTenderRow,
-  tender: Tender,
+  tender: Tender
 ): TenderRowDtoOut | NewTenderRowDtoOut {
   return {
     ...tenderRow,

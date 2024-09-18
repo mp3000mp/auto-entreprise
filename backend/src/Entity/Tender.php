@@ -252,6 +252,17 @@ class Tender
         return round($soldDays, 2);
     }
 
+    #[Groups(['tender_show', 'tender_list', 'opportunity_list', 'opportunity_show', 'company_show', 'contact_show'])]
+    public function getTotalRate(): float
+    {
+        $total = 0;
+        foreach ($this->tenderRows as $tenderRow) {
+            $total += $tenderRow->getFixedRate() + $tenderRow->getSoldDays()*$this->getAverageDailyRate();
+        }
+
+        return $total;
+    }
+
     public function getAmount(): float
     {
         return $this->getSoldDays() * $this->averageDailyRate;

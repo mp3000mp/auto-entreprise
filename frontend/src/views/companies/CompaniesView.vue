@@ -8,8 +8,8 @@ import type { ListCompany } from '@/stores/company/types'
 
 import Mp3000Table from '@/components/Mp3000Table.vue'
 import CompanyRow from '@/views/companies/CompanyRow.vue'
-import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
+import { useSorter, SortConfigTypeEnum } from '@/composables/useSorter'
 
 const companyStore = useCompanyStore()
 
@@ -30,7 +30,7 @@ const filteredCompanies = computed(() =>
     return company.name.toLowerCase().includes(filterSearch.value.toLowerCase())
   })
 )
-const sorter = new Sorter(
+const { getAsc, getPriority, sort, sortedList } = useSorter(
   [{ property: 'name', type: SortConfigTypeEnum.STRING }],
   filteredCompanies
 )
@@ -51,8 +51,8 @@ function hideForm() {
 }
 
 onMounted(async () => {
-  sorter.addSort('name')
   isLoading.value = true
+  sort('name')
   await Promise.all([companyStore.fetch(), companyStore.fetchDeletables()])
   isLoading.value = false
 })
@@ -75,16 +75,21 @@ onMounted(async () => {
       </template>
       <template v-slot:header>
         <tr>
-          <mp3000-table-header property="name" :sorter="sorter" label="Nom" />
+          <mp3000-table-header
+            :asc="getAsc('name')"
+            :priority="getPriority('name')"
+            @click="sort('name')"
+            label="Nom"
+          />
         </tr>
       </template>
       <template v-slot:body>
-        <tr v-if="sorter.sortedList.value.length === 0">
+        <tr v-if="sortedList.length === 0">
           <td colspan="100">Aucun client</td>
         </tr>
         <company-row
           v-else
-          v-for="company in sorter.sortedList.value"
+          v-for="company in sortedList"
           :key="company.id"
           :is-deletable="deletableIds.includes(company.id)"
           :company="company"

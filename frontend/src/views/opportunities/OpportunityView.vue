@@ -14,7 +14,6 @@ import type { Tender } from '@/stores/tender/types'
 import Mp3000Table from '@/components/Mp3000Table.vue'
 import TenderRow from '@/views/tenders/TenderRow.vue'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
-import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import BootstrapModal from '@/components/BootstrapModal.vue'
 import Mp3000Button from '@/components/Mp3000Button.vue'
 import OpportunityFileForm from '@/views/opportunities/OpportunityFileForm.vue'
@@ -24,6 +23,7 @@ import { getFileIcon } from '@/misc/utils'
 import WorkedTimeForm from '@/views/workedTimes/WorkedTimeForm.vue'
 import WorkedTimeRow from '@/views/workedTimes/WorkedTimeRow.vue'
 import type { WorkedTime } from '@/stores/workedTime/types'
+import { useSorter, SortConfigTypeEnum } from '@/composables/useSorter'
 
 const opportunityStore = useOpportunityStore()
 const tenderStore = useTenderStore()
@@ -71,7 +71,7 @@ const filteredTenders = computed(() =>
     return tender.opportunity.ref.toLowerCase().includes(tenderFilterSearch.value.toLowerCase())
   })
 )
-const tendersSorter = new Sorter(
+const { getAsc, getPriority, sort, sortedList } = useSorter(
   [
     { property: 'version', type: SortConfigTypeEnum.NUMBER },
     {
@@ -83,8 +83,7 @@ const tendersSorter = new Sorter(
     {
       property: 'amount',
       type: SortConfigTypeEnum.CUSTOM,
-      customCompare: (a: Tender, b: Tender) =>
-        a.soldDays * a.averageDailyRate - b.soldDays * b.averageDailyRate
+      customCompare: (a: Tender, b: Tender) => a.totalRate - b.totalRate
     },
     { property: 'createdAt', type: SortConfigTypeEnum.DATE }
   ],
@@ -164,7 +163,7 @@ function hideWorkedTimeForm() {
 }
 
 onMounted(async () => {
-  tendersSorter.addSort('version', false)
+  sort('version', false)
   await Promise.all([opportunityStore.fetchOne(props.opportunityId), tenderStore.fetchDeletables()])
   await companyStore.fetchOne(opportunity.value.company.id)
 })
@@ -341,18 +340,38 @@ onMounted(async () => {
         </div>
       </template>
       <template #header>
-        <mp3000-table-header property="version" :sorter="tendersSorter" label="Version" />
-        <mp3000-table-header property="status" :sorter="tendersSorter" label="Statut" />
-        <mp3000-table-header property="soldDays" :sorter="tendersSorter" label="Jours vendus" />
-        <mp3000-table-header property="amount" :sorter="tendersSorter" label="Montant" />
+        <mp3000-table-header
+          :asc="getAsc('version')"
+          :priority="getPriority('version')"
+          @click="sort('version')"
+          label="Version"
+        />
+        <mp3000-table-header
+          :asc="getAsc('status')"
+          :priority="getPriority('status')"
+          @click="sort('status')"
+          label="Statut"
+        />
+        <mp3000-table-header
+          :asc="getAsc('soldDays')"
+          :priority="getPriority('soldDays')"
+          @click="sort('soldDays')"
+          label="Jours vendus"
+        />
+        <mp3000-table-header
+          :asc="getAsc('amount')"
+          :priority="getPriority('amount')"
+          @click="sort('amount')"
+          label="Montant"
+        />
       </template>
       <template #body>
-        <tr v-if="tendersSorter.sortedList.value.length === 0">
+        <tr v-if="sortedList.length === 0">
           <td colspan="100">Aucun devis</td>
         </tr>
         <tender-row
           v-else
-          v-for="tender in tendersSorter.sortedList.value"
+          v-for="tender in sortedList"
           :key="tender.id"
           :tender="tender"
           :opportunity="opportunity"

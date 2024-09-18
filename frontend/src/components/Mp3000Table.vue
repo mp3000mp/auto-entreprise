@@ -16,7 +16,7 @@ withDefaults(
     <slot name="filters"></slot>
   </div>
   <div class="table-responsive">
-    <table class="table table-hover">
+    <table class="table table-hover table-striped table-sm">
       <thead>
         <slot name="header"></slot>
       </thead>

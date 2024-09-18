@@ -35,6 +35,11 @@ class TenderRow
     #[ORM\Column]
     #[Groups(['tender_show', 'tender_row_add', 'tender_row_edit'])]
     #[Assert\GreaterThanOrEqual(0)]
+    private float $fixedRate = 0;
+
+    #[ORM\Column]
+    #[Groups(['tender_show', 'tender_row_add', 'tender_row_edit'])]
+    #[Assert\GreaterThanOrEqual(0)]
     private float $soldDays;
 
     #[ORM\Column(length: 255)]
@@ -69,6 +74,18 @@ class TenderRow
         return $this;
     }
 
+    public function getFixedRate(): float
+    {
+        return $this->fixedRate;
+    }
+
+    public function setFixedRate(float $fixedRate): self
+    {
+        $this->fixedRate = $fixedRate;
+
+        return $this;
+    }
+
     public function getSoldDays(): float
     {
         return $this->soldDays;
@@ -79,6 +96,12 @@ class TenderRow
         $this->soldDays = $soldDays;
 
         return $this;
+    }
+
+    #[Groups(['tender_show', 'tender_row_add', 'tender_row_edit'])]
+    public function getTotalRate(): float
+    {
+        return $this->getFixedRate() + $this->getTender()->getAverageDailyRate()*$this->getSoldDays();
     }
 
     public function getTitle(): string

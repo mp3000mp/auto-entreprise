@@ -8,8 +8,8 @@ import TenderForm from '@/views/tenders/TenderForm.vue'
 import type { Tender, ListTender } from '@/stores/tender/types'
 import TenderRow from '@/views/tenders/TenderRow.vue'
 import Mp3000Table from '@/components/Mp3000Table.vue'
-import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
+import { useSorter, SortConfigTypeEnum } from '@/composables/useSorter'
 
 const tenderStore = useTenderStore()
 const companyStore = useCompanyStore()
@@ -41,7 +41,8 @@ const filteredTenders = computed(() =>
     return tender.opportunity.ref.toLowerCase().includes(filterSearch.value.toLowerCase())
   })
 )
-const sorter = new Sorter(
+
+const { getAsc, getPriority, sort, sortedList } = useSorter(
   [
     { property: 'version', type: SortConfigTypeEnum.NUMBER },
     {
@@ -64,8 +65,7 @@ const sorter = new Sorter(
     {
       property: 'amount',
       type: SortConfigTypeEnum.CUSTOM,
-      customCompare: (a: Tender, b: Tender) =>
-        a.soldDays * a.averageDailyRate - b.soldDays * b.averageDailyRate
+      customCompare: (a: Tender, b: Tender) => a.totalRate - b.totalRate
     },
     { property: 'createdAt', type: SortConfigTypeEnum.DATE }
   ],
@@ -84,8 +84,8 @@ function hideForm() {
 }
 
 onMounted(async () => {
-  sorter.addSort('createdAt', false)
   isLoading.value = true
+  sort('createdAt', false)
   await Promise.all([
     statuses.value.length ? null : tenderStore.fetchStatuses(),
     tenderStore.fetch(),
@@ -132,22 +132,57 @@ onMounted(async () => {
       </template>
       <template v-slot:header>
         <tr>
-          <mp3000-table-header property="version" :sorter="sorter" label="Version" />
-          <mp3000-table-header property="opportunity" :sorter="sorter" label="Opportunité" />
-          <mp3000-table-header property="company" :sorter="sorter" label="Client" />
-          <mp3000-table-header property="status" :sorter="sorter" label="Statut" />
-          <mp3000-table-header property="soldDays" :sorter="sorter" label="Jours vendus" />
-          <mp3000-table-header property="amount" :sorter="sorter" label="Montant" />
-          <mp3000-table-header property="createdAt" :sorter="sorter" label="Création" />
+          <mp3000-table-header
+            :asc="getAsc('version')"
+            :priority="getPriority('version')"
+            @click="sort('version')"
+            label="Version"
+          />
+          <mp3000-table-header
+            :asc="getAsc('opportunity')"
+            :priority="getPriority('opportunity')"
+            @click="sort('opportunity')"
+            label="Opportunité"
+          />
+          <mp3000-table-header
+            :asc="getAsc('company')"
+            :priority="getPriority('company')"
+            @click="sort('company')"
+            label="Client"
+          />
+          <mp3000-table-header
+            :asc="getAsc('status')"
+            :priority="getPriority('status')"
+            @click="sort('status')"
+            label="Statut"
+          />
+          <mp3000-table-header
+            :asc="getAsc('soldDays')"
+            :priority="getPriority('soldDays')"
+            @click="sort('soldDays')"
+            label="Jours vendus"
+          />
+          <mp3000-table-header
+            :asc="getAsc('amount')"
+            :priority="getPriority('amount')"
+            @click="sort('amount')"
+            label="Montant"
+          />
+          <mp3000-table-header
+            :asc="getAsc('createdAt')"
+            :priority="getPriority('createdAt')"
+            @click="sort('createdAt')"
+            label="Création"
+          />
         </tr>
       </template>
       <template v-slot:body>
-        <tr v-if="sorter.sortedList.value.length === 0">
+        <tr v-if="sortedList.length === 0">
           <td colspan="100">Aucun devis</td>
         </tr>
         <tender-row
           v-else
-          v-for="tender in sorter.sortedList.value"
+          v-for="tender in sortedList"
           :key="tender.id"
           :is-deletable="deletableIds.includes(tender.id)"
           :tender="tender"

@@ -11,7 +11,6 @@ import Mp3000Table from '@/components/Mp3000Table.vue'
 import TenderRowRow from '@/views/tenders/tenderRows/TenderRowRow.vue'
 import TenderRowForm from '@/views/tenders/tenderRows/tenderRowForm.vue'
 import type { TenderRow } from '@/stores/tender/types'
-import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
 import type { Tender } from '@/stores/tender/types'
 import Mp3000Button from '@/components/Mp3000Button.vue'
@@ -20,6 +19,7 @@ import config from '@/misc/config'
 import { getFileIcon } from '@/misc/utils'
 import TenderFileForm from '@/views/tenders/TenderFileForm.vue'
 import { tenderFileTypeLabels } from '@/stores/tender/types'
+import { useSorter, SortConfigTypeEnum } from '@/composables/useSorter'
 
 const tenderStore = useTenderStore()
 const router = useRouter()
@@ -44,7 +44,12 @@ const confirmMessage = computed(() => ({
 }))
 
 const tender = computed(() => tenderStore.currentTender)
-const tenderSoldDays = computed(() => tender.value.tenderRows.reduce((acc, tenderRow) => acc + tenderRow.soldDays, 0))
+const tenderSoldDays = computed(() =>
+  tender.value.tenderRows.reduce((acc, tenderRow) => acc + tenderRow.soldDays, 0)
+)
+const tenderFixedRate = computed(() =>
+  tender.value.tenderRows.reduce((acc, tenderRow) => acc + tenderRow.fixedRate, 0)
+)
 const isDeletable = computed(() => null === tender.value || tender.value.tenderRows.length === 0)
 function showForm() {
   isFormShowing.value = true
@@ -66,16 +71,16 @@ const filteredTenderRows = computed(() => {
       .includes(tenderRowFilterSearch.value.toLowerCase())
   })
 })
-const tenderRowsSorter = new Sorter(
+const { getAsc, getPriority, sort, sortedList } = useSorter(
   [
     { property: 'title', type: SortConfigTypeEnum.STRING },
     { property: 'description', type: SortConfigTypeEnum.STRING },
     { property: 'soldDays', type: SortConfigTypeEnum.NUMBER },
+    { property: 'fixedRate', type: SortConfigTypeEnum.NUMBER },
     {
       property: 'amount',
       type: SortConfigTypeEnum.CUSTOM,
-      customCompare: (a: Tender, b: Tender) =>
-        a.soldDays * tender.value.averageDailyRate - b.soldDays * tender.value.averageDailyRate
+      customCompare: (a: Tender, b: Tender) => a.totalRate - b.totalRate
     }
   ],
   filteredTenderRows
@@ -213,22 +218,44 @@ onMounted(async () => {
         </div>
       </template>
       <template v-slot:header>
-        <mp3000-table-header property="title" :sorter="tenderRowsSorter" label="Titre" />
         <mp3000-table-header
-          property="description"
-          :sorter="tenderRowsSorter"
+          :asc="getAsc('title')"
+          :priority="getPriority('title')"
+          @click="sort('title')"
+          label="Titre"
+        />
+        <mp3000-table-header
+          :asc="getAsc('description')"
+          :priority="getPriority('description')"
+          @click="sort('description')"
           label="Description"
         />
-        <mp3000-table-header property="soldDays" :sorter="tenderRowsSorter" label="Jours vendus" />
-        <mp3000-table-header property="amount" :sorter="tenderRowsSorter" label="Montant" />
+        <mp3000-table-header
+          :asc="getAsc('soldDays')"
+          :priority="getPriority('soldDays')"
+          @click="sort('soldDays')"
+          label="Jours vendus"
+        />
+        <mp3000-table-header
+            :asc="getAsc('fixedRate')"
+            :priority="getPriority('fixedRate')"
+            @click="sort('fixedRate')"
+            label="Coûts fixes"
+        />
+        <mp3000-table-header
+          :asc="getAsc('amount')"
+          :priority="getPriority('amount')"
+          @click="sort('amount')"
+          label="Montant"
+        />
       </template>
       <template v-slot:body>
-        <tr v-if="tenderRowsSorter.sortedList.value.length === 0">
+        <tr v-if="sortedList.length === 0">
           <td colspan="100">Aucune ligne</td>
         </tr>
         <template v-else>
           <tender-row-row
-            v-for="tenderRow in tenderRowsSorter.sortedList.value"
+            v-for="tenderRow in sortedList"
             :key="tenderRow.id"
             :tender-row="tenderRow"
             :average-daily-rate="tender.averageDailyRate"
@@ -237,7 +264,8 @@ onMounted(async () => {
           <tr class="total" v-if="tenderRowFilterSearch.length < 3">
             <td colspan="2" class="text-end">Total:</td>
             <td>{{ tenderSoldDays }}</td>
-            <td>{{ tenderSoldDays * tender.averageDailyRate }}€</td>
+            <td>{{ tenderFixedRate }}</td>
+            <td>{{ tenderFixedRate + tenderSoldDays * tender.averageDailyRate }}€</td>
           </tr>
         </template>
       </template>

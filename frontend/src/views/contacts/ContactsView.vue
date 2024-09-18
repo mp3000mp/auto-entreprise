@@ -8,8 +8,8 @@ import ContactForm from '@/views/contacts/ContactForm.vue'
 import type { Contact, ListContact } from '@/stores/contact/types'
 import ContactRow from '@/views/contacts/ContactRow.vue'
 import Mp3000Table from '@/components/Mp3000Table.vue'
-import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
+import { useSorter, SortConfigTypeEnum } from '@/composables/useSorter'
 
 const contactStore = useContactStore()
 const companyStore = useCompanyStore()
@@ -38,7 +38,7 @@ const filteredContacts = computed(() =>
       .includes(filterSearch.value.toLowerCase())
   })
 )
-const sorter = new Sorter(
+const { getAsc, getPriority, sort, sortedList } = useSorter(
   [
     {
       property: 'name',
@@ -74,8 +74,8 @@ function hideForm() {
 }
 
 onMounted(async () => {
-  sorter.addSort('company')
   isLoading.value = true
+  sort('company')
   await Promise.all([
     contactStore.fetch(),
     contactStore.fetchDeletables(),
@@ -113,20 +113,45 @@ onMounted(async () => {
       </template>
       <template v-slot:header>
         <tr>
-          <mp3000-table-header property="name" :sorter="sorter" label="Nom" />
-          <mp3000-table-header property="company" :sorter="sorter" label="Client" />
-          <mp3000-table-header property="email" :sorter="sorter" label="Email" />
-          <mp3000-table-header property="phone" :sorter="sorter" label="Téléphone" />
-          <mp3000-table-header property="comments" :sorter="sorter" label="Commentaires" />
+          <mp3000-table-header
+            :asc="getAsc('name')"
+            :priority="getPriority('name')"
+            @click="sort('name')"
+            label="Nom"
+          />
+          <mp3000-table-header
+            :asc="getAsc('company')"
+            :priority="getPriority('company')"
+            @click="sort('company')"
+            label="Client"
+          />
+          <mp3000-table-header
+            :asc="getAsc('email')"
+            :priority="getPriority('email')"
+            @click="sort('email')"
+            label="Email"
+          />
+          <mp3000-table-header
+            :asc="getAsc('phone')"
+            :priority="getPriority('phone')"
+            @click="sort('phone')"
+            label="Téléphone"
+          />
+          <mp3000-table-header
+            :asc="getAsc('comments')"
+            :priority="getPriority('comments')"
+            @click="sort('comments')"
+            label="Commentaires"
+          />
         </tr>
       </template>
       <template v-slot:body>
-        <tr v-if="sorter.sortedList.value.length === 0">
+        <tr v-if="sortedList.length === 0">
           <td colspan="100">Aucun contact</td>
         </tr>
         <contact-row
           v-else
-          v-for="contact in sorter.sortedList.value"
+          v-for="contact in sortedList"
           :key="contact.id"
           :is-deletable="deletableIds.includes(contact.id)"
           :contact="contact"

@@ -1,33 +1,26 @@
 <script lang="ts" setup>
-import type { Sorter } from '@/misc/sorter'
-
-const props = defineProps<{
-  label: string
-  property: string
-  sorter: Sorter<any>
-}>()
-
-function sort() {
-  if (props.sorter.isAsc(props.property) === false) {
-    props.sorter.removeSort(props.property)
-  } else {
-    props.sorter.addSort(props.property)
+withDefaults(
+  defineProps<{
+    label: string
+    asc?: boolean | null
+    priority?: number
+  }>(),
+  {
+    asc: null,
+    priority: 0
   }
-}
+)
 </script>
 
 <template>
-  <th @click.prevent="sort()" class="sort-header cp">
+  <th class="sort-header cp">
     <span>{{ label }}</span>
-    <template v-if="sorter.getPriority(property) > 0">
+    <template v-if="priority > 0">
       <span>
-        <font-awesome-icon
-          class="ms-1"
-          :icon="['fa', sorter.isAsc(property) ? 'sort-down' : 'sort-up']"
-        />
+        <font-awesome-icon class="ms-1" :icon="['fa', asc ? 'sort-down' : 'sort-up']" />
       </span>
-      <span class="sort-priority" :class="[sorter.isAsc(property) ? 'sort-down' : 'sort-up']">
-        {{ sorter.getPriority(property) }}
+      <span class="sort-priority" :class="[asc ? 'sort-down' : 'sort-up']">
+        {{ priority }}
       </span>
     </template>
   </th>

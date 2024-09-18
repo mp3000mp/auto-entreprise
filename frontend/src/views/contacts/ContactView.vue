@@ -9,11 +9,11 @@ import { useRouter } from 'vue-router'
 import type { Ref } from 'vue'
 import BootstrapLoader from '@/components/BootstrapLoader.vue'
 import type { Opportunity } from '@/stores/opportunity/types'
-import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import OpportunityForm from '@/views/opportunities/OpportunityForm.vue'
 import Mp3000Table from '@/components/Mp3000Table.vue'
 import OpportunityRow from '@/views/opportunities/OpportunityRow.vue'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
+import { useSorter, SortConfigTypeEnum } from '@/composables/useSorter'
 
 const contactStore = useContactStore()
 const opportunityStore = useOpportunityStore()
@@ -54,7 +54,12 @@ const filteredOpportunities = computed(() => {
     return opportunity.ref.toLowerCase().includes(opportunityFilterSearch.value.toLowerCase())
   })
 })
-const opportunitiesSorter = new Sorter(
+const {
+  getAsc: getOpportunityAsc,
+  getPriority: getOpportunityPriority,
+  sort: sortOpportunities,
+  sortedList: sortedOpportunities
+} = useSorter(
   [
     { property: 'ref', type: SortConfigTypeEnum.STRING },
     {
@@ -66,9 +71,7 @@ const opportunitiesSorter = new Sorter(
     {
       property: 'amount',
       type: SortConfigTypeEnum.CUSTOM,
-      customCompare: (a: Opportunity, b: Opportunity) =>
-        (a.lastTender?.soldDays ?? 0) * (a.lastTender.averageDailyRate ?? 0) -
-        (b.lastTender?.soldDays ?? 0) * (b.lastTender.averageDailyRate ?? 0)
+      customCompare: (a: Opportunity, b: Opportunity) => (a.lastTender?.totalRate ?? 0) - (b.lastTender?.totalRate ?? 0)
     },
     {
       property: 'soldDays',
@@ -104,7 +107,7 @@ async function remove() {
 }
 
 onMounted(async () => {
-  opportunitiesSorter.addSort('createdAt', false)
+  sortOpportunities('createdAt', false)
   await Promise.all([contactStore.fetchOne(props.contactId), opportunityStore.fetchDeletables()])
 })
 </script>
@@ -157,28 +160,50 @@ onMounted(async () => {
         </div>
       </template>
       <template #header>
-        <mp3000-table-header property="ref" :sorter="opportunitiesSorter" label="Ref" />
-        <mp3000-table-header property="status" :sorter="opportunitiesSorter" label="Statut" />
-        <mp3000-table-header property="amount" :sorter="opportunitiesSorter" label="Montant" />
         <mp3000-table-header
-          property="soldDays"
-          :sorter="opportunitiesSorter"
+          :asc="getOpportunityAsc('ref')"
+          :priority="getOpportunityPriority('ref')"
+          @click="sortOpportunities('ref')"
+          label="Ref"
+        />
+        <mp3000-table-header
+          :asc="getOpportunityAsc('status')"
+          :priority="getOpportunityPriority('status')"
+          @click="sortOpportunities('status')"
+          label="Statut"
+        />
+        <mp3000-table-header
+          :asc="getOpportunityAsc('amount')"
+          :priority="getOpportunityPriority('amount')"
+          @click="sortOpportunities('amount')"
+          label="Montant"
+        />
+        <mp3000-table-header
+          :asc="getOpportunityAsc('soldDays')"
+          :priority="getOpportunityPriority('soldDays')"
+          @click="sortOpportunities('soldDays')"
           label="Jours vendus"
         />
         <mp3000-table-header
-          property="workedDays"
-          :sorter="opportunitiesSorter"
+          :asc="getOpportunityAsc('workedDays')"
+          :priority="getOpportunityPriority('workedDays')"
+          @click="sortOpportunities('workedDays')"
           label="Jours travaillés"
         />
-        <mp3000-table-header property="createdAt" :sorter="opportunitiesSorter" label="Création" />
+        <mp3000-table-header
+          :asc="getOpportunityAsc('createdAt')"
+          :priority="getOpportunityPriority('createdAt')"
+          @click="sortOpportunities('createdAt')"
+          label="Création"
+        />
       </template>
       <template #body>
-        <tr v-if="opportunitiesSorter.sortedList.value.length === 0">
+        <tr v-if="sortedOpportunities.length === 0">
           <td colspan="100">Aucune opportunité</td>
         </tr>
         <opportunity-row
           v-else
-          v-for="opportunity in opportunitiesSorter.sortedList.value"
+          v-for="opportunity in sortedOpportunities"
           :key="opportunity.id"
           :is-deletable="deletableOpportuntyIds.includes(opportunity.id)"
           :with-details="false"

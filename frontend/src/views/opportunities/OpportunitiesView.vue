@@ -9,8 +9,8 @@ import OpportunityForm from '@/views/opportunities/OpportunityForm.vue'
 import type { Opportunity, ListOpportunity } from '@/stores/opportunity/types'
 import OpportunityRow from '@/views/opportunities/OpportunityRow.vue'
 import Mp3000Table from '@/components/Mp3000Table.vue'
-import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
+import { useSorter, SortConfigTypeEnum } from '@/composables/useSorter'
 
 const companyStore = useCompanyStore()
 const opportunityStore = useOpportunityStore()
@@ -42,7 +42,7 @@ const filteredOpportunities = computed(() =>
     return opportunity.ref.toLowerCase().includes(filterSearch.value.toLowerCase())
   })
 )
-const sorter = new Sorter(
+const { getAsc, getPriority, sort, sortedList } = useSorter(
   [
     { property: 'ref', type: SortConfigTypeEnum.STRING },
     {
@@ -60,9 +60,7 @@ const sorter = new Sorter(
     {
       property: 'amount',
       type: SortConfigTypeEnum.CUSTOM,
-      customCompare: (a: Opportunity, b: Opportunity) =>
-        (a.lastTender?.soldDays ?? 0) * (a.lastTender.averageDailyRate ?? 0) -
-        (b.lastTender?.soldDays ?? 0) * (b.lastTender.averageDailyRate ?? 0)
+      customCompare: (a: Opportunity, b: Opportunity) => (a.lastTender?.totalRate ?? 0) - (b.lastTender?.totalRate ?? 0)
     },
     {
       property: 'soldDays',
@@ -92,8 +90,8 @@ function hideForm() {
 }
 
 onMounted(async () => {
-  sorter.addSort('createdAt', false)
   isLoading.value = true
+  sort('createdAt', false)
   await Promise.all([
     statuses.value.length ? null : opportunityStore.fetchStatuses(),
     opportunityStore.fetch(),
@@ -143,22 +141,57 @@ onMounted(async () => {
       </template>
       <template v-slot:header>
         <tr>
-          <mp3000-table-header property="ref" :sorter="sorter" label="Ref" />
-          <mp3000-table-header property="company" :sorter="sorter" label="Client" />
-          <mp3000-table-header property="status" :sorter="sorter" label="Statut" />
-          <mp3000-table-header property="amount" :sorter="sorter" label="Montant" />
-          <mp3000-table-header property="soldDays" :sorter="sorter" label="Jours vendus" />
-          <mp3000-table-header property="workedDays" :sorter="sorter" label="Jours travaillés" />
-          <mp3000-table-header property="createdAt" :sorter="sorter" label="Création" />
+          <mp3000-table-header
+            :asc="getAsc('refid')"
+            :priority="getPriority('ref')"
+            @click="sort('ref')"
+            label="Ref"
+          />
+          <mp3000-table-header
+            :asc="getAsc('company')"
+            :priority="getPriority('company')"
+            @click="sort('company')"
+            label="Client"
+          />
+          <mp3000-table-header
+            :asc="getAsc('status')"
+            :priority="getPriority('status')"
+            @click="sort('status')"
+            label="Statut"
+          />
+          <mp3000-table-header
+            :asc="getAsc('amount')"
+            :priority="getPriority('amount')"
+            @click="sort('amount')"
+            label="Montant"
+          />
+          <mp3000-table-header
+            :asc="getAsc('soldDays')"
+            :priority="getPriority('soldDays')"
+            @click="sort('soldDays')"
+            label="Jours vendus"
+          />
+          <mp3000-table-header
+            :asc="getAsc('workedDays')"
+            :priority="getPriority('workedDays')"
+            @click="sort('workedDays')"
+            label="Jours travaillés"
+          />
+          <mp3000-table-header
+            :asc="getAsc('createdAt')"
+            :priority="getPriority('createdAt')"
+            @click="sort('createdAt')"
+            label="Création"
+          />
         </tr>
       </template>
       <template v-slot:body>
-        <tr v-if="sorter.sortedList.value.length === 0">
+        <tr v-if="sortedList.length === 0">
           <td colspan="100">Aucune opportunité</td>
         </tr>
         <opportunity-row
           v-else
-          v-for="opportunity in sorter.sortedList.value"
+          v-for="opportunity in sortedList"
           :key="opportunity.id"
           :is-deletable="deletableIds.includes(opportunity.id)"
           :opportunity="opportunity"

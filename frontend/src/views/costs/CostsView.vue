@@ -7,8 +7,8 @@ import CostForm from '@/views/costs/CostForm.vue'
 import type { Cost } from '@/stores/cost/types'
 import Mp3000Table from '@/components/Mp3000Table.vue'
 import CostRow from '@/views/costs/CostRow.vue'
-import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
+import { useSorter, SortConfigTypeEnum } from '@/composables/useSorter'
 
 const costStore = useCostStore()
 
@@ -33,7 +33,7 @@ const filteredCosts = computed(() =>
   })
 )
 
-const sorter = new Sorter(
+const { getAsc, getPriority, sort, sortedList } = useSorter(
   [
     {
       property: 'type',
@@ -57,7 +57,7 @@ function hideForm() {
 }
 
 onMounted(async () => {
-  sorter.addSort('date', false)
+  sort('date', false)
   isLoading.value = true
   await Promise.all([costStore.fetchCostTypes(), costStore.fetchCosts()])
   isLoading.value = false
@@ -92,19 +92,39 @@ onMounted(async () => {
       </template>
       <template v-slot:header>
         <tr>
-          <mp3000-table-header property="type" :sorter="sorter" label="Type" />
-          <mp3000-table-header property="date" :sorter="sorter" label="Date" />
-          <mp3000-table-header property="amount" :sorter="sorter" label="Amount" />
-          <mp3000-table-header property="description" :sorter="sorter" label="Description" />
+          <mp3000-table-header
+            :asc="getAsc('type')"
+            :priority="getPriority('type')"
+            @click="sort('type')"
+            label="Type"
+          />
+          <mp3000-table-header
+            :asc="getAsc('date')"
+            :priority="getPriority('date')"
+            @click="sort('date')"
+            label="Date"
+          />
+          <mp3000-table-header
+            :asc="getAsc('amount')"
+            :priority="getPriority('amount')"
+            @click="sort('amount')"
+            label="Amount"
+          />
+          <mp3000-table-header
+            :asc="getAsc('description')"
+            :priority="getPriority('description')"
+            @click="sort('description')"
+            label="Description"
+          />
         </tr>
       </template>
       <template v-slot:body>
-        <tr v-if="sorter.sortedList.value.length === 0">
+        <tr v-if="sortedList.length === 0">
           <td colspan="100">Aucun coût</td>
         </tr>
         <cost-row
           v-else
-          v-for="cost in sorter.sortedList.value"
+          v-for="cost in sortedList"
           :key="cost.id"
           :cost="cost"
           @show-form="showForm(cost)"

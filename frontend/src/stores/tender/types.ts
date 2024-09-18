@@ -20,6 +20,7 @@ export type TenderStatusLogDtoIn = Omit<TenderStatusLog, 'createdAt'> & {
 export type TenderRow = {
   id: number
   position: number
+  fixedRate: number
   soldDays: number
   title: string
   description: string

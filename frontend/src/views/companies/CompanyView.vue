@@ -14,10 +14,10 @@ import Mp3000Table from '@/components/Mp3000Table.vue'
 import OpportunityRow from '@/views/opportunities/OpportunityRow.vue'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
 import OpportunityForm from '@/views/opportunities/OpportunityForm.vue'
-import { SortConfigTypeEnum, Sorter } from '@/misc/sorter'
 import type { Contact } from '@/stores/contact/types'
 import ContactRow from '@/views/contacts/ContactRow.vue'
 import ContactForm from '@/views/contacts/ContactForm.vue'
+import { useSorter, SortConfigTypeEnum } from '@/composables/useSorter'
 
 const companyStore = useCompanyStore()
 const opportunityStore = useOpportunityStore()
@@ -60,7 +60,13 @@ const filteredOpportunities = computed(() => {
     return opportunity.ref.toLowerCase().includes(opportunityFilterSearch.value.toLowerCase())
   })
 })
-const opportunitiesSorter = new Sorter(
+
+const {
+  getAsc: getOpportunityAsc,
+  getPriority: getOpportunityPriority,
+  sort: sortOpportunities,
+  sortedList: sortedOpportunities
+} = useSorter(
   [
     { property: 'ref', type: SortConfigTypeEnum.STRING },
     {
@@ -72,9 +78,7 @@ const opportunitiesSorter = new Sorter(
     {
       property: 'amount',
       type: SortConfigTypeEnum.CUSTOM,
-      customCompare: (a: Opportunity, b: Opportunity) =>
-        (a.lastTender?.soldDays ?? 0) * (a.lastTender.averageDailyRate ?? 0) -
-        (b.lastTender?.soldDays ?? 0) * (b.lastTender.averageDailyRate ?? 0)
+      customCompare: (a: Opportunity, b: Opportunity) => (a.lastTender?.totalRate ?? 0) - (b.lastTender?.totalRate ?? 0)
     },
     {
       property: 'soldDays',
@@ -116,7 +120,12 @@ const filteredContacts = computed(() => {
       .includes(contactFilterSearch.value.toLowerCase())
   })
 })
-const contactsSorter = new Sorter(
+const {
+  getAsc: getContactAsc,
+  getPriority: getContactPriority,
+  sort: sortContacts,
+  sortedList: sortedContacts
+} = useSorter(
   [
     {
       property: 'name',
@@ -147,7 +156,8 @@ async function remove() {
 }
 
 onMounted(async () => {
-  opportunitiesSorter.addSort('createdAt', false)
+  sortOpportunities('createdAt', false)
+  sortContacts('name')
   await Promise.all([
     companyStore.fetchOne(props.companyId),
     opportunityStore.fetchDeletables(),
@@ -198,32 +208,50 @@ onMounted(async () => {
           </div>
         </template>
         <template #header>
-          <mp3000-table-header property="ref" :sorter="opportunitiesSorter" label="Ref" />
-          <mp3000-table-header property="status" :sorter="opportunitiesSorter" label="Statut" />
-          <mp3000-table-header property="amount" :sorter="opportunitiesSorter" label="Montant" />
           <mp3000-table-header
-            property="soldDays"
-            :sorter="opportunitiesSorter"
+            :asc="getOpportunityAsc('ref')"
+            :priority="getOpportunityPriority('ref')"
+            @click="sortOpportunities('ref')"
+            label="Ref"
+          />
+          <mp3000-table-header
+            :asc="getOpportunityAsc('status')"
+            :priority="getOpportunityPriority('status')"
+            @click="sortOpportunities('status')"
+            label="Statut"
+          />
+          <mp3000-table-header
+            :asc="getOpportunityAsc('amount')"
+            :priority="getOpportunityPriority('amount')"
+            @click="sortOpportunities('amount')"
+            label="Montant"
+          />
+          <mp3000-table-header
+            :asc="getOpportunityAsc('soldDays')"
+            :priority="getOpportunityPriority('soldDays')"
+            @click="sortOpportunities('soldDays')"
             label="Jours vendus"
           />
           <mp3000-table-header
-            property="workedDays"
-            :sorter="opportunitiesSorter"
+            :asc="getOpportunityAsc('workedDays')"
+            :priority="getOpportunityPriority('workedDays')"
+            @click="sortOpportunities('workedDays')"
             label="Jours travaillés"
           />
           <mp3000-table-header
-            property="createdAt"
-            :sorter="opportunitiesSorter"
+            :asc="getOpportunityAsc('createdAt')"
+            :priority="getOpportunityPriority('createdAt')"
+            @click="sortOpportunities('createdAt')"
             label="Création"
           />
         </template>
         <template #body>
-          <tr v-if="opportunitiesSorter.sortedList.value.length === 0">
+          <tr v-if="sortedOpportunities.length === 0">
             <td colspan="100">Aucune opportunité</td>
           </tr>
           <opportunity-row
             v-else
-            v-for="opportunity in opportunitiesSorter.sortedList.value"
+            v-for="opportunity in sortedOpportunities"
             :key="opportunity.id"
             :is-deletable="deletableOpportuntyIds.includes(opportunity.id)"
             :with-details="false"
@@ -258,23 +286,39 @@ onMounted(async () => {
         </template>
         <template v-slot:header>
           <tr>
-            <mp3000-table-header property="name" :sorter="contactsSorter" label="Nom" />
-            <mp3000-table-header property="email" :sorter="contactsSorter" label="Email" />
-            <mp3000-table-header property="phone" :sorter="contactsSorter" label="Téléphone" />
             <mp3000-table-header
-              property="comments"
-              :sorter="contactsSorter"
+              :asc="getContactAsc('name')"
+              :priority="getContactPriority('name')"
+              @click="sortContacts('name')"
+              label="Nom"
+            />
+            <mp3000-table-header
+              :asc="getContactAsc('email')"
+              :priority="getContactPriority('email')"
+              @click="sortContacts('email')"
+              label="Email"
+            />
+            <mp3000-table-header
+              :asc="getContactAsc('phone')"
+              :priority="getContactPriority('phone')"
+              @click="sortContacts('phone')"
+              label="Téléphone"
+            />
+            <mp3000-table-header
+              :asc="getContactAsc('comments')"
+              :priority="getContactPriority('comments')"
+              @click="sortContacts('comments')"
               label="Commentaires"
             />
           </tr>
         </template>
         <template v-slot:body>
-          <tr v-if="contactsSorter.sortedList.value.length === 0">
+          <tr v-if="sortedContacts.length === 0">
             <td colspan="100">Aucun contact</td>
           </tr>
           <contact-row
             v-else
-            v-for="contact in contactsSorter.sortedList.value"
+            v-for="contact in sortedContacts"
             :key="contact.id"
             :is-deletable="deletableContactIds.includes(contact.id)"
             :contact="contact"

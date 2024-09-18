@@ -32,7 +32,8 @@ function getEmptyTenderRow(): NewTenderRow {
     position: props.position,
     title: '',
     description: '',
-    soldDays: 0
+    soldDays: 0,
+    fixedRate: 0
   }
 }
 
@@ -114,6 +115,15 @@ onMounted(() => {
           class="form-control"
           v-model="currentTenderRow.soldDays"
           :disabled="isSubmitting"
+        />
+      </div>
+      <div class="form-group">
+        <label>Coût fixe</label>
+        <input
+            type="number"
+            class="form-control"
+            v-model="currentTenderRow.fixedRate"
+            :disabled="isSubmitting"
         />
       </div>
     </template>
