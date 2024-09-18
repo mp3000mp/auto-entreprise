@@ -60,7 +60,8 @@ const { getAsc, getPriority, sort, sortedList } = useSorter(
     {
       property: 'amount',
       type: SortConfigTypeEnum.CUSTOM,
-      customCompare: (a: Opportunity, b: Opportunity) => (a.lastTender?.totalRate ?? 0) - (b.lastTender?.totalRate ?? 0)
+      customCompare: (a: Opportunity, b: Opportunity) =>
+        (a.lastTender?.totalRate ?? 0) - (b.lastTender?.totalRate ?? 0)
     },
     {
       property: 'soldDays',

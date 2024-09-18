@@ -237,10 +237,10 @@ onMounted(async () => {
           label="Jours vendus"
         />
         <mp3000-table-header
-            :asc="getAsc('fixedRate')"
-            :priority="getPriority('fixedRate')"
-            @click="sort('fixedRate')"
-            label="Coûts fixes"
+          :asc="getAsc('fixedRate')"
+          :priority="getPriority('fixedRate')"
+          @click="sort('fixedRate')"
+          label="Coûts fixes"
         />
         <mp3000-table-header
           :asc="getAsc('amount')"

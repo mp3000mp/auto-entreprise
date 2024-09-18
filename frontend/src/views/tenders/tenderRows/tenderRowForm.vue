@@ -120,10 +120,10 @@ onMounted(() => {
       <div class="form-group">
         <label>Coût fixe</label>
         <input
-            type="number"
-            class="form-control"
-            v-model="currentTenderRow.fixedRate"
-            :disabled="isSubmitting"
+          type="number"
+          class="form-control"
+          v-model="currentTenderRow.fixedRate"
+          :disabled="isSubmitting"
         />
       </div>
     </template>
