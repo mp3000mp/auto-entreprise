@@ -261,7 +261,7 @@ onMounted(async () => {
             :average-daily-rate="tender.averageDailyRate"
             @show-form="showTenderRowForm(tenderRow)"
           />
-          <tr class="total" v-if="tenderRowFilterSearch.length < 3">
+          <tr class="total">
             <td colspan="2" class="text-end">Total:</td>
             <td>{{ tenderSoldDays }}</td>
             <td>{{ tenderFixedRate }}</td>

@@ -18,13 +18,17 @@ type SortConfig = {
 type Sort = Pick<SortConfig, 'property' | 'type' | 'customCompare'>
 
 function propCompare<T>(sort: SortConfig): (a: T, b: T) => number {
-  let compareFunc = (a: number, b: number): number => a - b
+  let compareFunc: (a: number, b: number) => number
   switch (sort.type) {
     case SortConfigTypeEnum.STRING:
       compareFunc = (a: string, b: string): number => String(a).localeCompare(String(b))
       break
     case SortConfigTypeEnum.DATE: // dayjs
       compareFunc = (a: Dayjs, b: Dayjs): number => a.diff(b)
+      break
+    case SortConfigTypeEnum.NUMBER:
+    default:
+      compareFunc = (a: number, b: number): number => a - b
       break
   }
 
@@ -48,7 +52,7 @@ function propCompare<T>(sort: SortConfig): (a: T, b: T) => number {
 }
 
 export function useSorter<T>(options: SortConfig[], list: Ref<T>[]) {
-  const sorts = ref(options.map((option) => ({ ...option, priority: 0, asc: true })))
+  const sorts: Ref<Sort[]> = ref(options.map((option) => ({ ...option, priority: 0, asc: true })))
   let maxPriority = 0
 
   function levelSorts(currentPriority: number) {
