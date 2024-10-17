@@ -59,7 +59,7 @@ async function remove() {
     </td>
     <td>{{ tender.status.label }}</td>
     <td>{{ tender.soldDays }}</td>
-    <td>{{ tender.soldDays * tender.averageDailyRate }}€</td>
+    <td>{{ tender.totalRate }}€</td>
     <td v-if="withDetails">{{ tender.createdAt.format('YYYY-MM-DD') }}</td>
   </tr>
 </template>

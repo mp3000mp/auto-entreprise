@@ -51,9 +51,7 @@ async function remove() {
     </td>
     <td>{{ opportunity.status.label }}</td>
     <td>
-      {{
-        (opportunity.lastTender?.soldDays ?? 0) * (opportunity.lastTender?.averageDailyRate ?? 0)
-      }}€
+      {{ opportunity.lastTender?.totalRate ?? 0 }}€
     </td>
     <td>{{ opportunity.lastTender?.soldDays ?? 0 }}</td>
     <td>{{ opportunity.workedDays }}</td>
