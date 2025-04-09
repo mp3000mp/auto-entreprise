@@ -103,7 +103,11 @@ export function useSorter<T>(options: SortConfig[], list: Ref<T>[]) {
     if (null === targetSort) {
       return
     }
-    targetSort.asc === false ? removeSort(targetSort) : addSort(targetSort, asc)
+    if (null !== asc) {
+      addSort(targetSort, asc)
+    } else {
+      targetSort.asc === false ? removeSort(targetSort) : addSort(targetSort)
+    }
   }
 
   function resetSorts() {

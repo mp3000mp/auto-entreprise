@@ -2,6 +2,8 @@ import { describe, expect, test } from 'vitest'
 import Component from '@/components/Mp3000ConfirmModal.vue'
 import { mount } from '@vue/test-utils'
 
+const stubs = ['font-awesome-icon']
+
 describe('BootstrapModal.vue', () => {
   test('is not showing', () => {
     const wrapper = mount(Component, {
@@ -15,6 +17,9 @@ describe('BootstrapModal.vue', () => {
           cancelButtonMessage: 'cancel message'
         },
         isShowing: true
+      },
+      global: {
+        stubs
       }
     })
     expect(wrapper.find('.modal').exists()).toBeTruthy()
