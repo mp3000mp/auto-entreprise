@@ -107,7 +107,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (securityStore.currentUser === null && to.name !== 'login') {
-    return next({ name: 'login', query: { redirect: to.href } })
+    return next({ name: 'login', query: { redirect: to.fullPath } })
   }
   if (securityStore.currentUser !== null && to.name === 'login') {
     return next({ name: 'home' })
@@ -116,7 +116,12 @@ router.beforeEach(async (to, from, next) => {
 })
 
 apiClient.setOnUnauthorizedCallback((response) => {
-  if (response.message === 'twoFactorAuthRequired') {
+  if (
+    typeof response === 'object' &&
+    response !== null &&
+    'message' in response &&
+    response.message === 'twoFactorAuthRequired'
+  ) {
     const securityStore = useSecurityStore()
     securityStore.twoFactorAuthRequired = true
   }

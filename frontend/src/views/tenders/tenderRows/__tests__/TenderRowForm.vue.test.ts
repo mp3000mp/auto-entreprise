@@ -5,6 +5,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { vi } from 'vitest'
 import Mp3000Button from '@/components/Mp3000Button.vue'
 import { useTenderStore } from '@/stores/tender'
+import { initEmptyTender } from '@tests/data/tender'
 
 const stubs = ['font-awesome-icon']
 
@@ -13,7 +14,7 @@ describe('TenderRowForm.vue', () => {
     const wrapper = mount(Component, {
       props: {
         tenderRow: null,
-        tender: { id: 1 },
+        tender: initEmptyTender(),
         isShowing: true
       },
       global: {
@@ -42,13 +43,14 @@ describe('TenderRowForm.vue', () => {
 
     const store = useTenderStore()
     expect(store.addTenderRow).toHaveBeenCalledTimes(1)
-    const arg = store.addTenderRow.mock.calls[0][0]
+    const arg = vi.mocked(store.addTenderRow).mock.calls[0][0]
     expect(arg).toEqual({
       tender: { id: 1 },
       position: 10,
       title: 'title1',
       description: 'desc1',
-      soldDays: 0
+      soldDays: 0,
+      fixedRate: 0
     })
   })
 })

@@ -6,6 +6,7 @@ import { useCompanyStore } from '@/stores/company'
 
 import TenderForm from '@/views/tenders/TenderForm.vue'
 import type { Tender, ListTender } from '@/stores/tender/types'
+import type { ListOpportunity, TenderOpportunity } from '@/stores/opportunity/types'
 import TenderRow from '@/views/tenders/TenderRow.vue'
 import Mp3000Table from '@/components/Mp3000Table.vue'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
@@ -29,7 +30,10 @@ const filterCompanyId = ref(null) as Ref<number | null>
 const filterStatusId = ref(null) as Ref<number | null>
 const filteredTenders = computed(() =>
   tenders.value.filter((tender) => {
-    if (null !== filterCompanyId.value && tender.opportunity.company.id !== filterCompanyId.value) {
+    if (
+      null !== filterCompanyId.value &&
+      tender.opportunity?.company.id !== filterCompanyId.value
+    ) {
       return false
     }
     if (null !== filterStatusId.value && tender.status.id !== filterStatusId.value) {
@@ -38,7 +42,7 @@ const filteredTenders = computed(() =>
     if (filterSearch.value.length < 1) {
       return true
     }
-    return tender.opportunity.ref.toLowerCase().includes(filterSearch.value.toLowerCase())
+    return tender.opportunity?.ref.toLowerCase().includes(filterSearch.value.toLowerCase()) ?? false
   })
 )
 
@@ -65,7 +69,7 @@ const { getAsc, getPriority, sort, sortedList } = useSorter(
     {
       property: 'amount',
       type: SortConfigTypeEnum.CUSTOM,
-      customCompare: (a: Tender, b: Tender) => a.totalRate - b.totalRate
+      customCompare: (a: Tender, b: Tender) => (a.totalRate ?? 0) - (b.totalRate ?? 0)
     },
     { property: 'createdAt', type: SortConfigTypeEnum.DATE }
   ],
@@ -186,7 +190,7 @@ onMounted(async () => {
           :key="tender.id"
           :is-deletable="deletableIds.includes(tender.id)"
           :tender="tender"
-          :opportunity="tender.opportunity"
+          :opportunity="tender.opportunity as TenderOpportunity"
           :with-details="true"
           @show-form="showForm(tender)"
         />
@@ -195,7 +199,7 @@ onMounted(async () => {
     <tender-form
       v-if="currentTender?.opportunity"
       :tender="currentTender"
-      :opportunity="currentTender.opportunity"
+      :opportunity="currentTender!.opportunity as unknown as ListOpportunity"
       :is-showing="isFormShowing"
       @stop-showing="hideForm"
       :is-loading="isFormLoading"

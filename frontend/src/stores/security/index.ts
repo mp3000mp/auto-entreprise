@@ -64,7 +64,7 @@ export const useSecurityStore = defineStore('security', {
     async checkIsLoggedIn() {
       try {
         this.currentUser = await ApiClient.query<User>(HttpMethodEnum.GET, '/api/me')
-      } catch (err: unknown) {
+      } catch {
         this.currentUser = null
       } finally {
         this.loggedInChecked = true

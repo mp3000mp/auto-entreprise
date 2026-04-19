@@ -33,7 +33,8 @@ describe('CompaniesView.vue', () => {
 
     await testSorter(
       wrapper,
-      [{ columnName: 'Nom', columnIdx: 0, expectedIdsOrder: [1, 2, 3] }],
+      [1, 2, 3],
+      [{ columnName: 'Nom', columnIdx: 0, expectedIdsOrder: [3, 2, 1] }],
       CompanyRow,
       'company'
     )

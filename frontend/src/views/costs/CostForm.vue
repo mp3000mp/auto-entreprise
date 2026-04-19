@@ -24,7 +24,7 @@ const costTypes = computed(() => costStore.costTypes)
 
 function getEmptyCost(): NewCost {
   return {
-    type: { id: 0, label: '' },
+    type: { id: 0, position: 0, label: '', code: '' },
     date: dayjs(),
     amount: 0,
     description: ''

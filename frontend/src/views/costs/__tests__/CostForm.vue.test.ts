@@ -44,12 +44,12 @@ describe('CostForm.vue', () => {
 
     const store = useCostStore()
     expect(store.addCost).toHaveBeenCalledTimes(1)
-    const arg = store.addCost.mock.calls[0][0]
+    const arg = vi.mocked(store.addCost).mock.calls[0][0]
     expect(setMidnight(arg, 'date')).toEqual({
       amount: 0,
       date: dayjs().startOf('day'),
       description: '',
-      type: { id: 2, label: '' }
+      type: { id: 2, label: '', position: 0, code: '' }
     })
   })
 })

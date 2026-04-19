@@ -62,13 +62,13 @@ describe('OpportunityForm.vue', () => {
 
     const store = useOpportunityStore()
     expect(store.add).toHaveBeenCalledTimes(1)
-    const arg = store.add.mock.calls[0][0]
+    const arg = vi.mocked(store.add).mock.calls[0][0]
     expect(setMidnight(arg, 'trackedAt')).toEqual({
       ref: 'ref1',
       description: 'desc1',
       company: { id: 2, name: '' },
       status: statuses[0],
-      meanOfPayment: { id: null },
+      meanOfPayment: null,
       trackedAt: dayjs().startOf('day'),
       purchasedAt: null,
       forecastedDelivery: null,

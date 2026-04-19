@@ -6,7 +6,7 @@ import { vi } from 'vitest'
 import { initOpportunity, initEmptyOpportunity } from '@tests/data/opportunity'
 import { useOpportunityStore } from '@/stores/opportunity'
 import { useTenderStore } from '@/stores/tender'
-import { useRouter } from 'vue-router'
+import { useRouter, type Router } from 'vue-router'
 import { initTenderStatuses } from '../../../../tests/data/tender'
 
 vi.mock('vue-router')
@@ -85,7 +85,7 @@ describe('OpportunityView.vue', () => {
     const routerMock = {
       push: vi.fn()
     }
-    useRouter.mockReturnValue(routerMock)
+    vi.mocked(useRouter).mockReturnValue(routerMock as unknown as Router)
     const wrapper = mount(Component, {
       props: {
         opportunityId: 1
@@ -128,7 +128,7 @@ describe('OpportunityView.vue', () => {
     const routerMock = {
       push: vi.fn()
     }
-    useRouter.mockReturnValue(routerMock)
+    vi.mocked(useRouter).mockReturnValue(routerMock as unknown as Router)
     const wrapper = mount(Component, {
       props: {
         opportunityId: 1

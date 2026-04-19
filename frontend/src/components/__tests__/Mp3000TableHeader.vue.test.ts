@@ -1,7 +1,6 @@
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import Component from '@/components/Mp3000TableHeader.vue'
 import { mount } from '@vue/test-utils'
-import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 
 const stubs = ['font-awesome-icon']
 
@@ -11,7 +10,7 @@ describe('Mp3000TableHeader.vue', () => {
       props: {
         label: 'label',
         asc: null,
-        priority: 0,
+        priority: 0
       },
       global: {
         stubs

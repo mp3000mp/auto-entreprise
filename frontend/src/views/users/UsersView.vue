@@ -5,7 +5,6 @@ import Mp3000Table from '@/components/Mp3000Table.vue'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
 import UserRow from '@/views/users/UserRow.vue'
 import { useSorter, SortConfigTypeEnum } from '@/composables/useSorter'
-import {FilterConfigTypeEnum, useFilter} from "@/composables/useFilter";
 
 const userStore = useUserStore()
 
@@ -13,20 +12,14 @@ const isLoading = ref(false)
 
 const users = computed(() => userStore.users)
 
-// const filterSearch = ref('')
-// const filteredUsers = computed(() =>
-//   users.value.filter((user) => {
-//     if (filterSearch.value.length < 1) {
-//       return true
-//     }
-//     return (user.email + user.username).toLowerCase().includes(filterSearch.value.toLowerCase())
-//   })
-// )
-const { filteredList, filter } = useFilter(
-  [
-    { property: 'email', type: FilterConfigTypeEnum.STRING },
-  ],
-  users
+const filterSearch = ref('')
+const filteredUsers = computed(() =>
+  users.value.filter((user) => {
+    if (filterSearch.value.length < 1) {
+      return true
+    }
+    return (user.email + user.username).toLowerCase().includes(filterSearch.value.toLowerCase())
+  })
 )
 const { getAsc, getPriority, sort, sortedList } = useSorter(
   [
@@ -35,7 +28,7 @@ const { getAsc, getPriority, sort, sortedList } = useSorter(
     { property: 'username', type: SortConfigTypeEnum.STRING },
     { property: 'roles', type: SortConfigTypeEnum.STRING }
   ],
-  filteredList
+  filteredUsers
 )
 
 onMounted(async () => {
@@ -49,7 +42,7 @@ onMounted(async () => {
 <template>
   <div>
     <h2>Utilisateurs</h2>
-    <h3> {{ filteredList.length }}</h3>
+    <h3>{{ sortedList.length }}</h3>
     <mp3000-table :is-loading="isLoading">
       <template v-slot:filters>
         <div class="col-auto">

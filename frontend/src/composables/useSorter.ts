@@ -13,12 +13,14 @@ type SortConfig = {
   type: SortConfigTypeEnum
   priority: number
   asc: boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customCompare?: (a: any, b: any) => number // todo T
 }
 type Sort = Pick<SortConfig, 'property' | 'type' | 'customCompare'>
 
 function propCompare<T>(sort: SortConfig): (a: T, b: T) => number {
-  let compareFunc: (a: number, b: number) => number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let compareFunc: (a: any, b: any) => number
   switch (sort.type) {
     case SortConfigTypeEnum.STRING:
       compareFunc = (a: string, b: string): number => String(a).localeCompare(String(b))
@@ -35,11 +37,13 @@ function propCompare<T>(sort: SortConfig): (a: T, b: T) => number {
   return (a: T, b: T): number => {
     const coef = sort.asc ? 1 : -1
     if (SortConfigTypeEnum.CUSTOM === sort.type) {
-      return sort.customCompare(a, b) * coef
+      return sort.customCompare!(a, b) * coef
     }
 
-    const aVal = a[sort.property]
-    const bVal = b[sort.property]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const aVal = (a as any)[sort.property]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const bVal = (b as any)[sort.property]
     if (aVal === null) {
       return (null === bVal ? 0 : -1) * coef
     }
@@ -51,8 +55,10 @@ function propCompare<T>(sort: SortConfig): (a: T, b: T) => number {
   }
 }
 
-export function useSorter<T>(options: SortConfig[], list: Ref<T>[]) {
-  const sorts: Ref<Sort[]> = ref(options.map((option) => ({ ...option, priority: 0, asc: true })))
+export function useSorter<T>(options: Sort[], list: Ref<T[]>) {
+  const sorts: Ref<SortConfig[]> = ref(
+    options.map((option) => ({ ...option, priority: 0, asc: true }))
+  )
   let maxPriority = 0
 
   function levelSorts(currentPriority: number) {
@@ -62,11 +68,11 @@ export function useSorter<T>(options: SortConfig[], list: Ref<T>[]) {
       }
     })
   }
-  function findSort(property: string): Sort | null {
+  function findSort(property: string): SortConfig | null {
     return sorts.value.find((sort) => sort.property === property) ?? null
   }
 
-  function addSort(targetSort: Sort, asc: boolean | null = null) {
+  function addSort(targetSort: SortConfig, asc: boolean | null = null) {
     const currentPriority = targetSort.priority
     if (currentPriority === 0) {
       targetSort.asc = asc ?? true
@@ -84,7 +90,7 @@ export function useSorter<T>(options: SortConfig[], list: Ref<T>[]) {
     sorts.value.sort((a, b) => b.priority - a.priority)
   }
 
-  function removeSort(targetSort: Sort) {
+  function removeSort(targetSort: SortConfig) {
     if (targetSort.priority === 0) {
       return
     }
@@ -126,12 +132,15 @@ export function useSorter<T>(options: SortConfig[], list: Ref<T>[]) {
   }
 
   const sortedList = computed(() => {
-    const rList = [...list.value]
-    sorts.value.forEach((sort) => {
-      if (sort.priority !== 0) {
-        rList.sort(propCompare(sort))
-      }
-    })
+    let rList = [...list.value]
+    sorts.value
+      .slice()
+      .reverse()
+      .forEach((sort) => {
+        if (sort.priority !== 0) {
+          rList = rList.sort(propCompare(sort))
+        }
+      })
     return rList
   })
 

@@ -46,6 +46,8 @@ export type TenderFile = {
   type: TenderFileTypeEnum
   title: string
   description: string
+  extension?: string
+  name?: string
   createdAt: Dayjs
 }
 export type TenderFileDtoIn = Omit<TenderFile, 'createdAt'> & {
@@ -66,17 +68,24 @@ export type Tender = {
   comments: string | null
   tenderRows: TenderRow[]
   soldDays: number
+  totalRate?: number
   statusLogs: TenderStatusLog[]
   tenderFiles: TenderFile[]
 }
-export type NewTender = Omit<Tender, 'id' | 'tenderRows' | 'statusLogs' | 'tenderFiles'>
+export type NewTender = Omit<
+  Tender,
+  'id' | 'tenderRows' | 'statusLogs' | 'tenderFiles' | 'createdAt' | 'soldDays'
+>
 export type ListTender = Pick<
   Tender,
-  'id' | 'status' | 'version' | 'createdAt' | 'averageDailyRate' | 'soldDays' | 'opportunity'
+  'id' | 'status' | 'version' | 'createdAt' | 'averageDailyRate' | 'soldDays' | 'totalRate'
 > & {
-  opportunity: TenderOpportunity
+  opportunity: TenderOpportunity | null
 }
-export type OpportunityTender = Omit<ListTender, 'createdAt' | 'opportunity'>
+export type OpportunityTender = Omit<ListTender, 'createdAt' | 'opportunity'> & {
+  totalRate?: number
+  workedDays?: number
+}
 export type TenderDtoIn = Omit<
   Tender,
   'canceledAt' | 'acceptedAt' | 'refusedAt' | 'sentAt' | 'statusLogs' | 'tenderFiles'
@@ -103,6 +112,8 @@ export type TenderDtoOut = Omit<
   | 'refusedAt'
   | 'sentAt'
   | 'tenderFiles'
+  | 'createdAt'
+  | 'soldDays'
 > & {
   opportunity: string
   status: string

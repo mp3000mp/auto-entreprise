@@ -8,7 +8,7 @@ export enum HttpMethodEnum {
   PUT = 'PUT'
 }
 
-type OnUnauthorizedCallback = (response: any) => void
+type OnUnauthorizedCallback = (response: unknown) => void
 
 export class ApiError {
   message = ''
@@ -17,7 +17,7 @@ export class ApiError {
 export type ApiClientOptions = {
   ignoreResponse?: boolean
   isJson?: boolean
-  headers?: any
+  headers?: Record<string, string>
 }
 const defaultApiClientOptions = {
   ignoreResponse: false,
@@ -36,7 +36,7 @@ class ApiClient {
   public async query<T>(
     httpMethod: HttpMethodEnum,
     url: string,
-    json: any = null,
+    json: FormData | object | null = null,
     options: ApiClientOptions = {}
   ): Promise<T> {
     options = {
@@ -50,7 +50,7 @@ class ApiClient {
     }
     if (json instanceof FormData) {
       fetchOptions.body = json
-      delete fetchOptions.headers['Content-Type'] // mandatory so boundary will be set by browser
+      delete (fetchOptions.headers as Record<string, string>)['Content-Type'] // mandatory so boundary will be set by browser
     } else if (json !== null) {
       fetchOptions.body = JSON.stringify(json)
     }
@@ -59,7 +59,7 @@ class ApiClient {
     let jsonResponse = response as T
     if (options.isJson) {
       if (options.ignoreResponse || response.status === 204) {
-        return null
+        return null as unknown as T
       }
       jsonResponse = await response.json()
     }

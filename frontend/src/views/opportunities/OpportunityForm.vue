@@ -38,13 +38,22 @@ const companies = computed(() => companyStore.companies)
 const meanOfPayments = computed(() => opportunityStore.meanOfPayments)
 const statuses = computed(() => opportunityStore.statuses)
 
+const selectedMeanOfPaymentId = computed({
+  get: () => currentOpportunity.value.meanOfPayment?.id ?? null,
+  set: (id: number | null) => {
+    currentOpportunity.value.meanOfPayment = id
+      ? (meanOfPayments.value.find((m) => m.id === id) ?? null)
+      : null
+  }
+})
+
 function getEmptyOpportunity(): NewOpportunity {
   return {
     ref: '',
     description: '',
-    status: { id: 0, label: '' },
+    status: { id: 0, position: 0, label: '', code: '' },
     company: props.company ? props.company : { id: 0, name: '' },
-    meanOfPayment: { id: null },
+    meanOfPayment: null,
     trackedAt: dayjs(),
     purchasedAt: null,
     forecastedDelivery: null,
@@ -91,12 +100,9 @@ async function submit() {
 function refresh() {
   if (props.opportunity) {
     currentOpportunity.value = { ...props.opportunity }
-    delete currentOpportunity.value.contacts
+    delete (currentOpportunity.value as Partial<Opportunity>).contacts
     if (props.company) {
       currentOpportunity.value.company = props.company
-    }
-    if (!currentOpportunity.value.meanOfPayment) {
-      currentOpportunity.value.meanOfPayment = { id: null }
     }
   } else {
     currentOpportunity.value = getEmptyOpportunity()
@@ -238,7 +244,7 @@ onMounted(async () => {
         <select
           v-else
           class="form-select"
-          v-model="currentOpportunity.meanOfPayment.id"
+          v-model="selectedMeanOfPaymentId"
           :disabled="isSubmitting"
         >
           <option :value="null">-</option>

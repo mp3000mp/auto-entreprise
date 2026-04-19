@@ -5,6 +5,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { vi } from 'vitest'
 import Mp3000Button from '@/components/Mp3000Button.vue'
 import { useWorkedTimeStore } from '@/stores/workedTime'
+import { initEmptyOpportunity } from '@tests/data/opportunity'
 import dayjs from '../../../misc/dayjs'
 import { setMidnight } from '../../../../tests/utils/dayjs'
 
@@ -15,7 +16,7 @@ describe('WorkedTimeForm.vue', () => {
     const wrapper = mount(Component, {
       props: {
         workedTime: null,
-        opportunity: { id: 1 },
+        opportunity: initEmptyOpportunity(),
         isShowing: true
       },
       global: {
@@ -44,7 +45,7 @@ describe('WorkedTimeForm.vue', () => {
 
     const store = useWorkedTimeStore()
     expect(store.add).toHaveBeenCalledTimes(1)
-    const arg = store.add.mock.calls[0][0]
+    const arg = vi.mocked(store.add).mock.calls[0][0]
     expect(setMidnight(arg, 'date')).toEqual({
       opportunity: { id: 1 },
       user: { id: 1 },

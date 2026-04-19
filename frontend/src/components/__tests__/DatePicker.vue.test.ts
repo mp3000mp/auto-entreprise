@@ -12,10 +12,13 @@ describe('DatePicker.vue', () => {
       }
     })
     const dp = wrapper.findComponent(VueDatePicker)
-    await dp.setValue(new Date('2023-12-15'))
+    await dp.vm.$emit('update:model-value', new Date('2023-12-15'))
 
-    expect(wrapper.emitted()['update:modelValue'].length).toBe(1)
-    const emittedArg = wrapper.emitted()['update:modelValue'][0][0]
+    const emitted = wrapper.emitted('update:modelValue')
+    expect(emitted).toBeTruthy()
+    expect(emitted!.length).toBe(1)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const emittedArg = (emitted![0] as any[])[0]
     expect(dayjs.isDayjs(emittedArg)).toBeTruthy()
     expect(emittedArg.format('YYYY-MM-DD')).toEqual('2023-12-15')
   })

@@ -4,11 +4,11 @@ import dayjs from "@/misc/dayjs";
 
 export function initTenderStatuses(): TenderStatus[] {
     return [
-        {id: 1, position: 10, label: 'ongoing'},
-        {id: 2, position: 20, label: 'sent'},
-        {id: 3, position: 30, label: 'accepted'},
-        {id: 4, position: 40, label: 'refused'},
-        {id: 5, position: 50, label: 'canceled'},
+        {id: 1, position: 10, label: 'ongoing', code: 'ongoing'},
+        {id: 2, position: 20, label: 'sent', code: 'sent'},
+        {id: 3, position: 30, label: 'accepted', code: 'accepted'},
+        {id: 4, position: 40, label: 'refused', code: 'refused'},
+        {id: 5, position: 50, label: 'canceled', code: 'canceled'},
     ]
 }
 
@@ -29,6 +29,8 @@ export function initTenderRows(): TenderRow[] {
             description: 'desc'+i,
             title: 'row'+i,
             soldDays: 1,
+            fixedRate: 0,
+            tender: { id: 1 },
         })
     }
     return rows
@@ -45,7 +47,7 @@ export function initTenders(noOpportunity: boolean = true): ListTender[] {
             createdAt: dayjs('2023-11-01'),
             averageDailyRate: 100,
             soldDays: 2,
-            tenderRows: [],
+            totalRate: 200,
         },
         {
             id: 2,
@@ -55,7 +57,7 @@ export function initTenders(noOpportunity: boolean = true): ListTender[] {
             createdAt: dayjs('2023-11-02'),
             averageDailyRate: 100,
             soldDays: 1.5,
-            tenderRows: [],
+            totalRate: 150,
         },
         {
             id: 3,
@@ -65,7 +67,7 @@ export function initTenders(noOpportunity: boolean = true): ListTender[] {
             createdAt: dayjs('2023-11-03'),
             averageDailyRate: 100,
             soldDays: 3,
-            tenderRows: [],
+            totalRate: 300,
         }
     ]
 }

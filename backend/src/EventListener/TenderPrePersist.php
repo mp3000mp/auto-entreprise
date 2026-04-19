@@ -6,8 +6,9 @@ use App\Entity\Tender;
 use App\Entity\TenderStatus;
 use App\Entity\TenderStatusLog;
 use App\Enum\TenderStatusEnum;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
@@ -15,35 +16,53 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 #[AsEntityListener(Events::prePersist, 'prePersist', entity: Tender::class)]
 #[AsEntityListener(Events::preUpdate, 'preUpdate', entity: Tender::class)]
+#[AsDoctrineListener(event: Events::postFlush)]
 class TenderPrePersist
 {
-    public function __construct(private Security $security, private EntityManagerInterface $em)
+    /** @var TenderStatusLog[] */
+    private array $pendingLogs = [];
+
+    public function __construct(private Security $security)
     {
     }
 
     public function prePersist(Tender $tender, PrePersistEventArgs $args): void
     {
+        $em = $args->getObjectManager();
         if (null === $tender->getStatus()) {
-            $status = $this->em->getRepository(TenderStatus::class)->findOneBy(['label' => TenderStatusEnum::ONGOING]);
+            $status = $em->getRepository(TenderStatus::class)->findOneBy(['label' => TenderStatusEnum::ONGOING]);
             $tender->setStatus($status);
         }
-        $this->createLog($tender);
+        $log = $this->buildLog($tender);
+        $em->persist($log);
     }
 
     public function preUpdate(Tender $tender, PreUpdateEventArgs $args): void
     {
         if ($args->hasChangedField('status')) {
-            $this->createLog($tender);
+            $this->pendingLogs[] = $this->buildLog($tender);
         }
     }
 
-    private function createLog(Tender $tender): void
+    public function postFlush(PostFlushEventArgs $args): void
     {
-        $log = (new TenderStatusLog())
+        if (!$this->pendingLogs) {
+            return;
+        }
+        $em = $args->getObjectManager();
+        foreach ($this->pendingLogs as $log) {
+            $em->persist($log);
+        }
+        $this->pendingLogs = [];
+        $em->flush();
+    }
+
+    private function buildLog(Tender $tender): TenderStatusLog
+    {
+        return (new TenderStatusLog())
             ->setStatus($tender->getStatus())
             ->setTender($tender)
             ->setCreatedAt(new \DateTime())
             ->setCreatedBy($this->security->getUser());
-        $this->em->persist($log);
     }
 }

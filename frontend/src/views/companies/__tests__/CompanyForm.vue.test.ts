@@ -36,7 +36,7 @@ describe('CompanyForm.vue', () => {
 
     const store = useCompanyStore()
     expect(store.add).toHaveBeenCalledTimes(1)
-    const arg = store.add.mock.calls[0][0]
+    const arg = vi.mocked(store.add).mock.calls[0][0]
     expect(arg).toEqual({
       name: 'MP3000',
       street1: '',

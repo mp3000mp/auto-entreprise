@@ -41,7 +41,7 @@ const confirmMessage = computed(() => ({
 }))
 const companyContacts = computed(() => companyStore.currentCompany?.contacts ?? [])
 const opportunityContactIds = computed(() =>
-  opportunity.value.contacts.map((contact) => contact.id)
+  (opportunity.value?.contacts ?? []).map((contact) => contact.id)
 )
 const notLinkedContacts = computed(() =>
   companyContacts.value.filter((contact) => !opportunityContactIds.value.includes(contact.id))
@@ -64,11 +64,14 @@ const currentTender = ref(null) as Ref<Tender | null>
 const tenderFilterSearch = ref('')
 const deletableTenderIds = tenderStore.deletableIds
 const filteredTenders = computed(() =>
-  opportunity.value.tenders.filter((tender) => {
+  (opportunity.value?.tenders ?? []).filter((tender) => {
     if (tenderFilterSearch.value.length < 1) {
       return true
     }
-    return tender.opportunity.ref.toLowerCase().includes(tenderFilterSearch.value.toLowerCase())
+    return (
+      tender.opportunity?.ref.toLowerCase().includes(tenderFilterSearch.value.toLowerCase()) ??
+      false
+    )
   })
 )
 const { getAsc, getPriority, sort, sortedList } = useSorter(
@@ -83,7 +86,7 @@ const { getAsc, getPriority, sort, sortedList } = useSorter(
     {
       property: 'amount',
       type: SortConfigTypeEnum.CUSTOM,
-      customCompare: (a: Tender, b: Tender) => a.totalRate - b.totalRate
+      customCompare: (a: Tender, b: Tender) => (a.totalRate ?? 0) - (b.totalRate ?? 0)
     },
     { property: 'createdAt', type: SortConfigTypeEnum.DATE }
   ],
@@ -148,7 +151,7 @@ function hideWorkedTimeHistory() {
 }
 
 const totalWorkedDays = computed(() =>
-  opportunity.value.workedTimes.reduce((acc, workedTime) => acc + workedTime.workedDays, 0)
+  (opportunity.value?.workedTimes ?? []).reduce((acc, workedTime) => acc + workedTime.workedDays, 0)
 )
 
 const isWorkedTimeFormShowing = ref(false)
@@ -165,7 +168,7 @@ function hideWorkedTimeForm() {
 onMounted(async () => {
   sort('version', false)
   await Promise.all([opportunityStore.fetchOne(props.opportunityId), tenderStore.fetchDeletables()])
-  await companyStore.fetchOne(opportunity.value.company.id)
+  await companyStore.fetchOne(opportunity.value!.company.id)
 })
 </script>
 
@@ -311,7 +314,7 @@ onMounted(async () => {
           target="_blank"
           class="me-1"
         >
-          <font-awesome-icon :icon="['fa', getFileIcon(file.extension)]" />
+          <font-awesome-icon :icon="['fa', getFileIcon(file.extension ?? '')]" />
           [{{ opportunityFileTypeLabels[file.type] }}] {{ file.name }}
         </a>
         <mp3000-icon class="me-1" icon="trash" @click="removeFile(file.id)" />
@@ -377,7 +380,7 @@ onMounted(async () => {
           :opportunity="opportunity"
           :with-details="false"
           :is-deletable="deletableTenderIds.includes(tender.id)"
-          @show-form="showTenderForm(tender)"
+          @show-form="showTenderForm(tender as unknown as Tender)"
         />
       </template>
     </mp3000-table>

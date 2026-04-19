@@ -82,11 +82,11 @@ async function toggleTwoFactorAuth() {
 async function checkTwoFactorCheck() {
   isSubmitting.value = true
   const response = await securityStore.checkTwoFactorAuth(twoFactorAuthCode.value)
-  if (response.success) {
+  if (response?.success) {
     errorMessage.value = ''
     successMessage.value = response.message
   } else {
-    errorMessage.value = response.message
+    errorMessage.value = response?.message ?? ''
     successMessage.value = ''
   }
   isSubmitting.value = false
@@ -96,10 +96,10 @@ async function checkTwoFactorCheck() {
 <template>
   <div>
     <h2>Mon compte</h2>
-    <h3>{{ currentUser.username }}</h3>
+    <h3>{{ currentUser?.username }}</h3>
     <p>
-      Email: {{ currentUser.email }}<br />
-      Roles: {{ currentUser.roles.join(',') }}
+      Email: {{ currentUser?.email }}<br />
+      Roles: {{ currentUser?.roles.join(',') }}
     </p>
     <h2>Mot de passe</h2>
     <button
@@ -165,13 +165,13 @@ async function checkTwoFactorCheck() {
     </div>
     <h2>Double authentification</h2>
     <button @click.prevent="toggleTwoFactorAuth" class="btn btn-primary mt-4">
-      {{ currentUser.isTotpAuthenticationEnabled ? 'Désactiver' : 'Activer' }} la double
+      {{ currentUser?.isTotpAuthenticationEnabled ? 'Désactiver' : 'Activer' }} la double
       authentification
     </button>
     <button
       @click.prevent="showTwoFactorAuthForm"
       class="btn btn-primary mt-4 ms-3"
-      v-if="!isTwoFactorAuthFormShowing && currentUser.isTotpAuthenticationEnabled"
+      v-if="!isTwoFactorAuthFormShowing && currentUser?.isTotpAuthenticationEnabled"
     >
       Afficher QR code
     </button>

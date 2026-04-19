@@ -37,6 +37,7 @@ describe('CostsView.vue', () => {
 
     await testSorter(
       wrapper,
+      [3, 2, 1],
       [
         { columnName: 'Type', columnIdx: 0, expectedIdsOrder: [1, 2, 3] },
         { columnName: 'Date', columnIdx: 1, expectedIdsOrder: [1, 2, 3] },

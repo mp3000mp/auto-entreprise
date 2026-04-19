@@ -32,11 +32,11 @@ setOptions({
       formData.append(fieldName, file, file.name)
 
       try {
-        await tenderStore.addTenderFile(formData, type.value, props.tenderId)
+        await tenderStore.addTenderFile(formData, type.value!, props.tenderId)
         progress(true, 100, 100)
         load('ok')
       } catch (err: unknown) {
-        error(err)
+        error(err as string)
       }
 
       setTimeout(() => {

@@ -6,17 +6,18 @@ import { vi } from 'vitest'
 import Mp3000Button from '@/components/Mp3000Button.vue'
 import { useTenderStore } from '@/stores/tender'
 import { initTenderStatuses } from '@tests/data/tender'
+import { initOpportunities } from '@tests/data/opportunity'
 
 const stubs = ['font-awesome-icon']
 
 describe('TenderForm.vue', () => {
   test('triggers submit event', async () => {
-    const fakeOpportunity = { id: 1, name: 'opp1', lastTender: { id: 1, version: 3 } }
+    const opportunity = initOpportunities(false)[0]
     const statuses = initTenderStatuses()
     const wrapper = mount(Component, {
       props: {
         tender: null,
-        opportunity: fakeOpportunity,
+        opportunity,
         isShowing: true
       },
       global: {
@@ -47,11 +48,11 @@ describe('TenderForm.vue', () => {
 
     const store = useTenderStore()
     expect(store.add).toHaveBeenCalledTimes(1)
-    const arg = store.add.mock.calls[0][0]
+    const arg = vi.mocked(store.add).mock.calls[0][0]
     expect(arg).toEqual({
-      version: 4,
+      version: 2,
       averageDailyRate: 150,
-      opportunity: fakeOpportunity,
+      opportunity,
       status: statuses[0],
       sentAt: null,
       acceptedAt: null,

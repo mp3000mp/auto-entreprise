@@ -101,7 +101,7 @@ class TenderRow
     #[Groups(['tender_show', 'tender_row_add', 'tender_row_edit'])]
     public function getTotalRate(): float
     {
-        return $this->getFixedRate() + $this->getTender()->getAverageDailyRate()*$this->getSoldDays();
+        return $this->getFixedRate() + $this->getTender()->getAverageDailyRate() * $this->getSoldDays();
     }
 
     public function getTitle(): string

@@ -1,5 +1,7 @@
 import { expect } from 'vitest'
 import Mp3000TableHeader from "@/components/Mp3000TableHeader.vue";
+import type { VueWrapper } from '@vue/test-utils'
+import type { Component } from 'vue'
 
 type Option = {
     columnName: string
@@ -7,11 +9,12 @@ type Option = {
     expectedIdsOrder: number[]
 }
 
-export function getRowIds(wrapper: any, rowComponent: any, prop: string): number[] {
-    return wrapper.findAllComponents(rowComponent).map(row => row.props(prop).id)
+export function getRowIds(wrapper: VueWrapper, rowComponent: Component, prop: string): number[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return wrapper.findAllComponents(rowComponent).map((row) => (row.props() as any)[prop].id)
 }
 
-export async function testSorter(wrapper: any, expectedInitialIdsOrder: number[], options: Option[], rowComponent: any, rowProp: string) {
+export async function testSorter(wrapper: VueWrapper, expectedInitialIdsOrder: number[], options: Option[], rowComponent: Component, rowProp: string) {
     const headers = wrapper.findAllComponents(Mp3000TableHeader)
     expect(getRowIds(wrapper, rowComponent, rowProp)).toEqual(expectedInitialIdsOrder)
     for (const option of options) {

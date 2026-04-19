@@ -1,10 +1,10 @@
 import { useNotificationStore } from '@/stores/notification/index'
 
 export function extractMessageFromError(err: unknown): string {
-  if ('message' in err) {
+  if (err !== null && typeof err === 'object' && 'message' in err) {
     return String(err.message)
   }
-  if ('detail' in err) {
+  if (err !== null && typeof err === 'object' && 'detail' in err) {
     return String(err.detail)
   }
   return 'Unexpected error'

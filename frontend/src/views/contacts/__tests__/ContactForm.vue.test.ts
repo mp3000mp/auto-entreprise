@@ -54,7 +54,7 @@ describe('ContactForm.vue', () => {
 
     const store = useContactStore()
     expect(store.add).toHaveBeenCalledTimes(1)
-    const arg = store.add.mock.calls[0][0]
+    const arg = vi.mocked(store.add).mock.calls[0][0]
     expect(arg).toEqual({
       firstName: 'Hugue',
       lastName: 'Aux fraises',

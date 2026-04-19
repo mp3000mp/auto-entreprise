@@ -50,9 +50,7 @@ async function remove() {
       }}</router-link>
     </td>
     <td>{{ opportunity.status.label }}</td>
-    <td>
-      {{ opportunity.lastTender?.totalRate ?? 0 }}€
-    </td>
+    <td>{{ opportunity.lastTender?.totalRate ?? 0 }}€</td>
     <td>{{ opportunity.lastTender?.soldDays ?? 0 }}</td>
     <td>{{ opportunity.workedDays }}</td>
     <td>{{ opportunity.createdAt.format('YYYY-MM-DD') }}</td>

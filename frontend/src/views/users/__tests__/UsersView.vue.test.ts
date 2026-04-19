@@ -11,7 +11,7 @@ const stubs = ['font-awesome-icon', 'router-link']
 
 describe('UsersView.vue', () => {
   test('sorts users', async () => {
-    const wrapper = await mount(Component, {
+    const wrapper = mount(Component, {
       global: {
         plugins: [
           createTestingPinia({
@@ -28,13 +28,16 @@ describe('UsersView.vue', () => {
       }
     })
 
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
     await testSorter(
       wrapper,
-      [1, 2, 3],
+      [2, 3, 1],
       [
         { columnName: '#', columnIdx: 0, expectedIdsOrder: [1, 2, 3] },
         { columnName: 'Email', columnIdx: 1, expectedIdsOrder: [1, 3, 2] },
-        { columnName: 'Username', columnIdx: 2, expectedIdsOrder: [2, 3, 1] },
+        { columnName: 'Username', columnIdx: 2, expectedIdsOrder: [1, 3, 2] },
         { columnName: 'Roles', columnIdx: 3, expectedIdsOrder: [1, 3, 2] }
       ],
       UserRow,

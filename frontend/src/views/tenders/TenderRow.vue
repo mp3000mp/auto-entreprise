@@ -3,13 +3,13 @@ import { computed, ref } from 'vue'
 import Mp3000Icon from '@/components/Mp3000Icon.vue'
 import type { ListTender } from '@/stores/tender/types'
 import { useTenderStore } from '@/stores/tender'
-import type { Opportunity } from '@/stores/opportunity/types'
+import type { TenderOpportunity } from '@/stores/opportunity/types'
 
 const tenderStore = useTenderStore()
 defineEmits(['show-form'])
 const props = defineProps<{
   tender: ListTender
-  opportunity: Opportunity
+  opportunity: TenderOpportunity
   isDeletable: boolean
   withDetails: boolean
 }>()

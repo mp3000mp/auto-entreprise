@@ -30,7 +30,7 @@ const errorMessage = ref('')
 function getEmptyWorkedTime(): NewWorkedTime {
   return {
     opportunity: { id: props.opportunity.id },
-    user: { id: currentUser.value.id },
+    user: { id: currentUser.value!.id },
     workedDays: 0,
     date: dayjs()
   }
@@ -61,7 +61,7 @@ function refresh() {
     currentWorkedTime.value = {
       ...props.workedTime,
       opportunity: { id: props.opportunity.id },
-      user: { id: currentUser.value.id }
+      user: { id: currentUser.value!.id }
     }
   } else {
     currentWorkedTime.value = getEmptyWorkedTime()

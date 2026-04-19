@@ -1,9 +1,15 @@
 name: backend
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
   pull_request:
-    branches: [ "main" ]
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
 
 jobs:
   lint-and-tests:
@@ -37,6 +43,13 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
       - name: Install Dependencies
         working-directory: ${{ env.DIRECTORY }}
         run: composer install -q --no-ansi --no-interaction --no-suggest --no-scripts --no-progress --prefer-dist --optimize-autoloader
@@ -69,7 +82,7 @@ jobs:
           DATABASE_URL: ${{ format('mysql://user1:password1@127.0.0.1:{0}/auto_entreprise_test?serverVersion=10.9.6-MariaDB', job.services.mariadb.ports[3306]) }}
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
+        uses: codecov/codecov-action@v4
         with:
           file: ${{ format('{0}/coverage.xml', env.DIRECTORY) }}
           flags: backend

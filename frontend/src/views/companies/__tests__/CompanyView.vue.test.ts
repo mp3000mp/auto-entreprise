@@ -6,7 +6,7 @@ import { vi } from 'vitest'
 import { initCompany, initEmptyCompany } from '@tests/data/company'
 import { useCompanyStore } from '@/stores/company'
 import { useOpportunityStore } from '@/stores/opportunity'
-import { useRouter } from 'vue-router'
+import { useRouter, type Router } from 'vue-router'
 
 vi.mock('vue-router')
 const stubs = ['font-awesome-icon', 'router-link']
@@ -70,7 +70,7 @@ describe('CompanyView.vue', () => {
     const routerMock = {
       push: vi.fn()
     }
-    useRouter.mockReturnValue(routerMock)
+    vi.mocked(useRouter).mockReturnValue(routerMock as unknown as Router)
     const wrapper = mount(Component, {
       props: {
         companyId: 1
@@ -110,7 +110,7 @@ describe('CompanyView.vue', () => {
     const routerMock = {
       push: vi.fn()
     }
-    useRouter.mockReturnValue(routerMock)
+    vi.mocked(useRouter).mockReturnValue(routerMock as unknown as Router)
     const wrapper = mount(Component, {
       props: {
         companyId: 1

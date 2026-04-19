@@ -13,6 +13,7 @@ import TenderRowForm from '@/views/tenders/tenderRows/tenderRowForm.vue'
 import type { TenderRow } from '@/stores/tender/types'
 import Mp3000TableHeader from '@/components/Mp3000TableHeader.vue'
 import type { Tender } from '@/stores/tender/types'
+import type { ListOpportunity } from '@/stores/opportunity/types'
 import Mp3000Button from '@/components/Mp3000Button.vue'
 import BootstrapModal from '@/components/BootstrapModal.vue'
 import config from '@/misc/config'
@@ -29,11 +30,10 @@ const props = defineProps<{
 
 const isFormShowing = ref(false)
 const isRemoving = ref(false)
-const newTenderRowPosition = computed(() =>
-  tender.value.tenderRows.length === 0
-    ? 10
-    : (Math.ceil(Math.max(...tender.value.tenderRows.map((row) => row.position)) / 10) + 1) * 10
-)
+const newTenderRowPosition = computed(() => {
+  if (!tender.value || tender.value.tenderRows.length === 0) return 10
+  return (Math.ceil(Math.max(...tender.value.tenderRows.map((row) => row.position)) / 10) + 1) * 10
+})
 const confirmMessage = computed(() => ({
   message:
     'Confirmer la suppression de ' +
@@ -44,11 +44,11 @@ const confirmMessage = computed(() => ({
 }))
 
 const tender = computed(() => tenderStore.currentTender)
-const tenderSoldDays = computed(() =>
-  tender.value.tenderRows.reduce((acc, tenderRow) => acc + tenderRow.soldDays, 0)
+const tenderSoldDays = computed(
+  () => tender.value?.tenderRows.reduce((acc, tenderRow) => acc + tenderRow.soldDays, 0) ?? 0
 )
-const tenderFixedRate = computed(() =>
-  tender.value.tenderRows.reduce((acc, tenderRow) => acc + tenderRow.fixedRate, 0)
+const tenderFixedRate = computed(
+  () => tender.value?.tenderRows.reduce((acc, tenderRow) => acc + tenderRow.fixedRate, 0) ?? 0
 )
 const isDeletable = computed(() => null === tender.value || tender.value.tenderRows.length === 0)
 function showForm() {
@@ -80,7 +80,7 @@ const { getAsc, getPriority, sort, sortedList } = useSorter(
     {
       property: 'amount',
       type: SortConfigTypeEnum.CUSTOM,
-      customCompare: (a: Tender, b: Tender) => a.totalRate - b.totalRate
+      customCompare: (a: Tender, b: Tender) => (a.totalRate ?? 0) - (b.totalRate ?? 0)
     }
   ],
   filteredTenderRows
@@ -190,7 +190,7 @@ onMounted(async () => {
         target="_blank"
         class="me-1"
       >
-        <font-awesome-icon :icon="['fa', getFileIcon(file.extension)]" />
+        <font-awesome-icon :icon="['fa', getFileIcon(file.extension ?? '')]" />
         [{{ tenderFileTypeLabels[file.type] }}] {{ file.name }}
         <mp3000-icon icon="trash" @click="removeFile(file.id)" />
       </a>
@@ -279,7 +279,7 @@ onMounted(async () => {
     />
     <tender-form
       :tender="tender"
-      :opportunity="tender.opportunity"
+      :opportunity="tender.opportunity as unknown as ListOpportunity"
       :is-showing="isFormShowing"
       @stop-showing="hideForm"
     />

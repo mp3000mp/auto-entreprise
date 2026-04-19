@@ -9,6 +9,7 @@ import { useRouter } from 'vue-router'
 import type { Ref } from 'vue'
 import BootstrapLoader from '@/components/BootstrapLoader.vue'
 import type { Opportunity } from '@/stores/opportunity/types'
+import type { Company } from '@/stores/company/types'
 import OpportunityForm from '@/views/opportunities/OpportunityForm.vue'
 import Mp3000Table from '@/components/Mp3000Table.vue'
 import OpportunityRow from '@/views/opportunities/OpportunityRow.vue'
@@ -209,14 +210,14 @@ onMounted(async () => {
           :is-deletable="deletableOpportuntyIds.includes(opportunity.id)"
           :with-details="false"
           :opportunity="opportunity"
-          @show-form="showOpportunityForm(opportunity)"
+          @show-form="showOpportunityForm(opportunity as unknown as Opportunity)"
         />
       </template>
     </mp3000-table>
     <opportunity-form
       :is-showing="isOpportunityFormShowing"
       :opportunity="currentOpportunity"
-      :company="contact.company"
+      :company="contact.company as unknown as Company"
       @stop-showing="hideOpportunityForm"
     />
 

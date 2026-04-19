@@ -1,12 +1,12 @@
 import { describe, expect, test } from 'vitest'
 import dayjs, { Dayjs } from 'dayjs'
-import { Ref, ref } from 'vue'
+import { type Ref, ref } from 'vue'
 import { useSorter, SortConfigTypeEnum } from '@/composables/useSorter'
 
 interface ListElement {
   id: number
   propString: string
-  propNumber: number
+  propNumber: number | null
   propDate: Dayjs
   customProp: string
 }
@@ -91,7 +91,7 @@ describe('useSorter.ts', () => {
     list.value[1].propNumber = 1
     sort('propNumber')
     sort('propDate')
-    expect(sortedList.value.map((s) => s.id)).toEqual([3, 2, 1])
+    expect(sortedList.value.map((s) => s.id)).toEqual([1, 3, 2])
   })
 
   test('handles props priority', () => {

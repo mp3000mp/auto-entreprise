@@ -5,7 +5,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { vi } from 'vitest'
 import { initTender, initEmptyTender } from '@tests/data/tender'
 import { useTenderStore } from '@/stores/tender'
-import { useRouter } from 'vue-router'
+import { useRouter, type Router } from 'vue-router'
 
 vi.mock('vue-router')
 const stubs = ['font-awesome-icon', 'router-link']
@@ -69,7 +69,7 @@ describe('TenderView.vue', () => {
     const routerMock = {
       push: vi.fn()
     }
-    useRouter.mockReturnValue(routerMock)
+    vi.mocked(useRouter).mockReturnValue(routerMock as unknown as Router)
     const wrapper = mount(Component, {
       props: {
         tenderId: 1
@@ -109,7 +109,7 @@ describe('TenderView.vue', () => {
     const routerMock = {
       push: vi.fn()
     }
-    useRouter.mockReturnValue(routerMock)
+    vi.mocked(useRouter).mockReturnValue(routerMock as unknown as Router)
     const wrapper = mount(Component, {
       props: {
         tenderId: 1

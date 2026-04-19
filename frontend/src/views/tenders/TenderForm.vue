@@ -36,7 +36,7 @@ function getEmptyTender(): NewTender {
   return {
     version: (props.opportunity.lastTender?.version ?? 0) + 1,
     averageDailyRate: 0,
-    status: { id: 0, position: 0, label: '' },
+    status: { id: 0, position: 0, label: '', code: '' },
     opportunity: props.opportunity,
     sentAt: null,
     acceptedAt: null,

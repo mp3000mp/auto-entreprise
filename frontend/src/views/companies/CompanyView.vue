@@ -257,7 +257,7 @@ onMounted(async () => {
             :is-deletable="deletableOpportuntyIds.includes(opportunity.id)"
             :with-details="false"
             :opportunity="opportunity"
-            @show-form="showOpportunityForm(opportunity)"
+            @show-form="showOpportunityForm(opportunity as unknown as Opportunity)"
           />
         </template>
       </mp3000-table>
@@ -324,7 +324,7 @@ onMounted(async () => {
             :is-deletable="deletableContactIds.includes(contact.id)"
             :contact="contact"
             :with-details="false"
-            @show-form="showContactForm(contact)"
+            @show-form="showContactForm(contact as unknown as Contact)"
           />
         </template>
       </mp3000-table>

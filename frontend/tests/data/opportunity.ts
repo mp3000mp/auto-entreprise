@@ -1,4 +1,4 @@
-import {
+import type {
     ListOpportunity, MeanOfPayment,
     Opportunity,
     OpportunityStatus,
@@ -11,24 +11,24 @@ import {initWorkedTimes} from "./workedTime";
 
 export function initMeanOfPayments(): MeanOfPayment[] {
     return [
-        {id: 1, position: 10, label: 'mop1'},
-        {id: 2, position: 10, label: 'mop2'},
-        {id: 3, position: 10, label: 'mop3'},
+        {id: 1, position: 10, label: 'mop1', code: 'mop1'},
+        {id: 2, position: 10, label: 'mop2', code: 'mop2'},
+        {id: 3, position: 10, label: 'mop3', code: 'mop3'},
     ]
 }
 
 export function initOpportunityStatuses(): OpportunityStatus[] {
     return [
-        {id: 1, position: 10, label: 'tracked'},
-        {id: 2, position: 20, label: 'need_ongoing'},
-        {id: 3, position: 30, label: 'need_sent'},
-        {id: 4, position: 40, label: 'tender_ongoing'},
-        {id: 5, position: 50, label: 'tender_sent'},
-        {id: 6, position: 60, label: 'dev_ongoing'},
-        {id: 7, position: 70, label: 'delivered'},
-        {id: 8, position: 80, label: 'billed'},
-        {id: 9, position: 90, label: 'payed'},
-        {id: 10, position: 100, label: 'canceled'},
+        {id: 1, position: 10, label: 'tracked', code: 'tracked'},
+        {id: 2, position: 20, label: 'need_ongoing', code: 'need_ongoing'},
+        {id: 3, position: 30, label: 'need_sent', code: 'need_sent'},
+        {id: 4, position: 40, label: 'tender_ongoing', code: 'tender_ongoing'},
+        {id: 5, position: 50, label: 'tender_sent', code: 'tender_sent'},
+        {id: 6, position: 60, label: 'dev_ongoing', code: 'dev_ongoing'},
+        {id: 7, position: 70, label: 'delivered', code: 'delivered'},
+        {id: 8, position: 80, label: 'billed', code: 'billed'},
+        {id: 9, position: 90, label: 'payed', code: 'payed'},
+        {id: 10, position: 100, label: 'canceled', code: 'canceled'},
     ]
 }
 

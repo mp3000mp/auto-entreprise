@@ -257,7 +257,7 @@ class Tender
     {
         $total = 0;
         foreach ($this->tenderRows as $tenderRow) {
-            $total += $tenderRow->getFixedRate() + $tenderRow->getSoldDays()*$this->getAverageDailyRate();
+            $total += $tenderRow->getFixedRate() + $tenderRow->getSoldDays() * $this->getAverageDailyRate();
         }
 
         return $total;

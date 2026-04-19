@@ -34,9 +34,10 @@ describe('ContactsView.vue', () => {
 
     await testSorter(
       wrapper,
+      [1, 2, 3],
       [
         { columnName: 'Nom', columnIdx: 0, expectedIdsOrder: [1, 3, 2] },
-        { columnName: 'Client', columnIdx: 1, expectedIdsOrder: [1, 2, 3] },
+        { columnName: 'Client', columnIdx: 1, expectedIdsOrder: [3, 2, 1] },
         { columnName: 'Email', columnIdx: 2, expectedIdsOrder: [2, 3, 1] },
         { columnName: 'Téléphone', columnIdx: 3, expectedIdsOrder: [1, 3, 2] },
         { columnName: 'Commentaires', columnIdx: 4, expectedIdsOrder: [1, 2, 3] }

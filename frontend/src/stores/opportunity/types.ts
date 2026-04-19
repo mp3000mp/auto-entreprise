@@ -43,6 +43,8 @@ export type OpportunityFile = {
   type: OpportunityFileTypeEnum
   title: string
   description: string
+  extension?: string
+  name?: string
   createdAt: Dayjs
 }
 export type OpportunityFileDtoIn = Omit<OpportunityFile, 'createdAt'> & {
@@ -69,7 +71,7 @@ export type Opportunity = {
   status: OpportunityStatus
   meanOfPayment: MeanOfPayment | null
   tenders: ListTender[]
-  lastTender: OpportunityTender
+  lastTender: OpportunityTender | null
   comments: string | null
   statusLogs: OpportunityStatusLog[]
   opportunityFiles: OpportunityFile[]
@@ -78,7 +80,15 @@ export type Opportunity = {
 }
 export type NewOpportunity = Omit<
   Opportunity,
-  'id' | 'contacts' | 'tenders' | 'statusLogs' | 'opportunityFiles' | 'workedDays' | 'workedTimes'
+  | 'id'
+  | 'contacts'
+  | 'tenders'
+  | 'statusLogs'
+  | 'opportunityFiles'
+  | 'workedDays'
+  | 'workedTimes'
+  | 'createdAt'
+  | 'lastTender'
 >
 export type ListOpportunity = Pick<
   Opportunity,
@@ -141,6 +151,7 @@ export type OpportunityDtoOut = Omit<
   | 'opportunityFiles'
   | 'workedDays'
   | 'workedTimes'
+  | 'lastTender'
 > & {
   company: string
   status: string

@@ -3,23 +3,23 @@ import dayjs from "@/misc/dayjs";
 
 export function initCosts(): Cost[] {
     return [
-        {id: 1, type: {id: 1, label: 'type1'}, amount: 200, date: dayjs('2023-11-01'), description: 'first'},
-        {id: 2, type: {id: 2, label: 'type2'}, amount: 100, date: dayjs('2023-11-02'), description: 'second'},
-        {id: 3, type: {id: 3, label: 'type3'}, amount: 300, date: dayjs('2023-11-03'), description: 'third'},
+        {id: 1, type: {id: 1, position: 10, label: 'type1', code: 'type1'}, amount: 200, date: dayjs('2023-11-01'), description: 'first'},
+        {id: 2, type: {id: 2, position: 20, label: 'type2', code: 'type2'}, amount: 100, date: dayjs('2023-11-02'), description: 'second'},
+        {id: 3, type: {id: 3, position: 30, label: 'type3', code: 'type3'}, amount: 300, date: dayjs('2023-11-03'), description: 'third'},
     ]
 }
 export function initCostTypes(): CostType[] {
     return [
-        {id: 1, label: 'type1'},
-        {id: 2, label: 'type2'},
-        {id: 3, label: 'type3'},
+        {id: 1, position: 10, label: 'type1', code: 'type1'},
+        {id: 2, position: 20, label: 'type2', code: 'type2'},
+        {id: 3, position: 30, label: 'type3', code: 'type3'},
     ]
 }
 
 export function initCost(): Cost {
     return {
         id: 1,
-        type: initCostTypes()[1],
+        type: initCostTypes()[1] as CostType,
         amount: 50,
         date: dayjs('2023-12-01'),
         description: 'desc'

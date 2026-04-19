@@ -38,6 +38,7 @@ describe('OpportunitiesView.vue', () => {
 
     await testSorter(
       wrapper,
+      [3, 2, 1],
       [
         { columnName: 'Ref', columnIdx: 0, expectedIdsOrder: [1, 2, 3] },
         { columnName: 'Client', columnIdx: 1, expectedIdsOrder: [1, 2, 3] },
@@ -45,7 +46,7 @@ describe('OpportunitiesView.vue', () => {
         { columnName: 'Montant', columnIdx: 3, expectedIdsOrder: [2, 1, 3] },
         { columnName: 'Jours vendus', columnIdx: 4, expectedIdsOrder: [2, 1, 3] },
         { columnName: 'Jours travaillés', columnIdx: 5, expectedIdsOrder: [3, 1, 2] },
-        { columnName: 'Création', columnIdx: 6, expectedIdsOrder: [1, 2, 3] }
+        { columnName: 'Création', columnIdx: 6, expectedIdsOrder: [3, 1, 2] }
       ],
       OpportunityRow,
       'opportunity'

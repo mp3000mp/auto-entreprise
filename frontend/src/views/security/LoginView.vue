@@ -24,7 +24,7 @@ async function focus() {
 }
 
 function redirectAfterLogin() {
-  router.push({ path: router.currentRoute.value.query?.redirect ?? '/' })
+  router.push({ path: String(router.currentRoute.value.query?.redirect ?? '/') })
 }
 
 async function connect() {
@@ -55,7 +55,7 @@ async function twoFactorAuth() {
   try {
     await securityStore.twoFactorAuth(twoFactorAuthCode.value)
     redirectAfterLogin()
-  } catch (err: unknown) {
+  } catch {
     isLoading.value = false
   }
 }

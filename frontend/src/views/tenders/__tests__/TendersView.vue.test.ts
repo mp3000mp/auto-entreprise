@@ -38,6 +38,7 @@ describe('TendersView.vue', () => {
 
     await testSorter(
       wrapper,
+      [3, 2, 1],
       [
         { columnName: 'Version', columnIdx: 0, expectedIdsOrder: [1, 2, 3] },
         { columnName: 'Opportunité', columnIdx: 1, expectedIdsOrder: [1, 2, 3] },
@@ -45,7 +46,7 @@ describe('TendersView.vue', () => {
         { columnName: 'Statut', columnIdx: 3, expectedIdsOrder: [1, 2, 3] },
         { columnName: 'Montant', columnIdx: 4, expectedIdsOrder: [2, 1, 3] },
         { columnName: 'Jours vendus', columnIdx: 5, expectedIdsOrder: [2, 1, 3] },
-        { columnName: 'Date création', columnIdx: 6, expectedIdsOrder: [1, 2, 3] }
+        { columnName: 'Date création', columnIdx: 6, expectedIdsOrder: [2, 1, 3] }
       ],
       TenderRow,
       'tender'

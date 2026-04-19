@@ -32,11 +32,11 @@ setOptions({
       formData.append(fieldName, file, file.name)
 
       try {
-        await opportunityStore.addOpportunityFile(formData, type.value, props.opportunityId)
+        await opportunityStore.addOpportunityFile(formData, type.value!, props.opportunityId)
         progress(true, 100, 100)
         load('ok')
       } catch (err: unknown) {
-        error(err)
+        error(err as string)
       }
 
       setTimeout(() => {
