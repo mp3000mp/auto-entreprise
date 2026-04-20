@@ -100,11 +100,12 @@ class CompanyControllerTest extends AbstractController
     {
         $this->loginUser($this->client);
         $companies = $this->em->getRepository(Company::class)->findAll();
+        $company = $companies[0];
 
-        $this->client->request('GET', sprintf('/api/companies/%d/contacts', $companies[0]->getId()));
+        $this->client->request('GET', sprintf('/api/companies/%d/contacts', $company->getId()));
         $this->assertResponseCode(200);
         $jsonResponse = $this->getResponseJson($this->client->getResponse());
 
-        self::assertCount(3, $jsonResponse);
+        self::assertCount($company->getContacts()->count(), $jsonResponse);
     }
 }

@@ -141,6 +141,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TwoFact
         return $this;
     }
 
+    #[\Deprecated]
     public function eraseCredentials(): void
     {
     }

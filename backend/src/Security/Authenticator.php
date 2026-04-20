@@ -7,7 +7,7 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -21,7 +21,7 @@ class Authenticator extends AbstractLoginFormAuthenticator
 {
     private const TOO_MANY_ATTEMPT_MSG = 'Too many attempts, please try later.';
 
-    public function __construct(private SerializerInterface $serializer, private RateLimiterFactory $mainLimiter, private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private SerializerInterface $serializer, private RateLimiterFactoryInterface $mainLimiter, private UrlGeneratorInterface $urlGenerator)
     {
     }
 

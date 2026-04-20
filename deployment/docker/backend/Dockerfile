@@ -1,8 +1,8 @@
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # install utilities
 RUN apt update \
-    && apt install -y --no-install-recommends curl zip unzip locales apt-utils vim git libicu-dev software-properties-common libpng-dev;
+    && apt install -y --no-install-recommends curl zip unzip locales apt-utils vim git libicu-dev libpng-dev;
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && echo "fr_FR.UTF-8 UTF-8" >> /etc/locale.gen \
@@ -12,7 +12,8 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
 RUN curl -sSk https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # install ext
-RUN docker-php-ext-install iconv pdo_mysql intl
+RUN docker-php-ext-configure gd \
+    && docker-php-ext-install iconv pdo_mysql intl gd
 
 # config apache
 RUN a2enmod rewrite \

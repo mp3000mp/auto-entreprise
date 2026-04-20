@@ -4,26 +4,26 @@ namespace App\Tests;
 
 use App\DataFixtures\AppFixtures;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 trait TestUtilsTrait
 {
-    protected EntityManagerInterface $em;
+    protected ?EntityManagerInterface $em = null;
 
     protected function purgeDatabase(): void
     {
         // utils
-        $this->em = self::getContainer()
-            ->get('doctrine')
-            ->getManager();
+        $em = self::getContainer()->get('doctrine')->getManager();
+        assert($em instanceof EntityManagerInterface);
+        $this->em = $em;
 
         // reset database
         $purger = new ORMPurger($this->em, []);
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_DELETE);
-        $loader = new ContainerAwareLoader(self::getContainer());
+        $loader = new Loader();
         $paramBag = self::getContainer()->get(ParameterBagInterface::class);
         $loader->addFixture(new AppFixtures($paramBag));
         $executor = new ORMExecutor($this->em, $purger);
@@ -36,7 +36,7 @@ trait TestUtilsTrait
     protected function terminateTest(): void
     {
         $this->em->close();
-        unset($this->em);
+        $this->em = null;
     }
 
     private function removeDir(string $path): void

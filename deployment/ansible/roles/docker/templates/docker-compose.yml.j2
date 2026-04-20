@@ -2,13 +2,13 @@ version: '3'
 
 services:
   mariadb:
-    image: mariadb:10.6
+    image: mariadb:11.4
     user: "1000:1000"
     environment:
-      MYSQL_ROOT_PASSWORD: "$MYSQL_ROOT_PASSWORD"
-      MYSQL_DATABASE: "$MYSQL_DATABASE"
-      MYSQL_USER: "$MYSQL_USER"
-      MYSQL_PASSWORD: "$MYSQL_PASSWORD"
+      MARIADB_ROOT_PASSWORD: "$MARIADB_ROOT_PASSWORD"
+      MARIADB_DATABASE: "$MARIADB_DATABASE"
+      MARIADB_USER: "$MARIADB_USER"
+      MARIADB_PASSWORD: "$MARIADB_PASSWORD"
     volumes:
       - ./mariadb/db:/var/lib/mysql
       - ./mariadb/conf/my.cnf:/etc/mysql/conf.d/my.cnf
