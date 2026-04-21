@@ -4,7 +4,11 @@ import { mount } from '@vue/test-utils'
 
 describe('FooterView.vue', () => {
   test('renders', () => {
-    const wrapper = mount(Component)
+    const wrapper = mount(Component, {
+      global: {
+        stubs: ['font-awesome-icon']
+      }
+    })
     expect(wrapper.exists()).toBeTruthy()
   })
 })

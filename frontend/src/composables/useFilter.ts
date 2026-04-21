@@ -57,6 +57,7 @@ export function useFilter<T>(options: FilterConfig[], list: Ref<T[]>) {
   })
 
   return {
+    filters,
     filteredList
   }
 }

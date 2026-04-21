@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url'
-import { mergeConfig, defineConfig, configDefaults, coverageConfigDefaults } from 'vitest/config'
+import { mergeConfig, defineConfig, coverageConfigDefaults } from 'vitest/config'
 import viteConfig from './vite.config'
 
 export default mergeConfig(
@@ -7,12 +7,18 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/*'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       coverage: {
-        exclude: [...coverageConfigDefaults.exclude, '*.config.ts'],
-        reporter: ['clover']
-      }
+        provider: 'v8',
+        reporter: ['text', 'lcov'],
+        include: [
+          'src'
+        ],
+        exclude: [
+          ...coverageConfigDefaults.exclude,
+          '*.config.ts',
+        ],
+      },
     }
   })
 )
