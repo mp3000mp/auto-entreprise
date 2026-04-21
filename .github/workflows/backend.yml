@@ -18,19 +18,19 @@ jobs:
     env:
       DIRECTORY: ./backend
 
-    services:
-      mariadb:
-        image: mariadb:11.4
-        env:
-          MARIADB_ROOT_PASSWORD: secret
-          MARIADB_USER: user1
-          MARIADB_PASSWORD: password1
-          MARIADB_DATABASE: auto_entreprise_test
-        ports:
-          - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
+      - name: Start MariaDB
+        run: |
+          docker run -d --name mariadb \
+            -e MARIADB_ROOT_PASSWORD=secret \
+            -e MARIADB_USER=user1 \
+            -e MARIADB_PASSWORD=password1 \
+            -e MARIADB_DATABASE=auto_entreprise_test \
+            -p 3306:3306 \
+            mariadb:11.4 \
+            --innodb-use-native-aio=0
+          until docker exec mariadb mysqladmin ping --silent; do sleep 2; done
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -65,19 +65,19 @@ jobs:
         working-directory: ${{ env.DIRECTORY }}
         run: php bin/console doc:database:create --if-not-exists --no-interaction -e test
         env:
-          DATABASE_URL: ${{ format('mysql://user1:password1@127.0.0.1:{0}/auto_entreprise_test?serverVersion=mariadb-11.4.0', job.services.mariadb.ports[3306]) }}
+          DATABASE_URL: mysql://user1:password1@127.0.0.1:3306/auto_entreprise_test?serverVersion=mariadb-11.4.0
 
       - name: Migrate database
         working-directory: ${{ env.DIRECTORY }}
         run: php bin/console doc:mig:mig --no-interaction -e test
         env:
-          DATABASE_URL: ${{ format('mysql://user1:password1@127.0.0.1:{0}/auto_entreprise_test?serverVersion=mariadb-11.4.0', job.services.mariadb.ports[3306]) }}
+          DATABASE_URL: mysql://user1:password1@127.0.0.1:3306/auto_entreprise_test?serverVersion=mariadb-11.4.0
 
       - name: Exec tests
         working-directory: ${{ env.DIRECTORY }}
         run: composer tuci
         env:
-          DATABASE_URL: ${{ format('mysql://user1:password1@127.0.0.1:{0}/auto_entreprise_test?serverVersion=mariadb-11.4.0', job.services.mariadb.ports[3306]) }}
+          DATABASE_URL: mysql://user1:password1@127.0.0.1:3306/auto_entreprise_test?serverVersion=mariadb-11.4.0
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
