@@ -29,7 +29,7 @@ jobs:
             -p 3306:3306 \
             mariadb:11.4 \
             --innodb-use-native-aio=0
-          until docker exec mariadb mysqladmin ping --silent; do sleep 2; done
+          until docker exec mariadb mariadb-admin ping --silent; do sleep 2; done
 
       - name: Checkout code
         uses: actions/checkout@v4
