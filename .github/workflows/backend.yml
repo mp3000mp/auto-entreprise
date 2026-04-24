@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Start MariaDB
         run: |
-          docker run -d --name mariadb \
+          docker run -d --name mariadb_test \
             -e MARIADB_ROOT_PASSWORD=secret \
             -e MARIADB_USER=user1 \
             -e MARIADB_PASSWORD=password1 \
@@ -29,7 +29,8 @@ jobs:
             -p 3306:3306 \
             mariadb:11.4 \
             --innodb-use-native-aio=0
-          until docker exec mariadb mariadb-admin ping --silent; do sleep 2; done
+          echo "127.0.0.1 mariadb_test" | sudo tee -a /etc/hosts
+          until docker exec mariadb_test mariadb-admin ping --silent; do sleep 2; done
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -69,19 +70,19 @@ jobs:
         working-directory: ${{ env.DIRECTORY }}
         run: php bin/console doc:database:create --if-not-exists --no-interaction -e test
         env:
-          DATABASE_URL: mysql://user1:password1@127.0.0.1:3306/auto_entreprise_test?serverVersion=mariadb-11.4.0
+          DATABASE_URL: mysql://user1:password1@mariadb_test:3306/auto_entreprise_test?serverVersion=mariadb-11.4.0
 
       - name: Migrate database
         working-directory: ${{ env.DIRECTORY }}
         run: php bin/console doc:mig:mig --no-interaction -e test
         env:
-          DATABASE_URL: mysql://user1:password1@127.0.0.1:3306/auto_entreprise_test?serverVersion=mariadb-11.4.0
+          DATABASE_URL: mysql://user1:password1@mariadb_test:3306/auto_entreprise_test?serverVersion=mariadb-11.4.0
 
       - name: Exec tests
         working-directory: ${{ env.DIRECTORY }}
         run: composer tuci
         env:
-          DATABASE_URL: mysql://user1:password1@127.0.0.1:3306/auto_entreprise_test?serverVersion=mariadb-11.4.0
+          DATABASE_URL: mysql://user1:password1@mariadb_test:3306/auto_entreprise_test?serverVersion=mariadb-11.4.0
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
