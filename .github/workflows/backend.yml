@@ -51,11 +51,15 @@ jobs:
 
       - name: Install Dependencies
         working-directory: ${{ env.DIRECTORY }}
-        run: composer install -q --no-ansi --no-interaction --no-suggest --no-scripts --no-progress --prefer-dist --optimize-autoloader
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --optimize-autoloader
 
       - name: PHP cs fixer
         working-directory: ${{ env.DIRECTORY }}
-        run: composer cs
+        run: composer csd
+
+      - name: Warmup Symfony cache
+        working-directory: ${{ env.DIRECTORY }}
+        run: php bin/console cache:warmup --env=dev
 
       - name: PHPStan
         working-directory: ${{ env.DIRECTORY }}
